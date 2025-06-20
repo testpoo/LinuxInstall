@@ -1,6 +1,6 @@
 ### 1. 安装Sway及相关软件
 ```
-sudo apt install fcitx5 fcitx5-rime rime-data-wubi thunar xarchiver pulseaudio blueman thunar-archive-plugin fonts-noto-cjk sway swaybg swayidle swaylock foot wofi seatd xwayland grim git brightnessctl wl-clipboard slurp
+sudo apt install fcitx5 fcitx5-rime rime-data-wubi thunar xarchiver pulseaudio blueman thunar-archive-plugin fonts-noto-cjk sway swaybg swayidle swaylock foot wofi seatd xwayland grim git brightnessctl wl-clipboard slurp upower
 
 # wl-clipboard 剪切板
 # slurp 截图选框
