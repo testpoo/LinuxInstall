@@ -1,6 +1,6 @@
 ### 1. 安装Sway及相关软件
 ```
-sudo apt install fcitx5 fcitx5-rime rime-data-wubi thunar xarchiver pulseaudio blueman thunar-archive-plugin fonts-noto-cjk sway swaybg swayidle swaylock foot wofi seatd xwayland grim git brightnessctl wl-clipboard slurp upower
+sudo apt install fcitx5 fcitx5-rime rime-data-wubi thunar xarchiver pulseaudio blueman thunar-archive-plugin fonts-noto-cjk sway swaybg swayidle swaylock foot wofi seatd xwayland grim git brightnessctl wl-clipboard slurp upower chromium chromium-l10n
 
 # wl-clipboard 剪切板
 # slurp 截图选框
@@ -79,7 +79,7 @@ input "2362:597:SYNA3602:00_093A:0255_Touchpad" {
 ### 9. Chromium支持wayland并支持fcitx5
 
 ```
---ozone-platform=wayland --enable-wayland-ime --wayland-text-input-version=3  --gtk-version=4
+--ozone-platform=wayland --enable-wayland-ime --wayland-text-input-version=3 --gtk-version=4
 ```
 
 ### 10. Sway配置文件修改
@@ -148,7 +148,7 @@ mode "$mode_system" {
 bindsym $mod+p mode "$mode_system"
 
 bindsym $mod+t exec Thunar
-bindsym $mod+q exec firefox-esr
+bindsym $mod+q exec chromium --ozone-platform=wayland --enable-wayland-ime --wayland-text-input-version=3 --gtk-version=4
 bindsym $mod+Control_L exec /home/poo/.config/sway/touchpad.py;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
 bindsym $mod+Shift+s exec grim -g "$(slurp)" - | wl-copy
 bindsym Print exec grim - | wl-copy
@@ -165,7 +165,7 @@ for_window [window_role="task_dialog"] floating enable
 for_window [title="文件操作进度"] floating enable
 for_window [title="确认替换文件"] floating enable
 
-#for_window [app_id="firefox-esr"] move container workspace number $ws1
+#for_window [app_id="chromium"] move container workspace number $ws1
 #for_window [app_id="Thunar"] move container workspace number $ws2
 #for_window [app_id="foot"] move container workspace number $ws3
 #for_window [app_id="sublime_text"] move container workspace number $ws4

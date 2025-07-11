@@ -286,7 +286,7 @@ mode "$mode_system" {
 bindsym $mod+p mode "$mode_system"
 
 bindsym $mod+t exec Thunar
-bindsym $mod+q exec firefox-esr
+bindsym $mod+q exec chromium --ozone-platform=wayland --enable-wayland-ime --wayland-text-input-version=3 --gtk-version=4
 bindsym $mod+Control_L exec /home/poo/.config/sway/touchpad.py;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
 bindsym $mod+Shift+s exec grim -g "$(slurp)" - | wl-copy
 bindsym Print exec grim - | wl-copy
@@ -304,7 +304,7 @@ for_window [window_role="task_dialog"] floating enable
 for_window [title="文件操作进度"] floating enable
 for_window [title="确认替换文件"] floating enable
 
-for_window [app_id="firefox-esr"] move container workspace number $ws1;workspace number $ws1
+for_window [app_id="chromium"] move container workspace number $ws1;workspace number $ws1
 for_window [app_id="Thunar"] move container workspace number $ws2;workspace number $ws2
 for_window [app_id="foot"] move container workspace number $ws3;workspace number $ws3
 for_window [app_id="sublime_text"] move container workspace number $ws4;workspace number $ws4
