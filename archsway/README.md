@@ -1,10 +1,3 @@
-title: arch+sway安装设置
-date: 2025-09-17
-category: 系统安装
-tag: debian, sway
-
-[TOC]
-
 ### 1. 安装Sway及相关软件
 ```
 # 通过arch安装sway
