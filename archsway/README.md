@@ -79,7 +79,7 @@ input "2362:597:SYNA3602:00_093A:0255_Touchpad" {
 
 配置 Group 直接启动 fcitx5 是只有西文键盘的，把下面的内容粘贴到 ~/.config/fcitx5/profile
 ```
-[Grou```ps/0]
+[Groups/0]
 # Group Name
 Name=Default
 # Layout
