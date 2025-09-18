@@ -2,11 +2,9 @@
 ```
 # 通过arch安装sway
 
-sudo pacman -S wqy-zenhei thunar chromium gvfs fcitx5 fcitx-rime xarchiver git upower blueman thunar-archive-plugin wl-clipboard fcitx5-configtool rime-wubi ristretto libreoffice man unzip xfce-appfinder seatd
+sudo pacman -S wqy-zenhei thunar chromium gvfs fcitx5 fcitx-rime xarchiver git upower blueman thunar-archive-plugin wl-clipboard rime-wubi ristretto libreoffice man unzip xfce-appfinder seatd
 
 sudo pacman -Rns lightdm lightdm-gtk-greeter htop smartmontools vim waybar wget wireless_tools wpa_supplicant openssh pavucontrol wmenu
-
-# 注：安装motrix时，需要安装fuse
 ```
 
 ### 2. 输入法环境变量设置
@@ -79,7 +77,7 @@ input "2362:597:SYNA3602:00_093A:0255_Touchpad" {
 
 ### 9.设置 Fcitx5 初始配置
 
-配置 Group 直接启动 fcitx5 是只有西文键盘的，如果是 KDE，可以到系统的输入法配置启用拼音。如果是别的桌面的话，把下面的内容粘贴到 ~/.config/fcitx5/profile
+配置 Group 直接启动 fcitx5 是只有西文键盘的，把下面的内容粘贴到 ~/.config/fcitx5/profile
 ```
 [Grou```ps/0]
 # Group Name
@@ -104,8 +102,7 @@ Layout=
 [GroupOrder]
 0=Default
 ```
-DefaultIM=xx 为设置默认输入法，如果你习惯使用 rime,后面安装好之后可以设置成 rime。
-配置文件在注销重新登陆之后就会生效，届时启动 fcitx5 即可体验。
+DefaultIM=xx 为设置默认输入法，如果你习惯使用 rime，后面安装好之后可以设置成 rime。配置文件在注销重新登陆之后就会生效，届时启动 fcitx5 即可体验。
 
 ### 9. 其他
 
@@ -117,6 +114,6 @@ Appdata:.xwechat
 sudo usermod -aG seat poo
 
 # 查字体
- fc-match
- fc-match -a | grep Mono  # 等线字体
+fc-match
+fc-match -a | grep Mono  # 等线字体
 ```
