@@ -26,16 +26,16 @@ while true; do
   if [ $(pactl get-sink-mute @DEFAULT_SINK@ | awk -F ' ' '{print $2}') = "no" ];then volume="🔊"$volume;else volume="🔇"$volume;fi
 
   # CPU
-  cpuUsage="©️"$(top -b -n1 | fgrep "Cpu" | awk '{printf "%d", 100-$8}')"%"
+  cpuUsage="©️"$(top -b -n1 | grep -F "Cpu" | awk '{printf "%d", 100-$8}')"%"
 
   # 内存
-  mem_used_persent="Ⓜ️"$(free -m | fgrep "内存" | awk '{printf "%.1f",$3/1024}')"G"
+  mem_used_persent="Ⓜ️"$(free -m | grep -F "内存" | awk '{printf "%.1f",$3/1024}')"G"
 
   # 磁盘
-  diskUsage="💾"$(df -h | fgrep "/dev/sda2" | awk '{print $3}')
+  diskUsage="💾"$(df -h | grep -F "/dev/sda2" | awk '{print $3}')
 
   # 网络
-  if [ $(ip addr | grep inet | awk 'NR==3' | awk -F ' ' '{print $2}'| cut -d '.' -f 1-2) = "192.168" ];then network="📶连接";else network="🌐断开";fi
+  if [ $(iwctl station wlan0 show | grep -F State | awk '{print $2}')="connected" ];then network="📶连接";else network="🌐断开";fi
 
   # 触摸板
   touchpad="📋"$(swaymsg -t get_inputs | python3 -c "import os,sys,json; print([li for li in json.load(sys.stdin) if li['identifier'] == '2362:597:SYNA3602:00_093A:0255_Touchpad'][0]['libinput']['send_events'])" | awk '{if ($0 == "enabled"){print "开"} else {print "关"}}')

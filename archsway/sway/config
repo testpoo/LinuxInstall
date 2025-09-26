@@ -303,6 +303,7 @@ for_window [window_role="task_dialog"] floating enable
 for_window [title="文件操作进度"] floating enable
 for_window [title="确认替换文件"] floating enable
 for_window [title="重命名"] floating enable
+for_window [title="编辑启动器"] floating enable
 
 for_window [app_id="chromium"] move container workspace number $ws1;workspace number $ws1
 for_window [app_id="Thunar"] move container workspace number $ws2;workspace number $ws2
@@ -314,7 +315,7 @@ for_window [app_id="ristretto"] move container workspace number $ws6;workspace n
 set $gnome-schema org.gnome.desktop.interface
 exec_always {
 #    gsettings set $gnome-schema gtk-theme 'theme name'
-    gsettings set $gnome-schema icon-theme 'Tela-circle-green-light'
+    gsettings set $gnome-schema icon-theme 'Qogir-Ubuntu-Light'
 #    gsettings set $gnome-schema cursor-theme 'cursor theme name'
 #    gsettings set $gnome-schema font-name 'Sans 10'
 }

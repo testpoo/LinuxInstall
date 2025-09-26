@@ -2,7 +2,7 @@
 ```
 # 通过arch安装sway
 
-sudo pacman -S wqy-zenhei thunar chromium gvfs fcitx5 fcitx-rime xarchiver git upower blueman thunar-archive-plugin wl-clipboard rime-wubi ristretto libreoffice man-db 7zip xfce-appfinder seatd
+sudo pacman -S thunar chromium gvfs fcitx5 fcitx5-rime xarchiver git upower blueman thunar-archive-plugin wl-clipboard rime-wubi ristretto libreoffice man-db 7zip xfce4-appfinder seatd libreoffice-fresh-zh-cn
 
 sudo pacman -Rns lightdm lightdm-gtk-greeter htop smartmontools vim waybar wget wireless_tools wpa_supplicant pavucontrol wmenu
 ```
@@ -116,4 +116,15 @@ sudo usermod -aG seat poo
 # 查字体
 fc-match
 fc-match -a | grep Mono  # 等线字体
+```
+
+### 10.添加Arch Linux CN 软件仓库源
+
+```
+# 在/etc/pacman.conf文件最后面添加
+[archlinuxcn]
+Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
+
+# 然后安装archlinuxcn-keyring
+pacman -Sy archlinuxcn-keyring
 ```
