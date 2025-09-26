@@ -2,9 +2,9 @@
 ```
 # 通过arch安装sway
 
-sudo pacman -S wqy-zenhei thunar chromium gvfs fcitx5 fcitx-rime xarchiver git upower blueman thunar-archive-plugin wl-clipboard rime-wubi ristretto libreoffice man unzip xfce-appfinder seatd
+sudo pacman -S wqy-zenhei thunar chromium gvfs fcitx5 fcitx-rime xarchiver git upower blueman thunar-archive-plugin wl-clipboard rime-wubi ristretto libreoffice man-db 7zip xfce-appfinder seatd
 
-sudo pacman -Rns lightdm lightdm-gtk-greeter htop smartmontools vim waybar wget wireless_tools wpa_supplicant openssh pavucontrol wmenu
+sudo pacman -Rns lightdm lightdm-gtk-greeter htop smartmontools vim waybar wget wireless_tools wpa_supplicant pavucontrol wmenu
 ```
 
 ### 2. 输入法环境变量设置
