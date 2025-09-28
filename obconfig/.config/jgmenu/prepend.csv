@@ -1,7 +1,0 @@
-@rect,,5,10,190,30,2,left,top,#000000 0,#656565 50,
-@search,,10,10,185,30,2,left,top,#eeeeee 80,#000000 0,
-^sep()
-终端,x-terminal-emulator,utilities-terminal
-文件,pcmanfm,system-file-manager
-浏览器,env MOZ_GTK_TITLEBAR_DECORATION=client firefox-esr,firefox-esr
-^sep()
