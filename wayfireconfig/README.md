@@ -1,7 +1,7 @@
 ### 1. 安装wayfire及相关软件
 ```
 # 在wayfire下foot无法输入中文，终端替换成Sakura
-sudo apt install wayfire swaybg swayidle swaylock fcitx5 fcitx5-rime rime-data-wubi thunar xarchiver pulseaudio blueman thunar-archive-plugin fonts-noto-cjk sakura wofi seatd xwayland git brightnessctl firefox-esr mako-notifier gsettings-desktop-schemas
+sudo apt install wayfire swaybg swayidle swaylock fcitx5 fcitx5-rime rime-data-wubi thunar xarchiver pipewire-audio blueman thunar-archive-plugin fonts-noto-cjk xfce4-terminal xfce4-appfinder seatd xwayland git brightnessctl firefox-esr mako-notifier
 ```
 
 ### 2. 启动wayfire

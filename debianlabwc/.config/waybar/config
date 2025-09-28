@@ -1,0 +1,122 @@
+{
+    "layer": "bottom",
+    "position": "bottom",
+    "height": 30,
+    "spacing": 3,
+    "modules-left": [
+        "custom/menu",
+        "custom/browser",
+        "custom/filemanager",
+        "custom/terminal"
+    ],
+    "modules-center": [
+        "wlr/taskbar"
+    ],
+    "modules-right": [
+        "disk",
+        "cpu",
+        "memory",
+        "pulseaudio",
+        "backlight",
+        "network",
+        "battery",
+        "clock",
+        "tray",
+        "custom/systeminfo"
+    ],
+    "custom/browser": {
+        "format": "",
+        "tooltip-format": "火狐浏览器",
+        "on-click": "firefox-esr"
+    },
+    "custom/filemanager": {
+        "format": "",
+        "tooltip-format": "文件管理器",
+        "on-click": "thunar"
+    },
+    "custom/terminal": {
+        "format": "",
+        "tooltip-format": "终端",
+        "on-click": "foot"
+    },
+    "custom/menu": {
+        "format": "",
+        "tooltip": false,
+        "on-click": "wofi -S drun -I --gtk-dark -x 0 -y 324 -W 300 -H 600 -p '请输入软件名称'",
+        "menu": "on-click-right",
+        "menu-file": "$HOME/.config/waybar/power_menu.xml",
+        "menu-actions": {
+            "shutdown": "systemctl poweroff -i",
+            "reboot": "systemctl reboot",
+            "suspend": "systemctl suspend",
+            "hibernate": "systemctl hibernate",
+            "swaylock": "swaylock",
+            "exit": "labwc -e",
+            "reconfigure": "labwc -r"
+        }
+    },
+    "wlr/taskbar": {
+        "format": "{icon}",
+        "icon-size": 28,
+        "spacing": 3,
+        "on-click-right": "close",
+        "tooltip-format": "{title}",
+        "ignore-list": [],
+        "on-click": "activate"
+    },
+    "tray": {
+        "spacing": 10
+    },
+    "clock": {
+        "format": "<small>        {:%H:%M\n%F}</small>",
+        "tooltip-format": "{:L%A %F %H:%M 第%V周}"
+    },
+    "disk": {
+        "format": "💾 {used}",
+        "tooltip-format": "已用{total}中的{used}({percentage_used}%)"
+    }, 
+    "cpu": {
+        "format": "Ⓒ {usage}%",
+        "tooltip": false
+    },
+    "memory": {
+        "format": "Ⓜ️ {}%",
+        "tooltip-format": "内存已用{used:0.1f}GiB"
+    },
+    "backlight": {
+        "format": "{icon} {percent}%",
+        "tooltip": false,
+        "format-icons": ["🌑", "🌒", "🌓", "🌔", "🌕"]
+    },
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-full": "{icon} {capacity}%",
+        "format-charging": "⚡ {capacity}%",
+        "format-plugged": "🔌 {capacity}%",
+        "format-alt": "{icon} {time}",
+        "format-icons": ["🔋"]
+    },
+    "network": {
+        "format-wifi": "📶 {essid} ({signalStrength}%)",
+        "tooltip-format": "{ifname}: {ipaddr}",
+        "format-disconnected": "🌐 断开",
+    },
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "🔇 {volume}%",
+        "format-icons": {
+            "default": ["🔈", "🔉", "🔊"]
+        },
+    },
+    "custom/systeminfo": {
+        "interval": 60,
+        "exec": "~/.config/waybar/systeminfo",
+        "format": "🖥️",
+        "tooltip-format": "<tt>{}</tt>",
+        }
+    }
+}
