@@ -120,7 +120,15 @@ Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
 pacman -Sy archlinuxcn-keyring
 ```
 
-### 10. 其他
+### 10. Arch Wifi慢
+
+- 查看网卡型号：`lspci| grep Net`，本机的型号是RTL8821CE
+
+- 查看驱动：`lsmod | grep 8821`
+
+- 切换驱动：`modprobe rtw88_8821ce`
+
+### 11.  其他
 
 ```
 # 修改微信文档目录，修改文件/home/poo/.xwechat/config/51a1fffea11325a1e4104c6b3de47af7.ini中使用以下内容
