@@ -1,7 +1,7 @@
 ### 1. 安装wayfire及相关软件
 ```
 # 在wayfire下foot无法输入中文，终端替换成Sakura
-sudo apt install wayfire swaybg swayidle swaylock fcitx5 fcitx5-rime rime-data-wubi thunar xarchiver pipewire-audio blueman thunar-archive-plugin fonts-noto-cjk xfce4-terminal xfce4-appfinder seatd xwayland git brightnessctl firefox-esr mako-notifier
+sudo apt install wayfire swaybg swayidle swaylock fcitx5 fcitx5-rime rime-data-wubi thunar xarchiver pipewire-audio blueman thunar-archive-plugin fonts-noto-cjk xfce4-terminal xfce4-appfinder seatd xwayland git brightnessctl firefox-esr webext-ublock-origin-firefox firefox-esr-l10n-zh-cn mako-notifier grim wl-clipboard slurp
 ```
 
 ### 2. 启动wayfire
@@ -94,13 +94,13 @@ binding_screenshot_interactive = <super> <shift> KEY_S
 command_screenshot_interactive = grim -g "$(slurp)" - | wl-copy
 
 # 音量控制
-# https://github.com/pulseaudio
+# https://github.com/PipeWire
 repeatable_binding_volume_up = KEY_VOLUMEUP
-command_volume_up = pactl set-sink-volume @DEFAULT_SINK@ +5%
+command_volume_up = wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+
 repeatable_binding_volume_down = KEY_VOLUMEDOWN
-command_volume_down = pactl set-sink-volume @DEFAULT_SINK@ -5%
+command_volume_down = wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-
 binding_mute = KEY_MUTE
-command_mute = pactl set-sink-mute @DEFAULT_SINK@ toggle
+command_mute = wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
 
 # 屏幕亮度
 # https://github.com/Hummer12007/brightnessctl

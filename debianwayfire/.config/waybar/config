@@ -5,12 +5,9 @@
     "spacing": 3,
     "modules-left": [
         "custom/menu",
-        "custom/browser",
-        "custom/filemanager",
-        "custom/terminal"
+        "wlr/taskbar"
     ],
     "modules-center": [
-        "wlr/taskbar"
     ],
     "modules-right": [
         "disk",
@@ -24,25 +21,10 @@
         "tray",
         "custom/systeminfo"
     ],
-    "custom/browser": {
-        "format": "",
-        "tooltip-format": "火狐浏览器",
-        "on-click": "firefox-esr"
-    },
-    "custom/filemanager": {
-        "format": "",
-        "tooltip-format": "文件管理器",
-        "on-click": "thunar"
-    },
-    "custom/terminal": {
-        "format": "",
-        "tooltip-format": "终端",
-        "on-click": "foot"
-    },
     "custom/menu": {
-        "format": "",
+        "format": "🌀",
         "tooltip": false,
-        "on-click": "wofi -S drun -I -G -p '请输入软件名称'",
+        "on-click": "xfce4-appfinder",
         "menu": "on-click-right",
         "menu-file": "$HOME/.config/waybar/power_menu.xml",
         "menu-actions": {
