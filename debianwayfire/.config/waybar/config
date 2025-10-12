@@ -10,10 +10,11 @@
     "modules-center": [
     ],
     "modules-right": [
+        "custom/touchpad",
         "disk",
         "cpu",
         "memory",
-        "pulseaudio",
+        "wireplumber",
         "backlight",
         "network",
         "battery",
@@ -86,18 +87,21 @@
         "tooltip-format": "{ifname}: {ipaddr}",
         "format-disconnected": "🌐 断开",
     },
-    "pulseaudio": {
+    "wireplumber": {
         "format": "{icon} {volume}%",
         "format-muted": "🔇 {volume}%",
-        "format-icons": {
-            "default": ["🔈", "🔉", "🔊"]
-        },
+        "format-icons": ["🔈", "🔉", "🔊"]
     },
     "custom/systeminfo": {
         "interval": 60,
         "exec": "~/.config/waybar/systeminfo",
         "format": "🖥️",
         "tooltip-format": "<tt>{}</tt>",
-        }
+    },
+    "custom/touchpad": {
+        "interval": 1,
+        "exec": "~/.config/waybar/touchpad",
+        "format": "📋 {}",
+        "tooltip-format": "触摸板",
     }
 }
