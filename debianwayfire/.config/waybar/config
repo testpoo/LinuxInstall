@@ -23,7 +23,7 @@
         "custom/systeminfo"
     ],
     "custom/menu": {
-        "format": "🌀",
+        "format": " 🌀 ",
         "tooltip": false,
         "on-click": "xfce4-appfinder",
         "menu": "on-click-right",
@@ -95,13 +95,13 @@
     "custom/systeminfo": {
         "interval": 60,
         "exec": "~/.config/waybar/systeminfo",
-        "format": "🖥️",
+        "format": " 🖥️ ",
         "tooltip-format": "<tt>{}</tt>",
     },
     "custom/touchpad": {
         "interval": 1,
         "exec": "~/.config/waybar/touchpad",
-        "format": "📋 {}",
+        "format": "🖱️ {}",
         "tooltip-format": "触摸板",
     }
 }
