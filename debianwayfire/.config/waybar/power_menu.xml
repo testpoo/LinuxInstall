@@ -33,6 +33,11 @@
       <object class="GtkSeparatorMenuItem" id="delimiter2"/>
     </child>
     <child>
+      <object class="GtkMenuItem" id="reload">
+        <property name="label">重载</property>
+      </object>
+    </child>
+    <child>
       <object class="GtkMenuItem" id="exit">
         <property name="label">退出</property>
       </object>

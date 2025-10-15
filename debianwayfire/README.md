@@ -1,7 +1,6 @@
 ### 1. 安装wayfire及相关软件
 ```
-# 在wayfire下foot无法输入中文，终端替换成Sakura
-sudo apt install wayfire swaybg swayidle swaylock fcitx5 fcitx5-rime rime-data-wubi thunar xarchiver pipewire-audio blueman thunar-archive-plugin fonts-noto-cjk xfce4-terminal xfce4-appfinder seatd xwayland git brightnessctl firefox-esr webext-ublock-origin-firefox firefox-esr-l10n-zh-cn mako-notifier grim wl-clipboard slurp libglib2.0-bin waybar
+sudo apt install wayfire swaybg swayidle swaylock fcitx5 fcitx5-rime rime-data-wubi thunar xarchiver pipewire-audio blueman thunar-archive-plugin fonts-noto-cjk xfce4-terminal xfce4-appfinder seatd xwayland git brightnessctl firefox-esr webext-ublock-origin-firefox firefox-esr-l10n-zh-cn mako-notifier grim wl-clipboard slurp libglib2.0-bin waybar chromium chromium-l10n
 ```
 
 ### 2. 启动wayfire
@@ -126,7 +125,7 @@ fi
 **`gtk` 程序添加最大化和最小化按钮**
 
 ```
-gsettings-desktop-schemas  # 这装这个软件
+# 安装libglib2.0-bin，才有gsettings这个命令
 
 gsettings set org.gnome.desktop.wm.preferences button-layout ":minimize,maximize,close"  # 添加最大化和最小化按钮
 gsettings set org.gnome.desktop.interface gtk-theme "主题名称"  # 设置主题

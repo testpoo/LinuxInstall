@@ -34,6 +34,7 @@
             "suspend": "systemctl suspend",
             "hibernate": "systemctl hibernate",
             "swaylock": "swaylock",
+            "reload": "wayfire -R",
             "exit": "pkill wayfire"
         }
     },
