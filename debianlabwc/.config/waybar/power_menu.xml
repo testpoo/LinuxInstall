@@ -33,8 +33,8 @@
       <object class="GtkSeparatorMenuItem" id="delimiter2"/>
     </child>
     <child>
-      <object class="GtkMenuItem" id="reconfigure">
-        <property name="label">配置重载</property>
+      <object class="GtkMenuItem" id="reload">
+        <property name="label">重载</property>
       </object>
     </child>
     <child>

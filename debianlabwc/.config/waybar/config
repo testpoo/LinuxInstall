@@ -5,18 +5,15 @@
     "spacing": 3,
     "modules-left": [
         "custom/menu",
-        "custom/browser",
-        "custom/filemanager",
-        "custom/terminal"
+        "wlr/taskbar"
     ],
     "modules-center": [
-        "wlr/taskbar"
     ],
     "modules-right": [
         "disk",
         "cpu",
         "memory",
-        "pulseaudio",
+        "wireplumber",
         "backlight",
         "network",
         "battery",
@@ -24,25 +21,10 @@
         "tray",
         "custom/systeminfo"
     ],
-    "custom/browser": {
-        "format": "",
-        "tooltip-format": "火狐浏览器",
-        "on-click": "firefox-esr"
-    },
-    "custom/filemanager": {
-        "format": "",
-        "tooltip-format": "文件管理器",
-        "on-click": "thunar"
-    },
-    "custom/terminal": {
-        "format": "",
-        "tooltip-format": "终端",
-        "on-click": "foot"
-    },
     "custom/menu": {
-        "format": "",
+        "format": " 🌀 ",
         "tooltip": false,
-        "on-click": "wofi -S drun -I --gtk-dark -x 0 -y 324 -W 300 -H 600 -p '请输入软件名称'",
+        "on-click": "xfce4-appfinder",
         "menu": "on-click-right",
         "menu-file": "$HOME/.config/waybar/power_menu.xml",
         "menu-actions": {
@@ -51,8 +33,8 @@
             "suspend": "systemctl suspend",
             "hibernate": "systemctl hibernate",
             "swaylock": "swaylock",
-            "exit": "labwc -e",
-            "reconfigure": "labwc -r"
+-           "exit": "labwc -e",
+-           "reload": "labwc -r"
         }
     },
     "wlr/taskbar": {
@@ -105,18 +87,15 @@
         "tooltip-format": "{ifname}: {ipaddr}",
         "format-disconnected": "🌐 断开",
     },
-    "pulseaudio": {
+    "wireplumber": {
         "format": "{icon} {volume}%",
         "format-muted": "🔇 {volume}%",
-        "format-icons": {
-            "default": ["🔈", "🔉", "🔊"]
-        },
+        "format-icons": ["🔈", "🔉", "🔊"]
     },
     "custom/systeminfo": {
         "interval": 60,
         "exec": "~/.config/waybar/systeminfo",
-        "format": "🖥️",
+        "format": " 🖥️ ",
         "tooltip-format": "<tt>{}</tt>",
-        }
     }
 }

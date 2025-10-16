@@ -21,28 +21,25 @@
     </keybind>
     <!--自定义-->
     <keybind key="W-s">
-      <action name="Execute" command="wofi -S drun --lines=6 --allow-images -p '请输入软件名称'" />
+      <action name="Execute" command="xfce4-appfinder" />
     </keybind>
     <keybind key="XF86AudioRaiseVolume">
-      <action name="Execute" command="pactl set-sink-volume @DEFAULT_SINK@ +5%" />
+      <action name="Execute" command="wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+" />
     </keybind>
     <keybind key="XF86AudioLowerVolume">
-      <action name="Execute" command="pactl set-sink-volume @DEFAULT_SINK@ -5%" />
+      <action name="Execute" command="wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-" />
     </keybind>
     <keybind key="XF86AudioMute">
-      <action name="Execute" command="pactl set-sink-mute @DEFAULT_SINK@ toggle" />
+      <action name="Execute" command="wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle" />
     </keybind>
     <keybind key="XF86AudioMicMute">
-      <action name="Execute" command="pactl set-source-mute @DEFAULT_SOURCE@ toggle" />
+      <action name="Execute" command="wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle" />
     </keybind>
     <keybind key="XF86MonBrightnessDown">
       <action name="Execute" command="brightnessctl set 5%-" />
     </keybind>
     <keybind key="XF86MonBrightnessUp">
       <action name="Execute" command="brightnessctl set 5%+" />
-    </keybind>
-    <keybind key="W-s">
-      <action name="Execute" command="wofi --show=drun -I --gtk-dark -x 0 -y 324 -W 300 -H 600 -p '请输入软件名称'" />
     </keybind>
     <keybind key="W-q">
       <action name="Execute" command="firefox-esr" />
@@ -51,4 +48,17 @@
       <action name="Execute" command="thunar" />
     </keybind>
   </keyboard>
+
+  <mouse>
+    <default />
+    <context name="Root">
+      <mousebind button="Left" action="Press">
+        <action name="ShowMenu" menu="none" />
+      </mousebind>
+      <mousebind button="Right" action="Press">
+        <action name="ShowMenu" menu="none" />
+      </mousebind>
+    </context>
+  </mouse>
+
 </labwc_config>

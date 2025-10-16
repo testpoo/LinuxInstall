@@ -35,4 +35,9 @@ swayidle -w \
 	before-sleep 'swaylock -f -c 000000' >/dev/null 2>&1 &
 
 fcitx5 >/dev/null 2>&1 &
+
 blueman-applet >/dev/null 2>&1 &
+
+gsettings set "org.gnome.desktop.interface" icon-theme "McMojave-circle"
+
+gsettings set org.gnome.desktop.wm.preferences button-layout ":minimize,maximize,close"

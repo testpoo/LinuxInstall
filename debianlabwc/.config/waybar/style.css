@@ -57,14 +57,12 @@ button:hover {
 #disk:hover,
 #backlight:hover,
 #network:hover,
-#pulseaudio:hover,
+#wireplumber:hover,
 #tray:hover,
 #mode:hover,
 #custom-menu:hover,
 #custom-systeminfo:hover,
-#custom-browser:hover,
-#custom-filemanager:hover,
-#custom-terminal:hover {
+#custom-touchpad:hover {
     background: rgba(200, 200, 200, 0.3);
 }
 
@@ -75,14 +73,12 @@ button:hover {
 #disk,
 #backlight,
 #network,
-#pulseaudio,
+#wireplumber,
 #tray,
 #mode,
 #custom-menu,
 #custom-systeminfo,
-#custom-browser,
-#custom-filemanager,
-#custom-terminal {
+#custom-touchpad {
     padding: 0 5px;
     color: #ffffff;
     background: rgba(100, 100, 100, 0.5);
