@@ -19,7 +19,7 @@ set $term foot
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
 # set $menu dmenu_path | dmenu | xargs swaymsg exec --
-set $menu wofi -S drun -I -G -p "请输入程序名称"
+set $menu xfce4-appfinder
 
 include /etc/sway/config-vars.d/*
 
@@ -27,7 +27,7 @@ include /etc/sway/config-vars.d/*
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 # output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
-output * bg /home/poo/图片/4.jpg fill
+output * bg /home/poo/图片/2.jpg fill
 #
 # Example configuration:
 #
@@ -41,9 +41,9 @@ output eDP-1 resolution 1920x1200 position 0,0 scale 1.25
 # Example configuration:
 #
 exec swayidle -w \
-        timeout 300 'swaylock -f -c 000000' \
+        timeout 300 'swaylock -f -i /home/poo/图片/background.png -c 015000' \
         timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-        before-sleep 'swaylock -f -c 000000'
+        before-sleep 'swaylock -f -i /home/poo/图片/background.png -c 015000'
 #
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
@@ -119,9 +119,9 @@ input "2362:597:SYNA3602:00_093A:0255_Touchpad" {
     set $ws1 "1:浏览器"
     set $ws2 "2:文件"
     set $ws3 "3:终端"
-    set $ws4 "4:sublime"
-    set $ws5 "5:wps"
-    set $ws6 "6"
+    set $ws4 "4:文本"
+    set $ws5 "5:office"
+    set $ws6 "6:图片"
     set $ws7 "7"
     set $ws8 "8"
     set $ws9 "9"
@@ -224,9 +224,7 @@ bar {
     # status_command while date +'%Y-%m-%d %X'; do sleep 1; done
     status_command ~/.config/sway/bar.sh
     font Noto Sans CJK SC Bold 10
-    icon_theme Adwaita
-    bindsym button3 exec /home/poo/.config/sway/systeminfo | wofi -d -G -s /home/poo/.config/sway/systeminfo.css -W 485 -H 530
-    bindsym button1 exec /home/poo/.config/sway/swayconfig | wofi -d -G -s /home/poo/.config/sway/systeminfo.css -W 320 -H 560
+    icon_theme McMojave-circle
 
     colors {
         statusline #ffffff
@@ -240,10 +238,10 @@ include /etc/sway/config.d/*
 exec_always --no-startup-id fcitx5 -d --replace
 exec_always --no-startup-id blueman-applet
 
-bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
-bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
-bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
-bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
+bindsym XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
+bindsym XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
+bindsym XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
+bindsym XF86AudioMicMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
 bindsym XF86MonBrightnessDown exec brightnessctl set 5%-;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
 bindsym XF86MonBrightnessUp exec brightnessctl set 5%+;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
 
@@ -271,7 +269,7 @@ focus_follows_mouse yes
 
 set $mode_system 锁屏(l)丨退出(e)丨挂起(s)丨休眼(h)丨重启(r)丨关机(p)
 mode "$mode_system" {
-    bindsym l exec --no-startup-id swaylock, mode "default"
+    bindsym l exec --no-startup-id swaylock -f -i /home/poo/图片/background.png -C 015000, mode "default"
     bindsym e exec --no-startup-id swaymsg exit, mode "default"
     bindsym s exec --no-startup-id systemctl suspend, mode "default"
     bindsym h exec --no-startup-id systemctl hibernate, mode "default"
@@ -286,16 +284,15 @@ mode "$mode_system" {
 bindsym $mod+p mode "$mode_system"
 
 bindsym $mod+t exec Thunar
-bindsym $mod+q exec chromium --ozone-platform=wayland --enable-wayland-ime --wayland-text-input-version=3 --gtk-version=4
+bindsym $mod+q exec chromium
 bindsym $mod+Control_L exec /home/poo/.config/sway/touchpad.py;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
 bindsym $mod+Shift+s exec grim -g "$(slurp)" - | wl-copy
 bindsym Print exec grim - | wl-copy
-bindsym $mod+Shift+i exec /home/poo/.config/sway/systeminfo | wofi -d -G -s /home/poo/.config/sway/systeminfo.css -W 485 -H 530
-bindsym $mod+Shift+o exec /home/poo/.config/sway/swayconfig | wofi -d -G -s /home/poo/.config/sway/systeminfo.css -W 320 -H 560
 
 # 设置窗口浮动
 for_window [class="wechat"] floating enable
 for_window [app_id="io.github.quodlibet.QuodLibet"] floating enable
+for_window [app_id="xfce4-appfinder"] floating enable, resize set 1920 1200
 
 # 弹窗
 # popups
@@ -303,9 +300,20 @@ for_window [window_role="pop-up"] floating enable
 for_window [window_role="task_dialog"] floating enable
 for_window [title="文件操作进度"] floating enable
 for_window [title="确认替换文件"] floating enable
+for_window [title="重命名"] floating enable
+for_window [title="编辑启动器"] floating enable
 
 for_window [app_id="chromium"] move container workspace number $ws1;workspace number $ws1
 for_window [app_id="Thunar"] move container workspace number $ws2;workspace number $ws2
 for_window [app_id="foot"] move container workspace number $ws3;workspace number $ws3
 for_window [app_id="sublime_text"] move container workspace number $ws4;workspace number $ws4
 for_window [class="wpsoffice"] move container workspace number $ws5;workspace number $ws5
+for_window [app_id="ristretto"] move container workspace number $ws6;workspace number $ws6
+
+set $gnome-schema org.gnome.desktop.interface
+exec_always {
+#    gsettings set $gnome-schema gtk-theme 'theme name'
+    gsettings set $gnome-schema icon-theme 'McMojave-circle'
+#    gsettings set $gnome-schema cursor-theme 'cursor theme name'
+#    gsettings set $gnome-schema font-name 'Sans 10'
+}
