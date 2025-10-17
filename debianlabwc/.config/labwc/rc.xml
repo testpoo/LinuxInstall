@@ -70,6 +70,9 @@
     <keybind key="W-S-s">
       <action name="Execute" command="sh -c 'grim -g &quot;$(slurp)&quot; - | wl-copy'" />
     </keybind>
+    <keybind key="W-Control_L">
+      <action name="Execute" command="~/.config/labwc/ltouchpad.sh" />
+    </keybind>
   </keyboard>
 
   <mouse>
@@ -83,5 +86,11 @@
       </mousebind>
     </context>
   </mouse>
+
+  <libinput>
+    <device category="default">
+      <sendEventsMode>yes</sendEventsMode>
+    </device>
+  </libinput>
 
 </labwc_config>
