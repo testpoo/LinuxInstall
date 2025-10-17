@@ -22,7 +22,7 @@
         "custom/systeminfo"
     ],
     "custom/menu": {
-        "format": " 🌀 ",
+        "format": " <span size=\"x-large\">🌀</span> ",
         "tooltip": false,
         "on-click": "xfce4-appfinder",
         "menu": "on-click-right",
@@ -33,8 +33,8 @@
             "suspend": "systemctl suspend",
             "hibernate": "systemctl hibernate",
             "swaylock": "swaylock",
--           "exit": "labwc -e",
--           "reload": "labwc -r"
+            "exit": "labwc -e",
+            "reload": "labwc -r"
         }
     },
     "wlr/taskbar": {

@@ -2,7 +2,7 @@
 
 # Set background color.
 # swaybg -c '#113344' >/dev/null 2>&1 &
-swaybg -i '/home/poo/图片/3.jpg' >/dev/null 2>&1 &
+swaybg -i '/home/poo/图片/1.jpg' >/dev/null 2>&1 &
 
 # Configure output directives such as mode, position, scale and transform.
 # Use wlr-randr to get your output names
@@ -29,10 +29,10 @@ mako >/dev/null 2>&1 &
 # (since a837fef). Instead use a wlr-output-power-management client such as
 # https://git.sr.ht/~leon_plickat/wlopm
 swayidle -w \
-	timeout 300 'swaylock -f -c 000000' \
+	timeout 300 'swaylock -f -i /home/poo/图片/background.png -c 015000' \
 	timeout 600 'wlopm --off \*' \
 	resume 'wlopm --on \*' \
-	before-sleep 'swaylock -f -c 000000' >/dev/null 2>&1 &
+	before-sleep 'swaylock -f -i /home/poo/图片/background.png -c 015000' >/dev/null 2>&1 & 
 
 fcitx5 >/dev/null 2>&1 &
 

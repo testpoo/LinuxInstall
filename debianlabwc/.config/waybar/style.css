@@ -61,8 +61,7 @@ button:hover {
 #tray:hover,
 #mode:hover,
 #custom-menu:hover,
-#custom-systeminfo:hover,
-#custom-touchpad:hover {
+#custom-systeminfo:hover {
     background: rgba(200, 200, 200, 0.3);
 }
 
@@ -77,8 +76,7 @@ button:hover {
 #tray,
 #mode,
 #custom-menu,
-#custom-systeminfo,
-#custom-touchpad {
+#custom-systeminfo {
     padding: 0 5px;
     color: #ffffff;
     background: rgba(100, 100, 100, 0.5);

@@ -7,6 +7,17 @@
 
 <labwc_config>
 
+  <core>
+    <decoration>client</decoration>
+    <gap>0</gap>
+    <adaptiveSync>no</adaptiveSync>
+    <allowTearing>no</allowTearing>
+    <autoEnableOutputs>yes</autoEnableOutputs>
+    <reuseOutputMode>no</reuseOutputMode>
+    <xwaylandPersistence>no</xwaylandPersistence>
+    <primarySelection>yes</primarySelection>
+  </core>
+
   <theme>
     <name></name>
     <cornerRadius>8</cornerRadius>
@@ -32,9 +43,6 @@
     <keybind key="XF86AudioMute">
       <action name="Execute" command="wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle" />
     </keybind>
-    <keybind key="XF86AudioMicMute">
-      <action name="Execute" command="wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle" />
-    </keybind>
     <keybind key="XF86MonBrightnessDown">
       <action name="Execute" command="brightnessctl set 5%-" />
     </keybind>
@@ -46,6 +54,21 @@
     </keybind>
     <keybind key="W-e">
       <action name="Execute" command="thunar" />
+    </keybind>
+    <keybind key="W-l">
+      <action name="Execute" command="swaylock -f -i /home/poo/图片/background.png -c 015000" />
+    </keybind>
+    <keybind key="W-S-c">
+      <action name="Execute" command="labwc -r" />
+    </keybind>
+    <keybind key="W-S-e">
+      <action name="Execute" command="labwc -e" />
+    </keybind>
+    <keybind key="Print">
+      <action name="Execute" command="sh -c 'grim - | wl-copy'" />
+    </keybind>
+    <keybind key="W-S-s">
+      <action name="Execute" command="sh -c 'grim -g &quot;$(slurp)&quot; - | wl-copy'" />
     </keybind>
   </keyboard>
 
