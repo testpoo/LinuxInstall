@@ -128,7 +128,21 @@ pacman -Sy archlinuxcn-keyring
 
 - 切换驱动：`modprobe rtw88_8821ce`
 
-### 11.  其他
+
+### 11. iwd无法联网
+
+```
+sudo nano /etc/iwd/main.conf
+
+[General]
+EnableNetworkConfiguration=true
+
+sudo systemctl enable iwd.service --now
+sudo systemctl enable systemd-resolved.service --now
+systemctl restart iwd
+```
+
+### 12.  其他
 
 ```
 # 修改微信文档目录，修改文件/home/poo/.xwechat/config/51a1fffea11325a1e4104c6b3de47af7.ini中使用以下内容
