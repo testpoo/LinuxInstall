@@ -315,7 +315,7 @@ for_window [app_id="ristretto"] move container workspace number $ws6;workspace n
 set $gnome-schema org.gnome.desktop.interface
 exec_always {
 #    gsettings set $gnome-schema gtk-theme 'theme name'
-    gsettings set $gnome-schema icon-theme 'Qogir-Ubuntu-Light'
+    gsettings set $gnome-schema icon-theme 'Reversal-blue-light'
 #    gsettings set $gnome-schema cursor-theme 'cursor theme name'
 #    gsettings set $gnome-schema font-name 'Sans 10'
 }
