@@ -1,6 +1,6 @@
 ### 1. 安装labwc及相关软件
 ```
-sudo apt install labwc swaybg swayidle swaylock kanshi fcitx5 fcitx5-rime rime-data-wubi thunar xarchiver pipewire-audio blueman thunar-archive-plugin fonts-noto-cjk foot wofi seatd xwayland git brightnessctl firefox-esr wlopm mako-notifier
+sudo apt install labwc swaybg swayidle swaylock kanshi fcitx5 fcitx5-rime rime-data-wubi thunar xarchiver pipewire-audio blueman thunar-archive-plugin fonts-noto-cjk foot xfce4-appfinder seatd xwayland git brightnessctl firefox-esr wlopm mako-notifier libglib2.0-bin waybar webext-ublock-origin-firefox firefox-esr-l10n-zh-cn
 ```
 ### 2. 启动labwc
 ```
