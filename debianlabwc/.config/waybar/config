@@ -44,7 +44,7 @@
         "spacing": 3,
         "on-click-right": "close",
         "tooltip-format": "{title}",
-        "ignore-list": [],
+        "ignore-list": ["xfce4-appfinder"],
         "on-click": "activate"
     },
     "tray": {
@@ -60,7 +60,7 @@
     }, 
     "cpu": {
         "format": "Ⓒ {usage}%",
-        "tooltip": false
+        "tooltip-format": "CPU已用{usage}%"
     },
     "memory": {
         "format": "Ⓜ️ {}%",
@@ -68,7 +68,7 @@
     },
     "backlight": {
         "format": "{icon} {percent}%",
-        "tooltip": false,
+        "tooltip-format": "亮度{percent}%",
         "format-icons": ["🌑", "🌒", "🌓", "🌔", "🌕"]
     },
     "battery": {

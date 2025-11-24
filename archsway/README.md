@@ -30,52 +30,7 @@ GLFW_IM_MODULE=fcitx
 [ "$(tty)" = "/dev/tty1" ] && exec sway
 ```
 
-### 4. 配置sway
-
-```
-mkdir -p ~/.config/sway
-cp /etc/sway/config ~/.config/sway/
-
-# 编辑~/.config/sway
-```
-
-### 5. 修改程序启动器
-
-```
-# 注释掉$menu行，改为以下内容：
-set $menu set $menu xfce4-appfinder
-```
-
-### 6. 设置终端(foot)字体大小
-
-```
-cp -r /etc/foot/ ~/.config/foot/
-vi ~/.config/foot/foot.ini
-
-font=FreeMono:size=12
-```
-
-### 7. 设置分辨率和缩放
-
-```
-swaymsg -t get_outputs
-output eDP-1 resolution 1920x1200 position 0,0 scale 1.25
-```
-
-### 8. 设置触摸板
-
-```
-swaymsg -t get_inputs
-input "2362:597:SYNA3602:00_093A:0255_Touchpad" {
-    dwt enabled
-    tap enabled
-    natural_scroll enabled
-    middle_emulation enabled
-    events enabled
-}
-```
-
-### 9.设置 Fcitx5 初始配置
+### 3.设置 Fcitx5 初始配置
 
 配置 Group 直接启动 fcitx5 是只有西文键盘的，把下面的内容粘贴到 ~/.config/fcitx5/profile
 ```
@@ -98,7 +53,7 @@ Layout=
 ```
 DefaultIM=xx 为设置默认输入法，后面的Group中的Name为具体的输入法名字，按0，1，2……这样的编号排序，修改文件时，在要fcitx5关闭状态下，否则修改不生效。
 
-#### 9.1 安装fcitx5后配置
+### 4 安装fcitx5后配置
 
 ```
 nano ~/.local/share/fcitx5/rime/default.custom.yaml
@@ -109,7 +64,7 @@ patch:
     - schema: wubi86
 ```
 
-### 9.添加Arch Linux CN 软件仓库源
+### 5.添加Arch Linux CN 软件仓库源
 
 ```
 # 在/etc/pacman.conf文件最后面添加
@@ -120,7 +75,7 @@ Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
 pacman -Sy archlinuxcn-keyring
 ```
 
-### 10. Arch Wifi慢
+### 6. Arch Wifi慢
 
 - 查看网卡型号：`lspci| grep Net`，本机的型号是RTL8821CE
 
@@ -129,7 +84,7 @@ pacman -Sy archlinuxcn-keyring
 - 切换驱动：`modprobe rtw88_8821ce`
 
 
-### 11. iwd无法联网
+### 7. iwd无法联网
 
 ```
 sudo nano /etc/iwd/main.conf
@@ -142,7 +97,7 @@ sudo systemctl enable systemd-resolved.service --now
 systemctl restart iwd
 ```
 
-### 12.  其他
+### 8. 其他
 
 ```
 # 修改微信文档目录，修改文件/home/poo/.xwechat/config/51a1fffea11325a1e4104c6b3de47af7.ini中使用以下内容
