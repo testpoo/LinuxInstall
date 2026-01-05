@@ -224,7 +224,7 @@ bar {
     # status_command while date +'%Y-%m-%d %X'; do sleep 1; done
     status_command ~/.config/sway/bar.sh
     font Noto Sans CJK SC Bold 10
-    icon_theme McMojave-circle
+    icon_theme Reversal-blue-dark
 
     colors {
         statusline #ffffff
@@ -284,7 +284,7 @@ mode "$mode_system" {
 bindsym $mod+p mode "$mode_system"
 
 bindsym $mod+t exec Thunar
-bindsym $mod+q exec chromium
+bindsym $mod+q exec firefox-esr
 bindsym $mod+Control_L exec /home/poo/.config/sway/touchpad.py;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
 bindsym $mod+Shift+s exec grim -g "$(slurp)" - | wl-copy
 bindsym Print exec grim - | wl-copy
@@ -303,7 +303,7 @@ for_window [title="确认替换文件"] floating enable
 for_window [title="重命名"] floating enable
 for_window [title="编辑启动器"] floating enable
 
-for_window [app_id="chromium"] move container workspace number $ws1;workspace number $ws1
+for_window [app_id="firefox-esr"] move container workspace number $ws1;workspace number $ws1
 for_window [app_id="Thunar"] move container workspace number $ws2;workspace number $ws2
 for_window [app_id="foot"] move container workspace number $ws3;workspace number $ws3
 for_window [app_id="sublime_text"] move container workspace number $ws4;workspace number $ws4
@@ -313,7 +313,7 @@ for_window [app_id="ristretto"] move container workspace number $ws6;workspace n
 set $gnome-schema org.gnome.desktop.interface
 exec_always {
 #    gsettings set $gnome-schema gtk-theme 'theme name'
-    gsettings set $gnome-schema icon-theme 'McMojave-circle'
+    gsettings set $gnome-schema icon-theme 'Reversal-blue'
 #    gsettings set $gnome-schema cursor-theme 'cursor theme name'
 #    gsettings set $gnome-schema font-name 'Sans 10'
 }
