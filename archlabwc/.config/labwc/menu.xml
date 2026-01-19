@@ -1,27 +1,27 @@
 <openbox_menu>
 
 <menu id="root-menu">
-  <item label="🔰 锁屏  ">
+  <item label="   🔰 锁屏    ">
     <action name="Execute" command="swaylock -f -i /home/poo/图片/background.png -c 015000" />
   </item>
-  <item label="🔰 挂起  ">
+  <item label="   🔰 挂起    ">
     <action name="Execute" command="systemctl suspend" />
   </item>
-  <item label="🔰 休眼  ">
+  <item label="   🔰 休眼    ">
     <action name="Execute" command="systemctl hibernate" />
   </item>
   <separator />
-  <item label="🔰 重启  ">
+  <item label="   🔰 重启    ">
     <action name="Execute" command="systemctl reboot" />
   </item>
-  <item label="🔰 关机  ">
+  <item label="   🔰 关机    ">
     <action name="Execute" command="systemctl poweroff -i" />
   </item>
   <separator />
-  <item label="🔰 重载  ">
+  <item label="   🔰 重载    ">
     <action name="Reconfigure" />
   </item>
-  <item label="🔰 退出  ">
+  <item label="   🔰 退出    ">
     <action name="Exit" />
   </item>
 </menu>

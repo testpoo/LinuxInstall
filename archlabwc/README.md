@@ -2,7 +2,7 @@
 ```
 # 通过arch安装labwc
 
-sudo pacman -S chromium thunar gvfs xarchiver thunar-archive-plugin fcitx5 fcitx5-rime git blueman wl-clipboard rime-wubi ristretto libreoffice-fresh man-db 7zip xfce4-appfinder libreoffice-fresh-zh-cn swaybg swayidle swaylock wlr-randr brightnessctl wlopm mako upower fuse xcb-util-image xfce4-terminal grim slurp xfce4-panel xfce4-genmon-plugin
+sudo pacman -S chromium thunar gvfs xarchiver thunar-archive-plugin fcitx5 fcitx5-rime git blueman wl-clipboard rime-wubi ristretto libreoffice-fresh man-db 7zip xfce4-appfinder libreoffice-fresh-zh-cn swaybg swayidle swaylock wlr-randr brightnessctl wlopm mako upower fuse xcb-util-image xfce4-terminal grim slurp xfce4-panel xfce4-genmon-plugin wtype
 
 sudo pacman -Rns alacritty htop smartmontools vim wget wireless_tools wpa_supplicant lightdm lightdm-gtk-geeter
 ```
@@ -79,6 +79,12 @@ systemctl restart iwd
 # 若 polkit 未安装在您的系统上，并且您想使用 seatd 来替代，请将您添加到 seat 用户组并启用/启动 seatd.service，然后重新登录。
 sudo systemctl enable seatd --now
 sudo usermod -aG seat poo
+
+# 通过wtype关联labwc root-menu，命令如下
+echo "<icon>system-shutdown</icon><iconclick>wtype -M win p -m win</iconclick>"
+
+# 强制xfce4-panel所有插件以内部方式运行
+xfconf-query -c xfce4-panel -p /force-all-internal -t bool -s true --create
 
 # 安装Motrix appimage包，需要安装依赖 fuse；安装微信appimage包，需要安装依赖xcb-util-image。
 
