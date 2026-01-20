@@ -13,3 +13,7 @@
 ### Debian下安装wayfire
 
 <https://github.com/testpoo/LinuxInstall/tree/main/debianwayfire>
+
+### Arch下安装Labwc
+
+<https://github.com/testpoo/LinuxInstall/tree/main/archlabwc>

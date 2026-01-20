@@ -92,7 +92,7 @@
 
   <libinput>
     <device category="default">
-      <sendEventsMode>yes</sendEventsMode>
+      <sendEventsMode>disabledOnExternalMouse</sendEventsMode>
     </device>
   </libinput>
 

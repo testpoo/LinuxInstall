@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "<icon>computer</icon>"
+echo "<icon>wine</icon><iconclick>wtype -M win p -m win</iconclick>"
 echo "<tool>系统: $(uname -s)
 用户名: $(whoami)
 Shell: $SHELL
