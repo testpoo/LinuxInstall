@@ -1,4 +1,4 @@
-swaybg -i '/home/poo/图片/1.jpg' >/dev/null 2>&1 &
+swaybg -i '/home/poo/图片/background.png' >/dev/null 2>&1 &
 
 wlr-randr --output eDP-1 --scale 1.25
 
