@@ -32,8 +32,15 @@ systemctl restart iwd
 ### 4. 其他
 
 ```
+# 启动pipewire
 systemctl --user status pipewire
 systemctl --user start pipewire
+
+# 通过wtype关联labwc root-menu，命令如下
+echo "<icon>system-shutdown</icon><iconclick>wtype -M win p -m win</iconclick>"
+
+# 强制xfce4-panel所有插件以内部方式运行
+xfconf-query -c xfce4-panel -p /force-all-internal -t bool -s true --create
 
 xfce4-genmon-plugin稳定版是4.1.1, 4.2以后才支持<css>标签，目前只支持gtk.css中书写， 所以支持强制在稳定版本中安装4.3
 ```
