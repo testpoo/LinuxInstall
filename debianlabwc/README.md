@@ -1,7 +1,6 @@
 ### 1. 安装labwc及相关软件
 ```
-sudo apt install thunar --no-install-recommends
-sudo apt install labwc swaybg swayidle swaylock wlr-randr fcitx5 fcitx5-rime rime-data-wubi gvfs xarchiver pipewire-audio blueman thunar-archive-plugin fonts-noto-cjk xfce4-terminal xfce4-appfinder git brightnessctl firefox-esr wlopm mako-notifier libglib2.0-bin xfce4-panel libglib2.0-bin firefox-esr webext-ublock-origin-firefox firefox-esr-l10n-zh-cn upower grim slurp xfce4-genmon-plugin wtypeiwd
+sudo apt install labwc swaybg swayidle swaylock wlr-randr fcitx5 fcitx5-rime rime-data-wubi thunar gvfs xarchiver pipewire-audio blueman thunar-archive-plugin fonts-noto-cjk xfce4-terminal xfce4-appfinder git brightnessctl wlopm mako-notifier libglib2.0-bin xfce4-panel libglib2.0-bin firefox-esr webext-ublock-origin-firefox firefox-esr-l10n-zh-cn upower grim slurp xfce4-genmon-plugin wtype iwd libreoffice libreoffice-l10n-zh-cn --no-install-recommends
 
 sudo apt autoremove --purge wpasupplicant
 ```
@@ -13,23 +12,26 @@ if [ -z "$DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
   exec labwc
 fi
 ```
+### 3. iwd无法联网
 
-#### 3. 输入法环境变量设置
-
-启用fcitx输入需要配置环境变量：
 ```
-nano ~/.config/labwc/environment
+sudo nano /etc/iwd/main.conf
 
-XIM="fcitx"
-#GTK_IM_MODULE=fcitx
-QT_IM_MODULE=fcitx
-XMODIFIERS="@im=fcitx"
-INPUT_METHOD=fcitx
-SDL_IM_MODULE=fcitx
-GLFW_IM_MODULE=fcitx
-```
+[General]
+EnableNetworkConfiguration=true
 
-### 4. 其它
+sudo systemctl enable iwd.service --now
+
+sudo nano /etc/resolv.conf
+
+nameserver 223.5.5.5
+nameserver 119.29.29.29
+
+systemctl restart iwd
 ```
-sudo chmod +s $(which brightnessctl) or sudo chmod 666 /sys/class/backlight/intel_backlight/brightness
+### 4. 其他
+
+```
+systemctl --user status pipewire
+systemctl --user start pipewire
 ```
