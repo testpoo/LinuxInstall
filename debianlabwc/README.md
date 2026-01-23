@@ -1,6 +1,6 @@
 ### 1. 安装labwc及相关软件
 ```
-sudo apt install labwc swaybg swayidle swaylock wlr-randr fcitx5 fcitx5-rime rime-data-wubi thunar gvfs xarchiver pipewire-audio blueman thunar-archive-plugin fonts-noto-cjk xfce4-terminal xfce4-appfinder git brightnessctl wlopm mako-notifier libglib2.0-bin xfce4-panel libglib2.0-bin firefox-esr webext-ublock-origin-firefox firefox-esr-l10n-zh-cn upower grim slurp xfce4-genmon-plugin wtype iwd polkitd ristretto
+sudo apt install labwc swaybg swayidle swaylock wlr-randr fcitx5 fcitx5-rime rime-data-wubi thunar gvfs xarchiver pipewire-audio blueman thunar-archive-plugin fonts-noto-cjk xfce4-terminal xfce4-appfinder git brightnessctl wlopm mako-notifier libglib2.0-bin xfce4-panel libglib2.0-bin firefox-esr webext-ublock-origin-firefox firefox-esr-l10n-zh-cn upower grim slurp wl-clipboard xfce4-genmon-plugin wtype iwd polkitd ristretto amberol
 
 sudo apt autoremove --purge wpasupplicant
 ```
