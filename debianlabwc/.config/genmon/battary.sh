@@ -11,7 +11,7 @@ if [[ $state = "charging" && $percentage = "100%" ]];then
 	echo "<txt>$percentage
 电量</txt>"
     echo "<tool>电量已充满</tool>"
-elif [[ $state = "charging" && $percentage > "100%" ]];then
+elif [[ $state = "charging" && ${percentage:0:-1} -le 100 ]];then
 	echo "<txt>$percentage
 充电</txt>"
     echo "<tool>电量剩余$percentage，将在$time_to_full后充满</tool>"
@@ -21,7 +21,7 @@ elif [[ $state = "discharging" ]];then
     echo "<tool>电量剩余$percentage，还可使用$time_to_empty</tool>"
 fi
 
-if [[ $percentage > "20%" ]];then
+if [[ ${percentage:0:-1} -ge 20 ]];then
     echo "<css>.genmon_value {background:#E0E0E0;color:#212121;font-size:11px;min-width:35px;margin-left:1px}</css>"
 else
     echo "<css>.genmon_value {background:#E0E0E0;color:#FF0000;font-size:11px;min-width:35px;margin-left:1px}</css>"

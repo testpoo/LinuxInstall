@@ -11,4 +11,4 @@ else
 声音</txt>"
     echo "<css>.genmon_value {background:#E0E0E0;color:#212121;font-size:11px;min-width:35px;margin-left:1px}</css>"
 fi
-echo "<tool>声音</tool>"
+echo "<tool>声音$volume</tool>"
