@@ -1,13 +1,13 @@
-### 1. 安装Sway及相关软件
+### 1. 安装Labwc及相关软件
 ```
 # 通过arch安装labwc
 
-sudo pacman -S chromium thunar gvfs xarchiver thunar-archive-plugin fcitx5 fcitx5-rime git blueman wl-clipboard rime-wubi ristretto libreoffice-fresh man-db 7zip xfce4-appfinder libreoffice-fresh-zh-cn swaybg swayidle swaylock wlr-randr brightnessctl wlopm mako upower fuse xcb-util-image xfce4-terminal grim slurp xfce4-panel xfce4-genmon-plugin wtype
+sudo pacman -S chromium thunar gvfs xarchiver thunar-archive-plugin fcitx5 fcitx5-rime git blueman wl-clipboard rime-wubi ristretto libreoffice-fresh man-db 7zip xfce4-appfinder libreoffice-fresh-zh-cn swaybg swayidle swaylock wlr-randr brightnessctl wlopm mako upower fuse xcb-util-image xfce4-terminal grim slurp xfce4-panel xfce4-genmon-plugin wtype cmus libmad
 
-sudo pacman -Rns alacritty htop smartmontools vim wget wireless_tools wpa_supplicant lightdm lightdm-gtk-geeter
+sudo pacman -Rns alacritty htop smartmontools vim wget wireless_tools wpa_supplicant lightdm lightdm-gtk-greeter
 ```
 
-### 2. 启动Sway
+### 2. 启动Labwc
 
 ```
 # 编辑 ~/.bash_profile加入以下内容即可：

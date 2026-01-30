@@ -14,7 +14,9 @@ Shell：$SHELL
 发型版: $(hostnamectl|grep 'Operating System'| awk -F ': ' '{print $2}')
 发型版版本：$(cat /etc/os-release |grep 'BUILD_ID' |awk -F'=' '{print $2}')
 内核版本：$(uname -r)
-处理器：$(cat /proc/cpuinfo |grep "model name" |cut -f2 -d: |head -n 1) $(cat /proc/cpuinfo |grep "physical id"|uniq |wc -l)C $(grep 'core id' /proc/cpuinfo | sort -u |wc -l)核 $(grep 'processor' /proc/cpuinfo |wc -l)线程
+处理器：$(cat /proc/cpuinfo |grep "model name" |head -n 1 |awk -F': ' '{print $2}') $(cat /proc/cpuinfo |grep "physical id"|uniq |wc -l)C $(grep 'core id' /proc/cpuinfo | sort -u |wc -l)核 $(grep 'processor' /proc/cpuinfo |wc -l)线程
 内存：$(cat /proc/meminfo |grep "MemTotal" |cut -f2 -d:|awk -F' ' '{print int($1)}' |awk '{printf "%.1f",$1/1024/1024}')GB
-GPU：$(lspci |grep -i vga | awk -F'00:02.0 VGA compatible controller: ' '{print $1,$2}')
-主板：$(cat /sys/devices/virtual/dmi/id/board_vendor) $(cat /sys/devices/virtual/dmi/id/board_name)</tool>"
+GPU：$(lspci |grep -i vga | awk -F' VGA compatible controller: ' '{print $2}')
+主板：$(cat /sys/devices/virtual/dmi/id/board_vendor) $(cat /sys/devices/virtual/dmi/id/board_name)
+网卡：$(lspci |grep -i 'Network controller' |awk -F'Co., Ltd. ' '{print $2}')
+声卡：$(lspci |grep -i audio |awk -F': ' '{print $2}')</tool>"
