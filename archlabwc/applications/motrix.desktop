@@ -1,11 +1,13 @@
 [Desktop Entry]
-Version=1.0
-Type=Application
 Name=Motrix
-Comment=Motrix
 Exec=/opt/motrix/Motrix-1.8.19.AppImage
 Terminal=false
-Icon=motrix-tray
-Categories=Development;
-StartupNotify=true
+Type=Application
+Icon=motrix
+StartupWMClass=Motrix
+X-AppImage-Version=1.8.19
+Comment=A full-featured download manager
+MimeType=application/x-bittorrent;x-scheme-handler/magnet;application/x-bittorrent;x-scheme-handler/mo;x-scheme-handler/motrix;x-scheme-handler/magnet;x-scheme-handler/thunder;
+Categories=Network;
 Path=
+StartupNotify=false
