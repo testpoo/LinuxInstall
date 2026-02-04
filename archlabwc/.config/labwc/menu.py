@@ -71,7 +71,7 @@ cats_zh = {
     "applications-system"
   ],
   "Utility": [
-    "实用程序",
+    "附件",
     "applications-utilities"
   ],
   "Settings": [
