@@ -79,6 +79,9 @@
       <mousebind button="Left" action="Press">
         <action name="ShowMenu" menu="none" />
       </mousebind>
+      <mousebind button="Right" action="Press">
+        <action name="ShowMenu" menu="none" />
+      </mousebind>
     </context>
   </mouse>
 

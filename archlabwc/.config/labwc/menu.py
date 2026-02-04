@@ -71,7 +71,7 @@ cats_zh = {
     "applications-system"
   ],
   "Utility": [
-    "实用工具",
+    "实用程序",
     "applications-utilities"
   ],
   "Settings": [
@@ -81,8 +81,13 @@ cats_zh = {
   "AudioVideo": [
     "多媒体",
     "audio"
+  ],
+  "Logout":[
+    "退出",
+    "gnome-logout"
   ]
 }
+
 del_files = {
     'org.gnupg.pinentry-qt5.desktop',
     'bssh.desktop',
@@ -93,37 +98,37 @@ del_files = {
 
 logouts = [
   {
-    "Name": "锁屏",
+    "Name": " 锁屏    ",
     "Exec": "swaylock -f -i /home/poo/图片/background.png -c 015000",
     "Icon": "system-lock-screen"
   },
   {
-    "Name": "挂起",
+    "Name": " 挂起    ",
     "Exec": "systemctl suspend",
     "Icon": "system-suspend"
   },
   {
-    "Name": "休眼",
+    "Name": " 休眼    ",
     "Exec": "systemctl hibernate",
     "Icon": "system-suspend-hibernate"
   },
   {
-    "Name": "重载",
+    "Name": " 重载    ",
     "Exec": "labwc -r",
     "Icon": "systemback"
   },
   {
-    "Name": "退出",
+    "Name": " 退出    ",
     "Exec": "labwc -e",
     "Icon": "system-log-out"
   },
   {
-    "Name": "重启",
+    "Name": " 重启    ",
     "Exec": "systemctl reboot",
     "Icon": "system-reboot"
   },
   {
-    "Name": "关机",
+    "Name": " 关机    ",
     "Exec": "systemctl poweroff -i",
     "Icon": "system-shutdown"
   }
@@ -175,6 +180,7 @@ for app in app_lists:
                 app_dicts[cat] = [app]
 
 app_dicts = dict(sorted(app_dicts.items(), key=lambda item: item[0]))
+app_dicts['Logout'] = logouts
 print('<openbox_pipe_menu>')
 for key in app_dicts:
     if key in cats_zh:
@@ -186,9 +192,4 @@ for key in app_dicts:
         print('<action name="Execute" command="' + app["Exec"] + '" />')
         print('</item>')
     print('</menu>')
-print("<separator />")
-for app in logouts:
-    print('<item label="' + app["Name"] + '" icon="' + app["Icon"] + '">')
-    print('<action name="Execute" command="' + app["Exec"] + '" />')
-    print('</item>')
 print('</openbox_pipe_menu>')

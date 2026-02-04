@@ -2,7 +2,7 @@
 ```
 # 通过arch安装labwc
 
-sudo pacman -S chromium thunar gvfs xarchiver thunar-archive-plugin xfce4-panel xfce4-genmon-plugin foot fcitx5 fcitx5-rime rime-wubi git blueman wl-clipboard ristretto libreoffice-fresh libreoffice-fresh-zh-cn man-db 7zip swaybg swayidle swaylock wlr-randr brightnessctl wlopm mako upower grim slurp 
+sudo pacman -S chromium thunar gvfs xarchiver thunar-archive-plugin xfce4-panel xfce4-genmon-plugin foot fcitx5 fcitx5-rime rime-wubi git blueman wl-clipboard ristretto libreoffice-fresh libreoffice-fresh-zh-cn man-db 7zip swaybg swayidle swaylock wlr-randr brightnessctl wlopm mako upower grim slurp wtype
 
 # 可选:cmus mp3插件, Motrix需要, 微信需要, 图标
 cmus libmad fuse xcb-util-image tela-circle-icon-theme-blue
@@ -84,7 +84,7 @@ sudo systemctl enable seatd --now
 sudo usermod -aG seat poo
 
 # 通过wtype关联labwc root-menu，命令如下
-echo "<icon>system-shutdown</icon><iconclick>wtype -M win p -m win</iconclick>"
+echo "<icon>system-shutdown</icon><iconclick>wtype -M win s -m win</iconclick>"
 
 # 强制xfce4-panel所有插件以内部方式运行
 xfconf-query -c xfce4-panel -p /force-all-internal -t bool -s true --create

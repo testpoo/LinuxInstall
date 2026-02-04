@@ -1,6 +1,7 @@
 #!/bin/bash
 
-echo -e "系统：$(uname -s)
+echo "<icon>distributor-logo-archlinux</icon><iconclick>wtype -M win s -m win</iconclick>"
+echo "<tool>系统：$(uname -s)
 用户名：$(whoami)
 Shell：$SHELL
 运行时间：$(uptime -p |awk -F' ' '{print $2,$3,$4,$5}')
@@ -18,5 +19,4 @@ Shell：$SHELL
 GPU：$(lspci |grep -i vga | awk -F' VGA compatible controller: ' '{print $2}')
 主板：$(cat /sys/devices/virtual/dmi/id/board_vendor) $(cat /sys/devices/virtual/dmi/id/board_name)
 网卡：$(lspci |grep -i 'Network controller' |awk -F'Co., Ltd. ' '{print $2}')
-声卡：$(lspci |grep -i audio |awk -F': ' '{print $2}')"
-exec /bin/bash
+声卡：$(lspci |grep -i audio |awk -F': ' '{print $2}')</tool>"
