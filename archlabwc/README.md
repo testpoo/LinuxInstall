@@ -2,7 +2,7 @@
 ```
 # 通过arch安装labwc
 
-sudo pacman -S chromium thunar gvfs xarchiver thunar-archive-plugin xfce4-panel xfce4-genmon-plugin xfce4-appfinder xfce4-terminal fcitx5 fcitx5-rime rime-wubi git blueman wl-clipboard ristretto libreoffice-fresh libreoffice-fresh-zh-cn man-db 7zip swaybg swayidle swaylock wlr-randr brightnessctl wlopm mako upower grim slurp wtype 
+sudo pacman -S chromium thunar gvfs xarchiver thunar-archive-plugin xfce4-panel xfce4-genmon-plugin foot fcitx5 fcitx5-rime rime-wubi git blueman wl-clipboard ristretto libreoffice-fresh libreoffice-fresh-zh-cn man-db 7zip swaybg swayidle swaylock wlr-randr brightnessctl wlopm mako upower grim slurp 
 
 # 可选:cmus mp3插件, Motrix需要, 微信需要, 图标
 cmus libmad fuse xcb-util-image tela-circle-icon-theme-blue
@@ -96,4 +96,8 @@ xfconf-query -c xfce4-panel -p /force-all-internal -t bool -s true --create
 # 解决 Chromium 浏览器卡顿缓慢的问题（在抖音和B站放视频页面卡住），禁用GPU加速：
 1. 打开 Chromium 浏览器，进入“设置 → 系统”，将 使用图形加速功能 的选项关闭掉，重启浏览器。如果设置后卡顿已有明显改善，那么就此搞定，不然继续第二步。
 2. 在地址栏上输入：chrome://flags/ 回车，在顶部搜索栏中搜索“gpu”，列表中找到：“GPU rasterization”(GPU 渲染) 以及 “Accelerated 2D canvas”(2D 图形加速) 两项，将它们都设为“Disabled”禁用即可。点击右下角的“ReLaunch”重启浏览器。
+
+# 查字体
+fc-match
+fc-match -a | grep Mono  # 等线字体
 ```

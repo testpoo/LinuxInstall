@@ -1,11 +1,10 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=cmus
+Name=Cmus
 Comment=cmus
-Exec=xfce4-terminal -e cmus
+Exec=foot -e cmus
 Terminal=false
 Icon=gnome-music
-Categories=Development;
+Categories=AudioVideo;
 StartupNotify=true
-Path=

@@ -1,29 +1,4 @@
+<?xml version="1.0"?>
 <openbox_menu>
-
-<menu id="root-menu">
-  <item label="  🎗️ 锁屏    ">
-    <action name="Execute" command="swaylock -f -i /home/poo/图片/background.png -c 015000" />
-  </item>
-  <item label="  🎗️ 挂起    ">
-    <action name="Execute" command="systemctl suspend" />
-  </item>
-  <item label="  🎗️ 休眼    ">
-    <action name="Execute" command="systemctl hibernate" />
-  </item>
-  <separator />
-  <item label="  🔰 重载    ">
-    <action name="Reconfigure" />
-  </item>
-  <item label="  🔰 退出    ">
-    <action name="Exit" />
-  </item>
-  <separator />
-  <item label="  🔥 重启    ">
-    <action name="Execute" command="systemctl reboot" />
-  </item>
-  <item label="  🔥 关机    ">
-    <action name="Execute" command="systemctl poweroff -i" />
-  </item>
-</menu>
-
+  <menu id="root-menu" label="" execute="/home/poo/.config/labwc/menu.py"/>
 </openbox_menu>

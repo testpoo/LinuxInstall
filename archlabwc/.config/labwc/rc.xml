@@ -19,21 +19,16 @@
   </core>
 
   <theme>
-    <name></name>
-    <cornerRadius>8</cornerRadius>
-    <font name="sans" size="10" />
+    <icon>Tela-circle-blue-light</icon>
   </theme>
 
   <keyboard>
     <default />
     <!-- Use a different terminal emulator -->
     <keybind key="W-Return">
-      <action name="Execute" command="xfce4-terminal" />
+      <action name="Execute" command="foot" />
     </keybind>
     <!--自定义-->
-    <keybind key="W-s">
-      <action name="Execute" command="xfce4-appfinder" />
-    </keybind>
     <keybind key="XF86AudioRaiseVolume">
       <action name="Execute" command="sh -c 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+;xfce4-panel --plugin-event=genmon-27:refresh:bool:true'" />
     </keybind>
@@ -73,7 +68,7 @@
     <keybind key="W-Control_L">
       <action name="Execute" command="sh -c 'if grep -q &quot;&lt;sendEventsMode&gt;disabledOnExternalMouse&lt;/sendEventsMode&gt;$&quot; ~/.config/labwc/rc.xml; then sed -i &quot;s/&lt;sendEventsMode&gt;disabledOnExternalMouse&lt;\/sendEventsMode&gt;/&lt;sendEventsMode&gt;yes&lt;\/sendEventsMode&gt;/&quot; ~/.config/labwc/rc.xml;labwc -r;else sed -i &quot;s/&lt;sendEventsMode&gt;yes&lt;\/sendEventsMode&gt;/&lt;sendEventsMode&gt;disabledOnExternalMouse&lt;\/sendEventsMode&gt;/&quot; ~/.config/labwc/rc.xml;labwc -r;fi;xfce4-panel --plugin-event=genmon-22:refresh:bool:true'" />
     </keybind>
-    <keybind key="W-p">
+    <keybind key="W-s">
       <action name="ShowMenu" menu="root-menu"/>
     </keybind>
   </keyboard>
@@ -81,9 +76,6 @@
   <mouse>
     <default />
     <context name="Root">
-      <mousebind button="Left" action="Press">
-        <action name="ShowMenu" menu="none" />
-      </mousebind>
       <mousebind button="Right" action="Press">
         <action name="ShowMenu" menu="none" />
       </mousebind>
