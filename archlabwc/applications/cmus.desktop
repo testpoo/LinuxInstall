@@ -2,7 +2,7 @@
 Version=1.0
 Type=Application
 Name=Cmus
-Comment=cmus
+Comment=cmus is a small, fast and powerful console music player.
 Exec=foot -e cmus
 Terminal=false
 Icon=gnome-music

@@ -76,7 +76,7 @@
   <mouse>
     <default />
     <context name="Root">
-      <mousebind button="Right" action="Press">
+      <mousebind button="Left" action="Press">
         <action name="ShowMenu" menu="none" />
       </mousebind>
     </context>
