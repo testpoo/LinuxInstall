@@ -83,8 +83,8 @@ systemctl restart iwd
 sudo systemctl enable seatd --now
 sudo usermod -aG seat poo
 
-# 通过wtype关联labwc root-menu，命令如下
-echo "<icon>system-shutdown</icon><iconclick>wtype -M win s -m win</iconclick>"
+# 通过wtype关联labwc root-menu，通过xfce启动器实现
+名称：Arch程序菜单  命令：wtype -M logo -k s
 
 # 强制xfce4-panel所有插件以内部方式运行
 xfconf-query -c xfce4-panel -p /force-all-internal -t bool -s true --create

@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
 <openbox_menu>
   <menu id="root-menu" label="" execute="/home/poo/.config/labwc/menu.py"/>
+  <menu id="info-menu" label="" execute="/home/poo/.config/labwc/info.py"/>
 </openbox_menu>
