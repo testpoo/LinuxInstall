@@ -101,3 +101,9 @@ xfconf-query -c xfce4-panel -p /force-all-internal -t bool -s true --create
 fc-match
 fc-match -a | grep Mono  # 等线字体
 ```
+
+### 8. 遇到的问题
+```
+# libreoffice打开提示错误，加载libswlo.so失败，使用下面的命令查找缺失的程序，然后安装
+ldd /usr/lib/libreoffice/program/libswlo.so | grep "not found"
+```
