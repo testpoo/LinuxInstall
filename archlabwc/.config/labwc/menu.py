@@ -2,6 +2,7 @@
 # coding=utf-8
 
 import os,configparser
+from collections import defaultdict
 
 cats = {
   "Office": [
@@ -17,7 +18,7 @@ cats = {
     "applications-graphics"
   ],
   "Network": [
-    "网络",
+    "互联网",
     "applications-network"
   ],
   "Education": [
@@ -92,19 +93,26 @@ logouts = [
   }
 ]
 
+exclude = [
+  'Avahi Zeroconf 浏览器',
+  'Avahi SSH 服务器的浏览器',
+  'Avahi VNC 服务器的浏览器',
+  'Foot Server',
+  'Foot Client'
+]
+
 file_path = '/usr/share/applications/'
 file_names = os.listdir(file_path)
 
 app_lists = []
-app_dicts = {}
+app_dicts = defaultdict(list)
 
 for name in file_names:
     config = configparser.RawConfigParser()
     config.read(file_path + name, encoding='utf-8')
-    #sections = config.sections()
     if not config.has_section('Desktop Entry'):
         continue
-    if config.get('Desktop Entry','Type') != "Application" or config.get('Desktop Entry','NoDisplay', fallback='false') != 'false' or config.get('Desktop Entry','OnlyShowIn', fallback='LABWC') != 'LABWC':
+    if config.get('Desktop Entry','Type') != "Application" or config.get('Desktop Entry','NoDisplay', fallback='false') != 'false' or 'LABWC' not in config.get('Desktop Entry','OnlyShowIn', fallback='LABWC').split(';'):
         continue
     if config.has_option('Desktop Entry','Name[zh_CN]'):
         Name = config.get('Desktop Entry','Name[zh_CN]')
@@ -124,22 +132,19 @@ for name in file_names:
         continue
     if config.has_option('Desktop Entry','Categories'):
         Categories = config.get('Desktop Entry','Categories').split(';')[:-1]
+        Category = "others"
         for cat in Categories:
             if cat in cats:
                 Category = cat
                 break
-            else:
-                Category = "others"
     else:
         continue
-    app_lists.append([Name,Exec,Icon,Category])
+    if Name not in exclude:
+        app_lists.append([Name,Exec,Icon,Category])
 
 app_lists.sort()
 for app in app_lists:
-    if app[3] in app_dicts:
-        app_dicts[app[3]] = app_dicts[app[3]] + [app]
-    else:
-        app_dicts[app[3]] = [app]
+    app_dicts[app[3]].append(app)
 
 app_dicts = dict(sorted(app_dicts.items(), key=lambda item: item[0]))
 
