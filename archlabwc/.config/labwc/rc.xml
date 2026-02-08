@@ -59,6 +59,12 @@
     <keybind key="W-S-e">
       <action name="Execute" command="labwc -e" />
     </keybind>
+    <keybind key="W-S-r">
+      <action name="Execute" command="systemctl reboot" />
+    </keybind>
+    <keybind key="W-S-p">
+      <action name="Execute" command="systemctl poweroff -i" />
+    </keybind>
     <keybind key="Print">
       <action name="Execute" command="sh -c 'grim - | wl-copy'" />
     </keybind>
@@ -78,10 +84,7 @@
     </keybind>
     <keybind key="W-p">
       <action name="ShowMenu" menu="info-menu">
-      <position>
-        <x>0</x>
-        <y>-0</y>
-      </position>
+      <atCursor>no</atCursor>
       </action>
     </keybind>
   </keyboard>

@@ -7,7 +7,8 @@ logouts = [
   {
     "Name": "锁屏",
     "Exec": "swaylock -f -i /home/poo/图片/background.png -c 015000",
-    "Icon": "system-lock-screen"
+    "Icon": "system-lock-screen",
+    "shortcut": "Win+L"
   },
 #  {
 #    "Name": "挂起",
@@ -22,22 +23,26 @@ logouts = [
   {
     "Name": "重载",
     "Exec": "labwc -r",
-    "Icon": "systemback"
+    "Icon": "systemback",
+    "shortcut": "Win+Shift+C"
   },
   {
     "Name": "退出",
     "Exec": "labwc -e",
-    "Icon": "system-log-out"
+    "Icon": "system-log-out",
+    "shortcut": "Win+Shift+E"
   },
   {
     "Name": "重启",
     "Exec": "systemctl reboot",
-    "Icon": "system-reboot"
+    "Icon": "system-reboot",
+    "shortcut": "Win+Shift+R"
   },
   {
     "Name": "关机",
     "Exec": "systemctl poweroff -i",
-    "Icon": "system-shutdown"
+    "Icon": "system-shutdown",
+    "shortcut": "Win+Shift+P"
   }
 ]
 
@@ -101,7 +106,7 @@ def menus(app_lists, num, i):
 
 print('<openbox_pipe_menu>')
 menus(app_lists, num, i)
-print('  <separator />')
+print('<separator />')
 for app in logouts:
-    items(app["Name"], app["Icon"], app["Exec"])
+    items(app["Name"] + "｜" + app["shortcut"], app["Icon"], app["Exec"])
 print('</openbox_pipe_menu>')
