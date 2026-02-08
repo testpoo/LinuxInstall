@@ -1,59 +1,7 @@
 #!/usr/bin/env python3
 # coding=utf-8
 
-import os,configparser
-from collections import defaultdict
-
-cats = {
-  "Office": [
-    "办公",
-    "applications-office"
-  ],
-  "Development": [
-    "开发",
-    "applications-development"
-  ],
-  "Graphics": [
-    "图形",
-    "applications-graphics"
-  ],
-  "Network": [
-    "互联网",
-    "applications-network"
-  ],
-  "Education": [
-    "教育",
-    "applications-education"
-  ],
-  "Science": [
-    "科学",
-    "applications-science"
-  ],
-  "Games": [
-    "游戏",
-    "applications-games"
-  ],
-  "System": [
-    "系统",
-    "applications-system"
-  ],
-  "Utility": [
-    "附件",
-    "applications-utilities"
-  ],
-  "Settings": [
-    "设置",
-    "applications-system-orange"
-  ],
-  "AudioVideo": [
-    "多媒体",
-    "applications-multimedia"
-  ],
-  "others":[
-    "其他",
-    "applications-other"
-  ]
-}
+import os,configparser,math
 
 logouts = [
   {
@@ -105,7 +53,8 @@ file_path = '/usr/share/applications/'
 file_names = os.listdir(file_path)
 
 app_lists = []
-app_dicts = defaultdict(list)
+num= 30
+i = 0
 
 for name in file_names:
     config = configparser.RawConfigParser()
@@ -130,35 +79,29 @@ for name in file_names:
         Icon = config.get('Desktop Entry','Icon')
     else:
         continue
-    if config.has_option('Desktop Entry','Categories'):
-        Categories = config.get('Desktop Entry','Categories').split(';')[:-1]
-        Category = "others"
-        for cat in Categories:
-            if cat in cats:
-                Category = cat
-                break
-    else:
-        continue
     if Name not in exclude:
-        app_lists.append([Name,Exec,Icon,Category])
+        app_lists.append([Name,Exec,Icon])
 
 app_lists.sort()
-for app in app_lists:
-    app_dicts[app[3]].append(app)
+cols = math.ceil(len(app_lists)/num)
 
-app_dicts = dict(sorted(app_dicts.items(), key=lambda item: item[0]))
+def items(label, icon, exec):
+    print('<item label="' + label + '" icon="' + icon + '">')
+    print('<action name="Execute" command="' + exec + '" />')
+    print('</item>')
+
+def menus(app_lists, num, i):
+    for app in app_lists[0:num]:
+        items(app[0], app[2], app[1])
+    if cols > i and len(app_lists) >= num:
+        i += 1
+        print('<menu id="more" icon="application-sql" label="更多程序">')
+        menus(app_lists[num:], num, i)
+        print('</menu>')
 
 print('<openbox_pipe_menu>')
-for key in app_dicts:
-    print('<menu id="' + key + '" icon="' + cats[key][1] + '" label="' + cats[key][0] + '">')
-    for app in app_dicts[key]:
-        print('<item label="' + app[0] + '" icon="' + app[2] + '">')
-        print('<action name="Execute" command="' + app[1] + '" />')
-        print('</item>')
-    print('</menu>')
+menus(app_lists, num, i)
 print('  <separator />')
 for app in logouts:
-    print('<item label="' + app["Name"] + '" icon="' + app["Icon"] + '">')
-    print('<action name="Execute" command="' + app["Exec"] + '" />')
-    print('</item>')
+    items(app["Name"], app["Icon"], app["Exec"])
 print('</openbox_pipe_menu>')
