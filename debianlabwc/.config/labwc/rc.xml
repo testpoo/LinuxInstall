@@ -77,7 +77,7 @@
     <keybind key="W-Control_L">
       <action name="Execute" command="sh -c 'if grep -q &quot;&lt;sendEventsMode&gt;disabledOnExternalMouse&lt;/sendEventsMode&gt;$&quot; ~/.config/labwc/rc.xml; then sed -i &quot;s/&lt;sendEventsMode&gt;disabledOnExternalMouse&lt;\/sendEventsMode&gt;/&lt;sendEventsMode&gt;yes&lt;\/sendEventsMode&gt;/&quot; ~/.config/labwc/rc.xml;labwc -r;else sed -i &quot;s/&lt;sendEventsMode&gt;yes&lt;\/sendEventsMode&gt;/&lt;sendEventsMode&gt;disabledOnExternalMouse&lt;\/sendEventsMode&gt;/&quot; ~/.config/labwc/rc.xml;labwc -r;fi;xfce4-panel --plugin-event=genmon-10:refresh:bool:true'" />
     </keybind>
-    <keybind key="W-o">
+    <keybind key="W-r">
       <action name="ShowMenu" menu="root-menu">
       <position>
         <x>0</x>
@@ -85,9 +85,12 @@
       </position>
       </action>
     </keybind>
-    <keybind key="W-p">
+    <keybind key="W-i">
       <action name="ShowMenu" menu="info-menu">
-      <atCursor>no</atCursor>
+      <position>
+        <x>560</x>
+        <y>100</y>
+      </position>
       </action>
     </keybind>
   </keyboard>

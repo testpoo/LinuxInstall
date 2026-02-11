@@ -1,6 +1,6 @@
 window.titlebar.padding.height: 6
 menu.width.min: 80
-menu.width.max: 500
+menu.width.max: 412
 window.button.width: 26
 window.button.height: 26
 window.button.hover.bg.corner-radius: 13
