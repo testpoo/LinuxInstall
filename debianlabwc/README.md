@@ -1,6 +1,6 @@
 ### 1. 安装labwc及相关软件
 ```
-sudo apt install labwc swaybg swayidle swaylock wlr-randr fcitx5 fcitx5-rime rime-data-wubi thunar gvfs xarchiver pipewire-audio blueman thunar-archive-plugin fonts-noto-cjk xfce4-terminal xfce4-appfinder git brightnessctl wlopm mako-notifier xfce4-panel firefox-esr webext-ublock-origin-firefox firefox-esr-l10n-zh-cn upower grim slurp wl-clipboard xfce4-genmon-plugin wtype iwd polkitd ristretto amberol
+sudo apt install labwc swaybg swayidle swaylock wlr-randr fcitx5 fcitx5-rime rime-data-wubi thunar thunar-archive-plugin xfce4-terminal xfce4-appfinder xfce4-panel xfce4-genmon-plugin xarchiver pipewire-audio blueman fonts-noto-cjk git brightnessctl wlopm mako-notifier firefox-esr webext-ublock-origin-firefox firefox-esr-l10n-zh-cn upower grim slurp wl-clipboard wtype iwd ristretto libglib2.0-bin amberol libreoffice libreoffice-l10n-zh-cn libreoffice-gtk3
 
 sudo apt autoremove --purge wpasupplicant
 ```
@@ -36,11 +36,11 @@ systemctl restart iwd
 systemctl --user status pipewire
 systemctl --user start pipewire
 
-# 通过wtype关联labwc root-menu，命令如下
-echo "<icon>system-shutdown</icon><iconclick>wtype -M win p -m win</iconclick>"
+# 通过wtype关联labwc root-menu，通过xfce启动器实现
+名称：程序菜单  命令：wtype -M logo -k s
 
 # 强制xfce4-panel所有插件以内部方式运行
 xfconf-query -c xfce4-panel -p /force-all-internal -t bool -s true --create
 
-xfce4-genmon-plugin稳定版是4.1.1, 4.2以后才支持<css>标签，目前只支持gtk.css中书写， 所以支持强制在稳定版本中安装4.3
+xfce4-genmon-plugin稳定版是4.1.1, 4.2以后才支持<css>标签，目前只支持gtk.css中书写， 所以强制在稳定版本中安装4.3
 ```

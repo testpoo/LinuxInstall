@@ -19,9 +19,7 @@
   </core>
 
   <theme>
-    <name></name>
-    <cornerRadius>8</cornerRadius>
-    <font name="sans" size="10" />
+    <icon>Tela-circle-blue-light</icon>
   </theme>
 
   <keyboard>
@@ -31,29 +29,29 @@
       <action name="Execute" command="xfce4-terminal" />
     </keybind>
     <!--自定义-->
-    <keybind key="W-s">
-      <action name="Execute" command="xfce4-appfinder" />
-    </keybind>
     <keybind key="XF86AudioRaiseVolume">
-      <action name="Execute" command="sh -c 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+;xfce4-panel --plugin-event=genmon-19:refresh:bool:true'" />
+      <action name="Execute" command="sh -c 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+;xfce4-panel --plugin-event=genmon-14:refresh:bool:true'" />
     </keybind>
     <keybind key="XF86AudioLowerVolume">
-      <action name="Execute" command="sh -c 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-;xfce4-panel --plugin-event=genmon-19:refresh:bool:true'" />
+      <action name="Execute" command="sh -c 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-;xfce4-panel --plugin-event=genmon-14:refresh:bool:true'" />
     </keybind>
     <keybind key="XF86AudioMute">
-      <action name="Execute" command="sh -c 'wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle;xfce4-panel --plugin-event=genmon-19:refresh:bool:true'" />
+      <action name="Execute" command="sh -c 'wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle;xfce4-panel --plugin-event=genmon-14:refresh:bool:true'" />
     </keybind>
     <keybind key="XF86MonBrightnessDown">
-      <action name="Execute" command="sh -c 'brightnessctl set 5%-;xfce4-panel --plugin-event=genmon-21:refresh:bool:true'" />
+      <action name="Execute" command="sh -c 'brightnessctl set 5%-;xfce4-panel --plugin-event=genmon-13:refresh:bool:true'" />
     </keybind>
     <keybind key="XF86MonBrightnessUp">
-      <action name="Execute" command="sh -c 'brightnessctl set 5%+;xfce4-panel --plugin-event=genmon-21:refresh:bool:true'" />
+      <action name="Execute" command="sh -c 'brightnessctl set 5%+;xfce4-panel --plugin-event=genmon-13:refresh:bool:true'" />
     </keybind>
     <keybind key="W-q">
-      <action name="Execute" command="chromium" />
+      <action name="Execute" command="firefox-esr" />
     </keybind>
     <keybind key="W-e">
       <action name="Execute" command="thunar" />
+    </keybind>
+    <keybind key="W-s">
+      <action name="Execute" command="xfce4-appfinder" />
     </keybind>
     <keybind key="W-l">
       <action name="Execute" command="swaylock -f -i /home/poo/图片/background.png -c 015000" />
@@ -64,6 +62,12 @@
     <keybind key="W-S-e">
       <action name="Execute" command="labwc -e" />
     </keybind>
+    <keybind key="W-S-r">
+      <action name="Execute" command="systemctl reboot" />
+    </keybind>
+    <keybind key="W-S-p">
+      <action name="Execute" command="systemctl poweroff -i" />
+    </keybind>
     <keybind key="Print">
       <action name="Execute" command="sh -c 'grim - | wl-copy'" />
     </keybind>
@@ -71,10 +75,20 @@
       <action name="Execute" command="sh -c 'grim -g &quot;$(slurp)&quot; - | wl-copy'" />
     </keybind>
     <keybind key="W-Control_L">
-      <action name="Execute" command="sh -c 'if grep -q &quot;&lt;sendEventsMode&gt;disabledOnExternalMouse&lt;/sendEventsMode&gt;$&quot; ~/.config/labwc/rc.xml; then sed -i &quot;s/&lt;sendEventsMode&gt;disabledOnExternalMouse&lt;\/sendEventsMode&gt;/&lt;sendEventsMode&gt;yes&lt;\/sendEventsMode&gt;/&quot; ~/.config/labwc/rc.xml;labwc -r;else sed -i &quot;s/&lt;sendEventsMode&gt;yes&lt;\/sendEventsMode&gt;/&lt;sendEventsMode&gt;disabledOnExternalMouse&lt;\/sendEventsMode&gt;/&quot; ~/.config/labwc/rc.xml;labwc -r;fi;xfce4-panel --plugin-event=genmon-22:refresh:bool:true'" />
+      <action name="Execute" command="sh -c 'if grep -q &quot;&lt;sendEventsMode&gt;disabledOnExternalMouse&lt;/sendEventsMode&gt;$&quot; ~/.config/labwc/rc.xml; then sed -i &quot;s/&lt;sendEventsMode&gt;disabledOnExternalMouse&lt;\/sendEventsMode&gt;/&lt;sendEventsMode&gt;yes&lt;\/sendEventsMode&gt;/&quot; ~/.config/labwc/rc.xml;labwc -r;else sed -i &quot;s/&lt;sendEventsMode&gt;yes&lt;\/sendEventsMode&gt;/&lt;sendEventsMode&gt;disabledOnExternalMouse&lt;\/sendEventsMode&gt;/&quot; ~/.config/labwc/rc.xml;labwc -r;fi;xfce4-panel --plugin-event=genmon-10:refresh:bool:true'" />
+    </keybind>
+    <keybind key="W-o">
+      <action name="ShowMenu" menu="root-menu">
+      <position>
+        <x>0</x>
+        <y>-0</y>
+      </position>
+      </action>
     </keybind>
     <keybind key="W-p">
-      <action name="ShowMenu" menu="root-menu"/>
+      <action name="ShowMenu" menu="info-menu">
+      <atCursor>no</atCursor>
+      </action>
     </keybind>
   </keyboard>
 

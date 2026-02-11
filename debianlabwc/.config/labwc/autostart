@@ -14,8 +14,8 @@ swayidle -w \
 
 fcitx5 >/dev/null 2>&1 &
 
-sleep 1 && blueman-applet >/dev/null 2>&1 &
+blueman-applet >/dev/null 2>&1 &
 
-gsettings set "org.gnome.desktop.interface" icon-theme "Reversal-blue-light"
+gsettings set "org.gnome.desktop.interface" icon-theme "Tela-circle-blue-light"
 
 gsettings set org.gnome.desktop.wm.preferences button-layout "menu:minimize,maximize,close"
