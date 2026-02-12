@@ -12,10 +12,10 @@ infof = "磁盘：" + os.popen("cat /proc/partitions |grep -w 'sda' | awk -F' ' 
 infog = "设备名称：" + os.popen("uname -n").read().replace('\n','')
 infoh = "操作系统名称：" + os.popen("hostnamectl|grep 'Static hostname'| awk -F ': ' '{print $2}'").read().replace('\n','')
 infoi = "操作系统类型：" + os.popen("uname -m").read().replace('\n','')
-infoj = "发型版: " + os.popen("lsb_release -si").read().replace('\n','')
-infok = "发型版版本：" + os.popen("cat /etc/os-release |grep VERSION_CODENAME |awk -F'=' '{print $2}'").read().replace('\n','')
+infoj = "发型版: " + os.popen("cat /etc/os-release |grep 'PRETTY_NAME' |awk -F'=' '{print $2}'|tr -d '\"'").read().replace('\n','')
+infok = "发型版版本：" + os.popen("cat /etc/os-release |grep DEBIAN_VERSION_FULL |awk -F'=' '{print $2}'").read().replace('\n','')
 infol = "内核版本：" + os.popen("uname -r").read().replace('\n','')
-infom = "处理器：" + os.popen("cat /proc/cpuinfo |grep 'model name' |head -n 1 |awk -F': ' '{print $2}'").read() + os.popen("cat /proc/cpuinfo |grep 'physical id'|uniq |wc -l").read().replace('\n','') +"C " + os.popen("grep 'core id' /proc/cpuinfo | sort -u |wc -l").read().replace('\n','') + "核 " + os.popen("grep 'processor' /proc/cpuinfo |wc -l").read().replace('\n','') + "线程"
+infom = "处理器：" + os.popen("cat /proc/cpuinfo |grep 'model name' |head -n 1 |awk -F': ' '{print $2}'").read().replace('\n','') + os.popen("cat /proc/cpuinfo |grep 'physical id'|uniq |wc -l").read().replace('\n','') +"C " + os.popen("grep 'core id' /proc/cpuinfo | sort -u |wc -l").read().replace('\n','') + "核 " + os.popen("grep 'processor' /proc/cpuinfo |wc -l").read().replace('\n','') + "线程"
 infon = "内存：" + os.popen("cat /proc/meminfo |grep 'MemTotal' |cut -f2 -d:|awk -F' ' '{print int($1)}' |awk '{printf \"%.1f\",$1/1024/1024}'").read().replace('\n','') + "GB"
 infoo = "GPU：" + os.popen("lspci |grep -i vga | awk -F' VGA compatible controller: ' '{print $2}'").read().replace('\n','')
 infop = "主板：" + os.popen("cat /sys/devices/virtual/dmi/id/board_vendor").read().replace('\n','') + os.popen("cat /sys/devices/virtual/dmi/id/board_name").read().replace('\n','')
