@@ -37,7 +37,7 @@ systemctl --user status pipewire
 systemctl --user start pipewire
 
 # 通过wtype关联labwc root-menu，通过xfce启动器实现
-名称：程序菜单  命令：wtype -M logo -k r
+名称：程序菜单  命令：wtype -M logo -k p
 
 # 强制xfce4-panel所有插件以内部方式运行
 xfconf-query -c xfce4-panel -p /force-all-internal -t bool -s true --create

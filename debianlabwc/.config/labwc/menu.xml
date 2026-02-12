@@ -24,5 +24,4 @@
     <action name="Execute" command="systemctl poweroff -i" />
   </item>
 </menu>
-<menu id="info-menu" label="" execute="/home/poo/.config/labwc/info.py"/>
 </openbox_menu>
