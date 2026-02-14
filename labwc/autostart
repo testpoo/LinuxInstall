@@ -1,0 +1,21 @@
+swaybg -i '/home/poo/图片/background.png' >/dev/null 2>&1 &
+
+wlr-randr --output eDP-1 --scale 1.25
+
+xfce4-panel >/dev/null 2>&1 &
+
+mako >/dev/null 2>&1 &
+
+swayidle -w \
+	timeout 300 'swaylock -f -i /home/poo/图片/background.png -c 015000' \
+	timeout 600 'wlopm --off \*' \
+	resume 'wlopm --on \*' \
+	before-sleep 'swaylock -f -i /home/poo/图片/background.png -c 015000' >/dev/null 2>&1 & 
+
+fcitx5 >/dev/null 2>&1 &
+
+blueman-applet >/dev/null 2>&1 &
+
+gsettings set "org.gnome.desktop.interface" icon-theme "Tela-blue-light"
+
+gsettings set org.gnome.desktop.wm.preferences button-layout "menu:minimize,maximize,close"

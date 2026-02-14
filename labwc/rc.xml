@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+
+<!--
+  This is a very simple config file with many options missing. For a complete
+  set of options with comments, see docs/rc.xml.all
+-->
+
+<labwc_config>
+
+  <core>
+    <decoration>client</decoration>
+    <gap>0</gap>
+    <adaptiveSync>no</adaptiveSync>
+    <allowTearing>no</allowTearing>
+    <autoEnableOutputs>yes</autoEnableOutputs>
+    <reuseOutputMode>no</reuseOutputMode>
+    <xwaylandPersistence>no</xwaylandPersistence>
+    <primarySelection>yes</primarySelection>
+  </core>
+
+  <theme>
+    <icon>Tela-blue-light</icon>
+  </theme>
+
+  <keyboard>
+    <default />
+    <!-- Use a different terminal emulator -->
+    <keybind key="W-Return">
+      <action name="Execute" command="xfce4-terminal" />
+    </keybind>
+    <!--自定义-->
+    <keybind key="XF86AudioRaiseVolume">
+      <action name="Execute" command="sh -c 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+;xfce4-panel --plugin-event=genmon-20:refresh:bool:true'" />
+    </keybind>
+    <keybind key="XF86AudioLowerVolume">
+      <action name="Execute" command="sh -c 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-;xfce4-panel --plugin-event=genmon-20:refresh:bool:true'" />
+    </keybind>
+    <keybind key="XF86AudioMute">
+      <action name="Execute" command="sh -c 'wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle;xfce4-panel --plugin-event=genmon-20:refresh:bool:true'" />
+    </keybind>
+    <keybind key="XF86MonBrightnessDown">
+      <action name="Execute" command="sh -c 'brightnessctl set 5%-;xfce4-panel --plugin-event=genmon-19:refresh:bool:true'" />
+    </keybind>
+    <keybind key="XF86MonBrightnessUp">
+      <action name="Execute" command="sh -c 'brightnessctl set 5%+;xfce4-panel --plugin-event=genmon-19:refresh:bool:true'" />
+    </keybind>
+    <keybind key="W-q">
+      <action name="Execute" command="firefox-esr" />
+    </keybind>
+    <keybind key="W-e">
+      <action name="Execute" command="thunar" />
+    </keybind>
+    <keybind key="W-s">
+      <action name="Execute" command="xfce4-appfinder" />
+    </keybind>
+    <keybind key="W-l">
+      <action name="Execute" command="swaylock -f -i /home/poo/图片/background.png -c 015000" />
+    </keybind>
+    <keybind key="W-S-c">
+      <action name="Execute" command="labwc -r" />
+    </keybind>
+    <keybind key="W-S-e">
+      <action name="Execute" command="labwc -e" />
+    </keybind>
+    <keybind key="W-S-r">
+      <action name="Execute" command="systemctl reboot" />
+    </keybind>
+    <keybind key="W-S-p">
+      <action name="Execute" command="systemctl poweroff -i" />
+    </keybind>
+    <keybind key="Print">
+      <action name="Execute" command="sh -c 'grim - | wl-copy'" />
+    </keybind>
+    <keybind key="W-S-s">
+      <action name="Execute" command="sh -c 'grim -g `$(slurp)` - | wl-copy'" />
+    </keybind>
+    <keybind key="W-Control_L">
+      <action name="Execute" command="sh -c 'if grep -q &quot;&lt;sendEventsMode&gt;disabledOnExternalMouse&lt;/sendEventsMode&gt;$&quot; ~/.config/labwc/rc.xml; then sed -i &quot;s/&lt;sendEventsMode&gt;disabledOnExternalMouse&lt;\/sendEventsMode&gt;/&lt;sendEventsMode&gt;yes&lt;\/sendEventsMode&gt;/&quot; ~/.config/labwc/rc.xml;labwc -r;else sed -i &quot;s/&lt;sendEventsMode&gt;yes&lt;\/sendEventsMode&gt;/&lt;sendEventsMode&gt;disabledOnExternalMouse&lt;\/sendEventsMode&gt;/&quot; ~/.config/labwc/rc.xml;labwc -r;fi;xfce4-panel --plugin-event=genmon-15:refresh:bool:true'" />
+    </keybind>
+    <keybind key="W-p">
+      <action name="ShowMenu" menu="root-menu">
+      <position>
+        <x>0</x>
+        <y>-0</y>
+      </position>
+      </action>
+    </keybind>
+    <keybind key="W-p">
+      <action name="ShowMenu" menu="info-menu">
+      <atCursor>no</atCursor>
+      </action>
+    </keybind>
+  </keyboard>
+
+  <mouse>
+    <default />
+    <context name="Root">
+      <mousebind button="Left" action="Press">
+        <action name="ShowMenu" menu="none" />
+      </mousebind>
+      <mousebind button="Right" action="Press">
+        <action name="ShowMenu" menu="none" />
+      </mousebind>
+    </context>
+  </mouse>
+
+  <libinput>
+    <device category="default">
+      <sendEventsMode>disabledOnExternalMouse</sendEventsMode>
+    </device>
+  </libinput>
+
+</labwc_config>

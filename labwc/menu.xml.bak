@@ -1,0 +1,64 @@
+<openbox_menu>
+<menu id="root-menu">
+  <item label="浏览器" icon="firefox-esr">
+    <action name="Execute" command="firefox-esr" />
+  </item>
+  <item label="文件" icon="thunar">
+    <action name="Execute" command="thunar" />
+  </item>
+  <item label="终端" icon="xfce4-terminal">
+    <action name="Execute" command="xfce4-terminal" />
+  </item>
+  <separator />
+  <item label="公共" icon="folder-publicshare">
+    <action name="Execute" command="thunar ~/公共" />
+  </item>
+  <item label="模板" icon="folder-templates">
+    <action name="Execute" command="thunar ~/模板" />
+  </item>
+  <item label="视频" icon="folder-videos">
+    <action name="Execute" command="thunar ~/视频" />
+  </item>
+  <item label="图片" icon="folder-pictures">
+    <action name="Execute" command="thunar ~/图片" />
+  </item>
+  <item label="文档" icon="folder-documents">
+    <action name="Execute" command="thunar ~/文档" />
+  </item>
+  <item label="下载" icon="folder-downloads">
+    <action name="Execute" command="thunar ~/下载" />
+  </item>
+  <item label="音乐" icon="folder-music">
+    <action name="Execute" command="thunar ~/音乐" />
+  </item>
+  <item label="桌面" icon="user-desktop">
+    <action name="Execute" command="thunar ~/桌面" />
+  </item>
+  <separator />
+  <menu id="logout" label="登出" icon="system-log-out">
+  <item label="锁屏" icon="system-lock-screen">
+    <action name="Execute" command="swaylock -f -i /home/poo/图片/background.png -c 015000" />
+  </item>
+  <item label="挂起" icon="system-suspend">
+    <action name="Execute" command="systemctl suspend" />
+  </item>
+  <item label="休眼" icon="system-suspend-hibernate">
+    <action name="Execute" command="systemctl hibernate" />
+  </item>
+  <separator />
+  <item label="重载" icon="systemback">
+    <action name="Reconfigure" />
+  </item>
+  <item label="退出" icon="system-log-out">
+    <action name="Exit" />
+  </item>
+  <separator />
+  <item label="重启" icon="system-reboot">
+    <action name="Execute" command="systemctl reboot" />
+  </item>
+  <item label="关机" icon="system-shutdown">
+    <action name="Execute" command="systemctl poweroff -i" />
+  </item>
+  </menu>
+</menu>
+</openbox_menu>
