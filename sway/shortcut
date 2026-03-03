@@ -1,0 +1,19 @@
+#!/bin/bash
+
+echo "    打开终端：mod+return
+    关闭窗口：mod+shift+q
+    启动器：mod+d
+    浮动装饰：mod
+    配置重载：mod+shift+c
+    退出：mod+shift+e
+    左右分裂：mod+b
+    上下分裂：mod+v
+    层叠：mod+s
+    选项卡：mod+w
+    横竖堆叠切换：mod+e
+    全屏：mod+f
+    浮动：mod+shift+space
+    堆叠和浮动的窗口切换：mod+space
+    切换到父容器：mod+a
+    暂存器：mod+shift+minus
+    从暂存器展示：mod+minus"| wofi -d -G -j -W 400 -H 500

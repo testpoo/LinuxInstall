@@ -19,15 +19,20 @@ set $term foot
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
 # set $menu dmenu_path | dmenu | xargs swaymsg exec --
-set $menu xfce4-appfinder
+set $menu wofi -S drun -I -w 3 -p '程序搜索'
+
+set $bar-path $HOME/.config/sway/bar.sh
+set $bg-path $HOME/图片/background.png
 
 include /etc/sway/config-vars.d/*
+
+exec "export WLR_NO_HARDWARE_CURSORS=1"
 
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 # output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
-output * bg /home/poo/图片/2.jpg fill
+output * bg $bg-path fill
 #
 # Example configuration:
 #
@@ -41,9 +46,9 @@ output eDP-1 resolution 1920x1200 position 0,0 scale 1.25
 # Example configuration:
 #
 exec swayidle -w \
-        timeout 300 'swaylock -f -i /home/poo/图片/background.png -c 015000' \
+        timeout 300 'swaylock -f -i $bg-path -c 015000' \
         timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-        before-sleep 'swaylock -f -i /home/poo/图片/background.png -c 015000'
+        before-sleep 'swaylock -f -i $bg-path -c 015000'
 #
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
@@ -223,8 +228,8 @@ bar {
     # The default just shows the current date and time.
     # status_command while date +'%Y-%m-%d %X'; do sleep 1; done
     status_command ~/.config/sway/bar.sh
-    font Noto Sans CJK SC Bold 10
-    icon_theme Reversal-blue-dark
+    font Noto Sans CJK SC 10
+    icon_theme Papirus-Dark
 
     colors {
         statusline #ffffff
@@ -238,12 +243,12 @@ include /etc/sway/config.d/*
 exec_always --no-startup-id fcitx5 -d --replace
 exec_always --no-startup-id blueman-applet
 
-bindsym XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
-bindsym XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
-bindsym XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
-bindsym XF86AudioMicMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
-bindsym XF86MonBrightnessDown exec brightnessctl set 5%-;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
-bindsym XF86MonBrightnessUp exec brightnessctl set 5%+;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
+bindsym XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+;exec pkill -SIGUSR1 -f $bar-path
+bindsym XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-;exec pkill -SIGUSR1 -f $bar-path
+bindsym XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle;exec pkill -SIGUSR1 -f $bar-path
+bindsym XF86AudioMicMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle;exec pkill -SIGUSR1 -f $bar-path
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%-;exec pkill -SIGUSR1 -f $bar-path
+bindsym XF86MonBrightnessUp exec brightnessctl set 5%+;exec pkill -SIGUSR1 -f $bar-path
 
 # 隐藏或者显示bar
 # bar toggle, hide or show
@@ -269,7 +274,7 @@ focus_follows_mouse yes
 
 set $mode_system 锁屏(l)丨退出(e)丨挂起(s)丨休眼(h)丨重启(r)丨关机(p)
 mode "$mode_system" {
-    bindsym l exec --no-startup-id swaylock -f -i /home/poo/图片/background.png -C 015000, mode "default"
+    bindsym l exec --no-startup-id swaylock -f -i $bg-path -C 015000, mode "default"
     bindsym e exec --no-startup-id swaymsg exit, mode "default"
     bindsym s exec --no-startup-id systemctl suspend, mode "default"
     bindsym h exec --no-startup-id systemctl hibernate, mode "default"
@@ -285,14 +290,18 @@ bindsym $mod+p mode "$mode_system"
 
 bindsym $mod+t exec Thunar
 bindsym $mod+q exec firefox-esr
-bindsym $mod+Control_L exec /home/poo/.config/sway/touchpad.py;exec pkill -SIGUSR1 -f /home/poo/.config/sway/bar.sh
+bindsym $mod+Control_L exec python3 -c 'import os,json;os.system("swaymsg input '2362:597:SYNA3602:00_093A:0255_Touchpad' events disabled") if [input for input in json.load(os.popen("swaymsg -t get_inputs")) if input["identifier"] == "2362:597:SYNA3602:00_093A:0255_Touchpad"][0]["libinput"]["send_events"] == "enabled" else os.system("swaymsg input '2362:597:SYNA3602:00_093A:0255_Touchpad' events enabled")';exec pkill -SIGUSR1 -f $bar-path
 bindsym $mod+Shift+s exec grim -g "$(slurp)" - | wl-copy
 bindsym Print exec grim - | wl-copy
+bindsym $mod+i exec /home/poo/.config/sway/systeminfo
+bindsym $mod+c exec /home/poo/.config/sway/shortcut
 
 # 设置窗口浮动
 for_window [class="wechat"] floating enable
-for_window [app_id="io.github.quodlibet.QuodLibet"] floating enable
-for_window [app_id="xfce4-appfinder"] floating enable, resize set 1920 1200
+for_window [app_id="io.bassi.Amberol"] floating enable
+for_window [app_id="org.fcitx.fcitx5-config-qt"] floating enable
+for_window [app_id="blueman-manager"] floating enable
+# for_window [app_id="xfce4-appfinder"] floating enable, resize set 1920 1200
 
 # 弹窗
 # popups
@@ -313,7 +322,7 @@ for_window [app_id="ristretto"] move container workspace number $ws6;workspace n
 set $gnome-schema org.gnome.desktop.interface
 exec_always {
 #    gsettings set $gnome-schema gtk-theme 'theme name'
-    gsettings set $gnome-schema icon-theme 'Reversal-blue'
+    gsettings set $gnome-schema icon-theme 'Papirus-Light'
 #    gsettings set $gnome-schema cursor-theme 'cursor theme name'
 #    gsettings set $gnome-schema font-name 'Sans 10'
 }
