@@ -228,7 +228,7 @@ bar {
     # The default just shows the current date and time.
     # status_command while date +'%Y-%m-%d %X'; do sleep 1; done
     status_command ~/.config/sway/bar.sh
-    font Noto Sans CJK SC 10
+    font Noto Sans Mono CJK SC Bold 10
     icon_theme Papirus-Dark
 
     colors {
@@ -300,8 +300,8 @@ bindsym $mod+c exec /home/poo/.config/sway/shortcut
 for_window [class="wechat"] floating enable
 for_window [app_id="io.bassi.Amberol"] floating enable
 for_window [app_id="org.fcitx.fcitx5-config-qt"] floating enable
-for_window [app_id="blueman-manager"] floating enable
-# for_window [app_id="xfce4-appfinder"] floating enable, resize set 1920 1200
+for_window [app_id="blueman-manager"] floating enable, resize set 900 600
+for_window [app_id="blueman-services"] floating enable, resize set 900 600
 
 # 弹窗
 # popups
@@ -322,7 +322,7 @@ for_window [app_id="ristretto"] move container workspace number $ws6;workspace n
 set $gnome-schema org.gnome.desktop.interface
 exec_always {
 #    gsettings set $gnome-schema gtk-theme 'theme name'
-    gsettings set $gnome-schema icon-theme 'Papirus-Light'
+    gsettings set $gnome-schema icon-theme 'Papirus'
 #    gsettings set $gnome-schema cursor-theme 'cursor theme name'
 #    gsettings set $gnome-schema font-name 'Sans 10'
 }

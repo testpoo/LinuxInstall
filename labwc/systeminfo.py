@@ -27,3 +27,9 @@ print('<separator label="Debian系统信息" />')
 for app in [infoa,infob,infoc,infod,infoe,infof,infog,infoh,infoi,infoj,infok,infol,infom,infon,infoo,infop,infoq,infor]:
     print('<item label="' + app + '" icon="debian-logo" />')
 print('</openbox_pipe_menu>')
+
+# Arch替代 distributor-logo-archlinux
+# infod = "包数量：" + os.popen("pacman -Q|awk 'END {print NR}'").read().replace('\n','')
+# infoe = "分辨率：" + os.popen("cat /sys/class/drm/card1-eDP-1/modes").read().replace('\n','')
+# infoj = "发型版: " + os.popen("hostnamectl|grep 'Operating System'| awk -F ': ' '{print $2}'").read().replace('\n','')
+# infok = "发型版版本：" + os.popen("cat /etc/os-release |grep 'BUILD_ID' |awk -F'=' '{print $2}'").read().replace('\n','')
