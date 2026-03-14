@@ -7,11 +7,11 @@ time_to_full=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep -i 
 # battery="⚡️"$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep -i "state\|percentage\|time to empty" | awk -F ':' '{print $2,$4}' | sed 's/ //g') 
 state=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep -i "state" | awk -F ':' '{print $2,$4}' | sed 's/ //g')
 
-if [[ $state = "charging" && $percentage = "100%" ]];then
+if [[ $state = "fully-charged" ]];then
 	echo "<txt>$percentage
 电量</txt>"
     echo "<tool>电量已充满</tool>"
-elif [[ $state = "charging" && ${percentage:0:-1} -le 100 ]];then
+elif [[ $state = "charging" ]];then
 	echo "<txt>$percentage
 充电</txt>"
     echo "<tool>电量剩余$percentage，将在$time_to_full后充满</tool>"
