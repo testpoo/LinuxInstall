@@ -42,8 +42,13 @@ logouts = [
 ]
 
 exclude = [
+  'Avahi Zeroconf 浏览器',
+  'Avahi SSH 服务器的浏览器',
+  'Avahi VNC 服务器的浏览器',
   'Foot Server',
-  'Foot Client'
+  'Foot Client',
+  'Qt V4L2 test Utility',
+  'Qt V4L2 video capture utility'
 ]
 
 file_path = '/usr/share/applications/'
@@ -103,7 +108,7 @@ def menus(app_lists, num, i):
 print('<openbox_pipe_menu>')
 menus(app_lists, num, i)
 print('<separator />')
-print('<menu id="logout" label="登出" icon="system-log-out">')
+print('<menu id="logout" label="从这里登出" icon="system-log-out">')
 for app in logouts:
     items(app["Name"], app["Icon"], app["Exec"])
 print('</menu>')
