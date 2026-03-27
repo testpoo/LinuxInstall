@@ -42,13 +42,8 @@ logouts = [
 ]
 
 exclude = [
-  'Avahi Zeroconf 浏览器',
-  'Avahi SSH 服务器的浏览器',
-  'Avahi VNC 服务器的浏览器',
   'Foot Server',
-  'Foot Client',
-  'Qt V4L2 test Utility',
-  'Qt V4L2 video capture utility'
+  'Foot Client'
 ]
 
 file_path = '/usr/share/applications/'
