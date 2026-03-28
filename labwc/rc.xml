@@ -19,14 +19,14 @@
   </core>
 
   <theme>
-    <icon>Papirus-Light</icon>
+    <icon>Tela-circle-blue-light</icon>
   </theme>
 
   <keyboard>
     <default />
     <!-- Use a different terminal emulator -->
     <keybind key="W-Return">
-      <action name="Execute" command="foot" />
+      <action name="Execute" command="xfce4-terminal" />
     </keybind>
     <!--自定义-->
     <keybind key="XF86AudioRaiseVolume">
@@ -66,7 +66,7 @@
       <action name="Execute" command="sh -c 'grim -g &quot;$(slurp)&quot; -s 1.25 - | wl-copy'" />
     </keybind>
     <keybind key="W-Control_L">
-      <action name="Execute" command="sh -c 'if grep -q &quot;&lt;sendEventsMode&gt;disabledOnExternalMouse&lt;/sendEventsMode&gt;$&quot; ~/.config/labwc/rc.xml; then sed -i &quot;s/&lt;sendEventsMode&gt;disabledOnExternalMouse&lt;\/sendEventsMode&gt;/&lt;sendEventsMode&gt;yes&lt;\/sendEventsMode&gt;/&quot; ~/.config/labwc/rc.xml;labwc -r;else sed -i &quot;s/&lt;sendEventsMode&gt;yes&lt;\/sendEventsMode&gt;/&lt;sendEventsMode&gt;disabledOnExternalMouse&lt;\/sendEventsMode&gt;/&quot; ~/.config/labwc/rc.xml;labwc -r;fi;xfce4-panel --plugin-event=genmon-17:refresh:bool:true'" />
+      <action name="Execute" command="sh -c 'if grep -q &quot;&lt;sendEventsMode&gt;no&lt;/sendEventsMode&gt;$&quot; ~/.config/labwc/rc.xml; then sed -i &quot;s/&lt;sendEventsMode&gt;no&lt;\/sendEventsMode&gt;/&lt;sendEventsMode&gt;yes&lt;\/sendEventsMode&gt;/&quot; ~/.config/labwc/rc.xml;labwc -r;else sed -i &quot;s/&lt;sendEventsMode&gt;yes&lt;\/sendEventsMode&gt;/&lt;sendEventsMode&gt;no&lt;\/sendEventsMode&gt;/&quot; ~/.config/labwc/rc.xml;labwc -r;fi;xfce4-panel --plugin-event=genmon-17:refresh:bool:true'" />
     </keybind>
     <keybind key="W-s">
       <action name="ShowMenu" menu="root-menu">
@@ -91,8 +91,8 @@
   </mouse>
 
   <libinput>
-    <device category="default">
-      <sendEventsMode>disabledOnExternalMouse</sendEventsMode>
+    <device category="touchpad">
+      <sendEventsMode>no</sendEventsMode>
     </device>
   </libinput>
 

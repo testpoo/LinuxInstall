@@ -7,15 +7,23 @@ time_to_full=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep -i 
 # battery="⚡️"$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep -i "state\|percentage\|time to empty" | awk -F ':' '{print $2,$4}' | sed 's/ //g') 
 state=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep -i "state" | awk -F ':' '{print $2,$4}' | sed 's/ //g')
 
-if [[ $state = "fully-charged" ]];then
+if [[ $state = "fully-charged" ]] && [[ $percentage = "100%" ]];then
 	echo "<txt>$percentage
 电量</txt>"
     echo "<tool>电量已充满</tool>"
-elif [[ $state = "charging" ]];then
+elif [[ $state = "charging" ]] && [[ $percentage = "100%" ]];then
 	echo "<txt>$percentage
 充电</txt>"
+    echo "<tool>电量$percentage，即将充满</tool>"
+elif [[ $state = "charging" ]] && [[ $percentage != "100%" ]];then
+    echo "<txt>$percentage
+充电</txt>"
     echo "<tool>电量剩余$percentage，将在$time_to_full后充满</tool>"
-elif [[ $state = "discharging" ]];then
+elif [[ $state = "discharging" ]] && [[ $percentage = "100%" ]];then
+    echo "<txt>$percentage
+放电</txt>"
+    echo "<tool>电量$percentage，即将放电</tool>"
+elif [[ $state = "discharging" ]] && [[ $percentage != "100%" ]];then
 	echo "<txt>$percentage
 放电</txt>"
     echo "<tool>电量剩余$percentage，还可使用$time_to_empty</tool>"
