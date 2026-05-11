@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "<icon>debian-logo</icon><iconclick>wtype -M logo -k s</iconclick>"
+echo "<icon>distributor-logo-debian</icon><iconclick>wtype -M logo -k s</iconclick>"
 echo "<tool>系统：$(uname -s)
 用户名：$(whoami)
 Shell：$SHELL
