@@ -22,7 +22,7 @@ logouts = [
   {
     "Name": "重载",
     "Exec": "labwc -r",
-    "Icon": "systemback"
+    "Icon": "sync-synchronizing"
   },
   {
     "Name": "退出",
