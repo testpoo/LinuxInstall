@@ -76,6 +76,22 @@
       </position>
       </action>
     </keybind>
+    <keybind key="W-v">
+      <action name="ShowMenu" menu="volume-menu">
+      <position>
+        <x>-0</x>
+        <y>-0</y>
+      </position>
+      </action>
+    </keybind>
+    <keybind key="W-n">
+      <action name="ShowMenu" menu="network-menu">
+      <position>
+        <x>-55</x>
+        <y>-0</y>
+      </position>
+      </action>
+    </keybind>
   </keyboard>
 
   <mouse>

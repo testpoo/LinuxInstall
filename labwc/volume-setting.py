@@ -11,16 +11,12 @@ for device in devices:
     if device[1] != '*':
         device =['',device[1].replace(".","")," ".join(device[2:])]
     else:
-        device =[device[1],device[2].replace(".","")," ".join(device[3:])]
+        device =['mail-unread-symbolic',device[2].replace(".","")," ".join(device[3:])]
     ndevices.append(device)
-
+print('<openbox_pipe_menu>')
+print('<separator label="默认声卡选择" />')
 for device in ndevices:
-    print(str(ndevices.index(device)) + "：" + device[2] + " " + device[0])
-num = input("请选择声卡序号：")
-card_id = ndevices[int(num)][1]
-result = os.system("wpctl set-default " + card_id)
-if result == 0:
-    print("设置声卡成功...")
-else:
-    print("设置声卡失败...")
-input("按回车关闭...")
+    print('<item label="' + device[2] + '" icon="' + device[0] + '">')
+    print('<action name="Execute" command="' + 'wpctl set-default ' + device[1] + '" />')
+    print('</item>')
+print('</openbox_pipe_menu>')
