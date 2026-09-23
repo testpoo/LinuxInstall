@@ -3,7 +3,12 @@
 
 import os
 
-os.system("iwctl station wlan0 scan")
+new_knowpass = []
+knowpass = os.popen("iwctl known-networks list").read()
+for know in knowpass.replace('[0m','').split('\n')[4:]:
+    if know.split() != []:
+        new_knowpass.append(know.split()[0])
+# os.system("iwctl station wlan0 scan")
 ssids = os.popen("iwctl station wlan0 get-networks").read()
 new_ssids = []
 choice_ssid = ''
@@ -22,10 +27,22 @@ if choice_ssid != '':
     print('<action name="Execute" command="iwctl station wlan0 disconnect" />')
     print('</item>')
 print('<separator label="可用 WLAN" />')
-for new_ssid in new_ssids:
-    print('<item label="' + ' ' + new_ssid[1] + '" icon="' + new_ssid[2] + '">')
-    exec = "iwctl station wlan0 connect " + new_ssid[1]
-    print('<action name="Execute" command="' + exec + '" />')
+for ssid in new_ssids:
+    print('<item label="' + ' ' + ssid[1] + '" icon="' + ssid[2] + '">')
+    if ssid[1] in new_knowpass:
+        print('<action name="Execute" command="iwctl station wlan0 connect ' + ssid[1] + '" />')
+    else:
+        print('<action name="Execute" command="~/.config/labwc/network-input.py ' + ssid[1] + '" />')
     print('</item>')
+print('<item label="更新列表" icon="system-software-update">')
+exec = "sh -c 'iwctl station wlan0 scan;wtype -M logo -k n'"
+print('<action name="Execute" command="' + exec + '" />')
+print('</item>')
+print('<menu id="logout" label="清除密碼" icon="edit-clear">')
+for ssid in new_ssids: 
+    if ssid[1] in new_knowpass:    
+        print('<item label="' + ssid[1] + '" icon="' + ssid[0] + '">')
+        print('<action name="Execute" command="iwctl known-networks ' + ssid[1] + ' forget" />')
+        print('</item>')
+print('</menu>')
 print('</openbox_pipe_menu>')
-# exec = "sh -c 'INPUT=$(~/network-input.py);iwctl --passphrase $INPUT station wlan0 connect " + choice_ssid[1] + "'"
