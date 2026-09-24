@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=更换桌面背景
+Comment=更换桌面背景
+Exec=sh -c 'pkill swaybg;swaybg -i /home/poo/图片/background.jpg'
+Terminal=false
+Icon=text-x-changelog
+Categories=Development;
+StartupNotify=true

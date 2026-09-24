@@ -94,10 +94,10 @@ def menus(app_lists, num, i):
         i += 1
         print('<menu id="more" icon="application-sql" label="更多程序">')
         menus(app_lists[num:], num, i)
-        if i != 0:
-            print('<separator />')
-            for i in range(len(logouts)):
-                items("☰☲☱☴☵☶☳☷", "application-sql", "")
+        #if i != 0:
+            #print('<separator />')
+            #for i in range(len(logouts)):
+            #    items("☰☲☱☴☵☶☳☷", "application-sql", "")
         print('</menu>')
 
 print('<openbox_pipe_menu>')

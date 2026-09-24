@@ -87,7 +87,7 @@
     <keybind key="W-n">
       <action name="ShowMenu" menu="network-menu">
       <position>
-        <x>-55</x>
+        <x>-0</x>
         <y>-0</y>
       </position>
       </action>

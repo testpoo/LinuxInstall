@@ -41,7 +41,7 @@ print('</item>')
 print('<menu id="logout" label="清除密碼" icon="edit-clear">')
 for ssid in new_ssids: 
     if ssid[1] in new_knowpass:    
-        print('<item label="' + ssid[1] + '" icon="' + ssid[0] + '">')
+        print('<item label="' + ssid[1] + '" icon="' + ssid[2] + '">')
         print('<action name="Execute" command="iwctl known-networks ' + ssid[1] + ' forget" />')
         print('</item>')
 print('</menu>')
