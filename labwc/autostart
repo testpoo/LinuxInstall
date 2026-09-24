@@ -1,4 +1,4 @@
-swaybg -i '/home/poo/图片/background.jpg' >/dev/null 2>&1 &
+swaybg -i /home/poo/图片/【哲风壁纸】动漫风景-夏日.jpg >/dev/null 2>&1 &
 
 wlr-randr --output eDP-1 --scale 1.25
 

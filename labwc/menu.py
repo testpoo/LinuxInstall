@@ -6,7 +6,7 @@ import os,configparser,math
 logouts = [
   {
     "Name": "锁屏",
-    "Exec": "swaylock -f -i /home/poo/图片/background.png -c 015000",
+    "Exec": "swaylock -f -i ~/图片/background.jpg -c 015000",
     "Icon": "system-lock-screen"
   },
 #  {
