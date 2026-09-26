@@ -30,19 +30,19 @@
     </keybind>
     <!--自定义-->
     <keybind key="XF86AudioRaiseVolume">
-      <action name="Execute" command="sh -c 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+;xfce4-panel --plugin-event=genmon-10:refresh:bool:true;~/.config/labwc/volume-notify.sh'" />
+      <action name="Execute" command="sh -c 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+;~/.config/labwc/settings.sh volume-notify'" />
     </keybind>
     <keybind key="XF86AudioLowerVolume">
-      <action name="Execute" command="sh -c 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-;xfce4-panel --plugin-event=genmon-10:refresh:bool:true;~/.config/labwc/volume-notify.sh'" />
+      <action name="Execute" command="sh -c 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-;~/.config/labwc/settings.sh volume-notify'" />
     </keybind>
     <keybind key="XF86AudioMute">
-      <action name="Execute" command="sh -c 'wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle;xfce4-panel --plugin-event=genmon-10:refresh:bool:true;~/.config/labwc/volume-notify.sh'" />
+      <action name="Execute" command="sh -c 'wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle;~/.config/labwc/settings.sh volume-notify'" />
     </keybind>
     <keybind key="XF86MonBrightnessDown">
-      <action name="Execute" command="sh -c 'brightnessctl set 5%-;~/.config/labwc/light.sh'" />
+      <action name="Execute" command="sh -c 'brightnessctl set 5%-;~/.config/labwc/settings.sh light'" />
     </keybind>
     <keybind key="XF86MonBrightnessUp">
-      <action name="Execute" command="sh -c 'brightnessctl set 5%+;~/.config/labwc/light.sh'" />
+      <action name="Execute" command="sh -c 'brightnessctl set 5%+;~/.config/labwc/settings.sh light'" />
     </keybind>
     <keybind key="W-q">
       <action name="Execute" command="firefox-esr" />
@@ -66,7 +66,7 @@
       <action name="Execute" command="sh -c 'grim -g &quot;$(slurp)&quot; -s 1.25 - | wl-copy'" />
     </keybind>
     <keybind key="W-Control_L">
-      <action name="Execute" command="~/.config/labwc/touchpad.sh" />
+      <action name="Execute" command="~/.config/labwc/settings.sh touchpad" />
     </keybind>
     <keybind key="W-s">
       <action name="ShowMenu" menu="root-menu">

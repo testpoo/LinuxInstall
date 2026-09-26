@@ -6,7 +6,7 @@ from gi.repository import Gtk, Gdk
 
 class InputPopup(Gtk.Window):
     def __init__(self):
-        super().__init__(title="输入密码")
+        super().__init__(title="请输入WIFI密码")
         self.set_default_size(300, 100)
         self.set_resizable(False)
         # 窗口居中
@@ -20,7 +20,7 @@ class InputPopup(Gtk.Window):
 
         # 输入框
         self.entry = Gtk.Entry()
-        self.entry.set_placeholder_text("请输入文本...")
+        self.entry.set_placeholder_text("请输入WIFI密码...")
         self.entry.connect("activate", self.on_submit) # 回车提交
         vbox.pack_start(self.entry, False, False, 0)
 
@@ -65,8 +65,6 @@ def main():
     win = InputPopup()
     win.show_all()
     Gtk.main()
-    # 输出结果到stdout，shell捕获
-    # print(win.result if win.result is not None else "")
     if win.result is not None:
         passwd = win.result
     else:
