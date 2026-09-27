@@ -15,17 +15,58 @@ def menus(app_lists, num, i, cols):
         i += 1
         print('<menu id="more" icon="application-sql" label="更多程序">')
         menus(app_lists[num:], num, i)
-        #if i != 0:
-            #print('<separator />')
-            #for i in range(len(logouts)):
-            #    items("☰☲☱☴☵☶☳☷", "application-sql", "")
+        if i != 0:
+            print('<separator />')
+            for i in range(len(logouts)):
+                items("☰☲☱☴☵☶☳☷", "application-sql", "")
         print('</menu>')
+
+def apps():
+    exclude = [
+      'Foot Server',
+      'Foot Client',
+      '批量重命名',
+      'Thunar 首选项',
+      '可移动驱动器和介质'
+    ]
+
+    file_path = '/usr/share/applications/'
+    file_names = os.listdir(file_path)
+
+    app_lists = []
+
+    for name in file_names:
+        config = configparser.RawConfigParser()
+        config.read(file_path + name, encoding='utf-8')
+        if not config.has_section('Desktop Entry'):
+            continue
+        if config.get('Desktop Entry','Type') != "Application" or config.get('Desktop Entry','NoDisplay', fallback='false') != 'false' or 'LABWC' not in config.get('Desktop Entry','OnlyShowIn', fallback='LABWC').split(';'):
+            continue
+        if config.has_option('Desktop Entry','Name[zh_CN]'):
+            Name = config.get('Desktop Entry','Name[zh_CN]')
+        elif config.has_option('Desktop Entry','Name[zh]'):
+            Name = config.get('Desktop Entry','Name[zh]')
+        elif config.has_option('Desktop Entry','Name'):
+            Name = config.get('Desktop Entry','Name')
+        else:
+            continue
+        if config.has_option('Desktop Entry','Exec'):
+            Exec = config.get('Desktop Entry','Exec').split('%')[0]
+        else:
+            continue
+        if config.has_option('Desktop Entry','Icon'):
+            Icon = config.get('Desktop Entry','Icon')
+        else:
+            continue
+        if Name not in exclude:
+            app_lists.append([Name,Exec,Icon])
+    return sorted(app_lists)
 
 def applications():
     logouts = [
       {
         "Name": "锁屏",
-        "Exec": "swaylock -f -i ~/图片/background.jpg -c 015000",
+        "Exec": "swaylock -c 0F4C81",
         "Icon": "system-lock-screen"
         },
 #  {
@@ -60,49 +101,12 @@ def applications():
         }
     ]
 
-    exclude = [
-      'Foot Server',
-      'Foot Client'
-    ]
-
-    file_path = '/usr/share/applications/'
-    file_names = os.listdir(file_path)
-
-    app_lists = []
     num= 28
     i = 0
-
-    for name in file_names:
-        config = configparser.RawConfigParser()
-        config.read(file_path + name, encoding='utf-8')
-        if not config.has_section('Desktop Entry'):
-            continue
-        if config.get('Desktop Entry','Type') != "Application" or config.get('Desktop Entry','NoDisplay', fallback='false') != 'false' or 'LABWC' not in config.get('Desktop Entry','OnlyShowIn', fallback='LABWC').split(';'):
-            continue
-        if config.has_option('Desktop Entry','Name[zh_CN]'):
-            Name = config.get('Desktop Entry','Name[zh_CN]')
-        elif config.has_option('Desktop Entry','Name[zh]'):
-            Name = config.get('Desktop Entry','Name[zh]')
-        elif config.has_option('Desktop Entry','Name'):
-            Name = config.get('Desktop Entry','Name')
-        else:
-            continue
-        if config.has_option('Desktop Entry','Exec'):
-            Exec = config.get('Desktop Entry','Exec').split('%')[0]
-        else:
-            continue
-        if config.has_option('Desktop Entry','Icon'):
-            Icon = config.get('Desktop Entry','Icon')
-        else:
-            continue
-        if Name not in exclude:
-            app_lists.append([Name,Exec,Icon])
-
-    app_lists.sort()
-    cols = math.ceil(len(app_lists)/num)
+    app_lists = apps()
 
     print('<openbox_pipe_menu>')
-    menus(app_lists, num, i, cols)
+    menus(app_lists, num, i, math.ceil(len(app_lists)/num))
     print('<separator />')
     print('<menu id="logout" label="从这里登出" icon="system-log-out">')
     for app in logouts:
@@ -124,9 +128,7 @@ def volume():
     print('<openbox_pipe_menu>')
     print('<separator label="默认声卡选择" />')
     for device in ndevices:
-        print('<item label="' + device[2] + '" icon="' + device[0] + '">')
-        print('<action name="Execute" command="' + 'wpctl set-default ' + device[1] + '" />')
-        print('</item>')
+        items(device[2], device[0], "wpctl set-default " + device[1])
     print('</openbox_pipe_menu>')
 
 def network():
@@ -149,27 +151,21 @@ def network():
     print('<openbox_pipe_menu>')
     if choice_ssid != '':
         print('<separator label="已连接 WLAN" />')
-        print('<item label="' + ' ' + choice_ssid[1] + '" icon="' + choice_ssid[2] + '">')
-        print('<action name="Execute" command="iwctl station wlan0 disconnect" />')
-        print('</item>')
+        items(choice_ssid[1], choice_ssid[2], "iwctl station wlan0 disconnect")
     print('<separator label="可用 WLAN" />')
     for ssid in new_ssids:
-        print('<item label="' + ' ' + ssid[1] + '" icon="' + ssid[2] + '">')
         if ssid[1] in new_knowpass:
-            print('<action name="Execute" command="iwctl station wlan0 connect ' + ssid[1] + '" />')
+            items(ssid[1], ssid[2], "iwctl station wlan0 connect " + ssid[1])
         else:
-            print('<action name="Execute" command="~/.config/labwc/network-input.py ' + ssid[1] + '" />')
-        print('</item>')
+            items(ssid[1], ssid[2], "~/.config/labwc/network-input.py " + ssid[1])
     print('<item label="更新列表" icon="system-software-update">')
     exec = "sh -c 'iwctl station wlan0 scan;wtype -M logo -k n'"
     print('<action name="Execute" command="' + exec + '" />')
     print('</item>')
     print('<menu id="logout" label="清除密碼" icon="edit-clear">')
-    for ssid in new_ssids: 
-        if ssid[1] in new_knowpass:    
-            print('<item label="' + ssid[1] + '" icon="' + ssid[2] + '">')
-            print('<action name="Execute" command="iwctl known-networks ' + ssid[1] + ' forget" />')
-            print('</item>')
+    for ssid in new_ssids:
+        if ssid[1] in new_knowpass:
+            items(ssid[1], ssid[2], "iwctl known-networks " + ssid[1] + " forget")
     print('</menu>')
     print('</openbox_pipe_menu>')
 

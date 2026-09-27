@@ -51,7 +51,7 @@
       <action name="Execute" command="thunar" />
     </keybind>
     <keybind key="W-l">
-      <action name="Execute" command="swaylock -f -i ~/图片/background.jpg -c 015000" />
+      <action name="Execute" command="swaylock -c 0F4C81" />
     </keybind>
     <keybind key="W-S-c">
       <action name="Execute" command="labwc -r" />
