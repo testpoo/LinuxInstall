@@ -1,8 +1,37 @@
-import gi,os,subprocess,configparser
-from pathlib import Path
+#!/usr/bin/env python3
+# coding=utf-8
 
+import gi,os,subprocess,configparser
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gdk
+gi.require_version("GdkPixbuf", "2.0")
+from gi.repository import Gtk, Gdk, GdkPixbuf
+
+ICON_SIZE = 32
+
+def load_icon(icon_str):
+    """统一加载图标：支持绝对文件路径 / 主题图标名称，失败返回默认pixbuf"""
+    fallback = Gtk.IconTheme.get_default().load_icon("application-x-executable", ICON_SIZE, 0)
+    if not icon_str:
+        return fallback
+    # 如果是文件路径
+    if os.path.isabs(icon_str):
+        if os.path.exists(icon_str):
+            try:
+                return GdkPixbuf.Pixbuf.new_from_file_at_scale(icon_str, ICON_SIZE, ICON_SIZE, True)
+            except Exception:
+                return fallback
+        else:
+            return fallback
+    # 主题图标名
+    theme = Gtk.IconTheme.get_default()
+    try:
+        p = theme.load_icon(icon_str, ICON_SIZE, Gtk.IconLookupFlags.USE_BUILTIN)
+        if p:
+            return p
+    except Exception:
+        pass
+    return fallback
+
 
 def scan_desktop_entries():
     app_lists = []
@@ -52,32 +81,29 @@ class WofiLike(Gtk.Window):
         self.set_default_size(500, 400)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.set_border_width(10)
-
         self.all_apps = scan_desktop_entries()
         self.matched_apps = self.all_apps.copy()
-
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
         self.add(vbox)
-
         # 搜索框
         self.search_entry = Gtk.SearchEntry()
-        self.search_entry.set_placeholder_text("Search application...")
+        self.search_entry.set_placeholder_text("查询程序...")
         self.search_entry.connect("changed", self.on_search_changed)
         vbox.pack_start(self.search_entry, False, True, 0)
 
-        # ListStore：第一列 icon-name，第二列文字
-        self.list_store = Gtk.ListStore(str, str)
+        # ListStore: 0=GdkPixbuf对象，1=显示名称
+        self.list_store = Gtk.ListStore(GdkPixbuf.Pixbuf, str)
         self.tree_view = Gtk.TreeView(model=self.list_store)
         self.tree_view.set_headers_visible(False)
 
-        # 第1列：图标
+        # 图标列
         cell_pix = Gtk.CellRendererPixbuf()
         col_icon = Gtk.TreeViewColumn()
         col_icon.pack_start(cell_pix, False)
-        col_icon.add_attribute(cell_pix, "icon-name", 0)
+        col_icon.add_attribute(cell_pix, "pixbuf", 0)
         self.tree_view.append_column(col_icon)
 
-        # 第2列：应用名称
+        # 文字列
         cell_text = Gtk.CellRendererText()
         col_text = Gtk.TreeViewColumn()
         col_text.pack_start(cell_text, True)
@@ -85,12 +111,10 @@ class WofiLike(Gtk.Window):
         self.tree_view.append_column(col_text)
 
         self.tree_view.connect("row-activated", self.on_row_activate)
-
         scrolled = Gtk.ScrolledWindow()
         scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         scrolled.add(self.tree_view)
         vbox.pack_start(scrolled, True, True, 0)
-
         self.selection = self.tree_view.get_selection()
         self.update_list()
         self.connect("key-press-event", self.on_window_key)
@@ -98,8 +122,8 @@ class WofiLike(Gtk.Window):
     def update_list(self):
         self.list_store.clear()
         for app in self.matched_apps:
-            icon_name = app.get("icon", "application-x-executable")
-            self.list_store.append([icon_name, app["name"]])
+            pix = load_icon(app["icon"])
+            self.list_store.append([pix, app["name"]])
         if self.matched_apps:
             self.selection.select_path(Gtk.TreePath.new_from_indices([0]))
 

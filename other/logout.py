@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# coding=utf-8
+
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
@@ -7,7 +10,7 @@ import getpass
 class PowerMenu(Gtk.Window):
     def __init__(self):
         super().__init__(title="注销")
-        self.set_default_size(300, 300)
+        self.set_default_size(340, 300)
         self.set_resizable(False)
         self.set_decorated(False)
         self.set_position(Gtk.WindowPosition.CENTER)
@@ -59,7 +62,7 @@ class PowerMenu(Gtk.Window):
         # ========= 底部取消按钮 =========
         row_cancel = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         btn_cancel = Gtk.Button(label="取消")
-        btn_cancel.set_size_request(120, 50)
+        btn_cancel.set_size_request(340, 40)
         btn_cancel.connect("clicked", self.on_cancel)
         row_cancel.pack_start(btn_cancel, False, False, 0)
         row_cancel.set_halign(Gtk.Align.CENTER)
@@ -80,6 +83,7 @@ class PowerMenu(Gtk.Window):
         vbox.set_margin_bottom(8)
 
         image = Gtk.Image.new_from_icon_name(icon_name, Gtk.IconSize.DIALOG)
+        image.set_pixel_size(64)  # 放大图标
         label = Gtk.Label(label=text)
         label.set_markup("<big>%s</big>" % text)
 
