@@ -12,14 +12,7 @@ def items(label, icon, exec):
 
 def menus(app_dicts, cat, icon, cat_zh):
     print('<menu id="apps" label="' + cat_zh + '" icon="' + icon + '">')
-    seen = set()
-    app_lists = []
-    for sub in app_dicts[cat]:
-        key = tuple(sub)
-        if key not in seen:
-            seen.add(key)
-            app_lists.append(sub)
-    for app in app_lists:
+    for app in app_dicts[cat]:
         items(app[0], app[2], app[1])
     print('</menu>')
 
@@ -120,25 +113,25 @@ def applications():
     ]
 
     abouts = [
-        "系统：" + os.popen("uname -s").read(),
-        "用户名：" + os.popen("whoami").read(),
-        "Shell：" + os.popen("echo $SHELL").read(),
-        "运行时间：" + os.popen("uptime -p |awk -F' ' '{print $2,$3,$4,$5}' |sed -e 's/ hours, /时/g' -e 's/ minutes/分/g' -e 's/ hour, /时/g' -e 's/ minute/分/g'").read(),
-        "包数量：" + os.popen("dpkg -l |wc -l").read(),
-        "分辨率：" + os.popen("wlr-randr |awk '/Modes:/{getline; print}' |awk -F' ' '{print $1}'").read(),
-        "磁盘：" + os.popen("cat /proc/partitions |grep -w 'sda' | awk -F' ' '{print $3}' |awk '{printf \"%.1f\",$1/1024/1024}'").read() + "GB",
-        "设备名称：" + os.popen("hostname").read(),
-        "操作系统名称：" + os.popen("lsb_release -si").read(),
-        "操作系统类型：" + os.popen("uname -m |sed -e 's/_/__/g'").read(),
-        "发型版：" + os.popen("lsb_release -sd").read(),
-        "发型版版本：" + os.popen("cat /etc/os-release |grep VERSION_CODENAME |awk -F'=' '{print $2}'").read(),
-        "内核版本：" + os.popen("uname -r").read(),
-        "处理器：" + os.popen("cat /proc/cpuinfo |grep 'model name' |head -n 1 |awk -F ': ' '{print $2}'").read() + os.popen("cat /proc/cpuinfo |grep 'physical id'|uniq |wc -l").read().strip() + "C "  + os.popen("grep 'core id' /proc/cpuinfo | sort -u |wc -l").read().strip() + "核 "  + os.popen("grep 'processor' /proc/cpuinfo |wc -l").read().strip() + "线程",
-        "内存：" + os.popen("cat /proc/meminfo |grep 'MemTotal' |cut -f2 -d:|awk -F' ' '{print int($1)}' |awk '{printf \"%.1f\",$1/1024/1024}'").read() + "GB",
-        "GPU：" + os.popen("lspci |grep -i vga |awk -F ': ' '{print $2}'").read(),
-        "主板：" + os.popen("cat /sys/devices/virtual/dmi/id/board_vendor").read() + os.popen("cat /sys/devices/virtual/dmi/id/board_name").read(),
-        "网卡：" + os.popen("lspci |grep -i 'Network controller' |awk -F'Co., Ltd. ' '{print $2}'").read(),
-        "声卡：" + os.popen("lspci |grep -i audio |awk -F': ' '{print $2}'").read(),
+        "系统：" + os.popen("uname -s").read().strip(),
+        "用户名：" + os.popen("whoami").read().strip(),
+        "Shell：" + os.popen("echo $SHELL").read().strip(),
+        "运行时间：" + os.popen("uptime -p |awk -F' ' '{print $2,$3,$4,$5}' |sed -e 's/ hours, /时/g' -e 's/ minutes/分/g' -e 's/ hour, /时/g' -e 's/ minute/分/g'").read().strip(),
+        "包数量：" + os.popen("dpkg -l |wc -l").read().strip(),
+        "分辨率：" + os.popen("wlr-randr |awk '/Modes:/{getline; print}' |awk -F' ' '{print $1}'").read().strip(),
+        "磁盘：" + os.popen("cat /proc/partitions |grep -w 'sda' | awk -F' ' '{print $3}' |awk '{printf \"%.1f\",$1/1024/1024}'").read().strip() + "GB",
+        "设备名称：" + os.popen("hostname").read().strip(),
+        "操作系统名称：" + os.popen("lsb_release -si").read().strip(),
+        "操作系统类型：" + os.popen("uname -m |sed -e 's/_/__/g'").read().strip(),
+        "发型版：" + os.popen("lsb_release -sd").read().strip(),
+        "发型版版本：" + os.popen("cat /etc/os-release |grep VERSION_CODENAME |awk -F'=' '{print $2}'").read().strip(),
+        "内核版本：" + os.popen("uname -r").read().strip(),
+        "处理器：" + os.popen("cat /proc/cpuinfo |grep 'model name' |head -n 1 |awk -F ': ' '{print $2}'").read().strip() + " " + os.popen("cat /proc/cpuinfo |grep 'physical id'|uniq |wc -l").read().strip() + "C "  + os.popen("grep 'core id' /proc/cpuinfo | sort -u |wc -l").read().strip() + "核 "  + os.popen("grep 'processor' /proc/cpuinfo |wc -l").read().strip() + "线程",
+        "内存：" + os.popen("cat /proc/meminfo |grep 'MemTotal' |cut -f2 -d:|awk -F' ' '{print int($1)}' |awk '{printf \"%.1f\",$1/1024/1024}'").read().strip() + "GB",
+        "GPU：" + os.popen("lspci |grep -i vga |awk -F ': ' '{print $2}'").read().strip(),
+        "主板：" + os.popen("cat /sys/devices/virtual/dmi/id/board_vendor").read().strip() + " " + os.popen("cat /sys/devices/virtual/dmi/id/board_name").read().strip(),
+        "网卡：" + os.popen("lspci |grep -i 'Network controller' |awk -F'Co., Ltd. ' '{print $2}'").read().strip(),
+        "声卡：" + os.popen("lspci |grep -i audio |awk -F': ' '{print $2}'").read().strip(),
     ]
 
     app_lists = apps()
@@ -149,11 +142,13 @@ def applications():
         for cat in CATEGORIES:
             intersection = set(cat[1]) & set(app[3].split(";"))
             others = set(list(chain.from_iterable([cat[1] for cat in CATEGORIES if cat[2] != ['Other']]))) & set(app[3].split(";"))
-            if intersection != ():
+            if intersection:
                 for key in intersection:
-                    if key in cat[1]:
+                    if key in cat[1] and app[:-1] not in app_dicts[cat[0]]:
                         app_dicts[cat[0]].append(app[:-1])
-            elif others == ():
+            elif 'WPS' in app[0] and app[:-1] not in app_dicts['Office']:
+                app_dicts['Office'].append(app[:-1])
+            elif 'WPS' not in app[0] and not others and app[:-1] not in app_dicts['Other']:
                 app_dicts['Other'].append(app[:-1])
 
     print('<openbox_pipe_menu>')
