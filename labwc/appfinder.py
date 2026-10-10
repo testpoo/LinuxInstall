@@ -38,9 +38,6 @@ def scan_desktop_entries():
     exclude = [
       'Foot Server',
       'Foot Client',
-      '批量重命名',
-      'Thunar 首选项',
-      '可移动驱动器和介质'
     ]
     file_path = '/usr/share/applications/'
     file_names = os.listdir(file_path)
@@ -73,7 +70,7 @@ def scan_desktop_entries():
 
 def filter_apps(apps, query):
     q = query.lower()
-    return [a for a in apps if q in a["name"].lower()]
+    return [a for a in apps if q in a["name"].lower() or q in a["exec"].lower()]
 
 class WofiLike(Gtk.Window):
     def __init__(self):
@@ -81,6 +78,7 @@ class WofiLike(Gtk.Window):
         self.set_default_size(500, 400)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.set_border_width(10)
+        self.set_icon_name("org.xfce.appfinder")
         self.all_apps = scan_desktop_entries()
         self.matched_apps = self.all_apps.copy()
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)

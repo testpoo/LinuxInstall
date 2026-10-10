@@ -51,7 +51,7 @@
       <action name="Execute" command="thunar" />
     </keybind>
     <keybind key="W-l">
-      <action name="Execute" command="swaylock -c 0F4C81" />
+      <action name="Execute" command="swaylock -i ~/图片/lock.svg -c 0F4C81" />
     </keybind>
     <keybind key="W-S-c">
       <action name="Execute" command="labwc -r" />
@@ -69,6 +69,9 @@
       <action name="Execute" command="~/.config/labwc/settings.sh touchpad" />
     </keybind>
     <keybind key="W-s">
+      <action name="Execute" command="~/.config/labwc/appfinder.py" />
+    </keybind>
+    <keybind key="A-F3">
       <action name="ShowMenu" menu="root-menu">
       <position>
         <x>0</x>

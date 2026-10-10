@@ -2,32 +2,31 @@
 # coding=utf-8
 
 import os,configparser,math,sys
+from collections import defaultdict
+from itertools import chain
 
 def items(label, icon, exec):
     print('<item label="' + label + '" icon="' + icon + '">')
     print('<action name="Execute" command="' + exec + '" />')
     print('</item>')
 
-def menus(app_lists, num, i, cols):
-    for app in app_lists[0:num]:
+def menus(app_dicts, cat, icon, cat_zh):
+    print('<menu id="apps" label="' + cat_zh + '" icon="' + icon + '">')
+    seen = set()
+    app_lists = []
+    for sub in app_dicts[cat]:
+        key = tuple(sub)
+        if key not in seen:
+            seen.add(key)
+            app_lists.append(sub)
+    for app in app_lists:
         items(app[0], app[2], app[1])
-    if cols > i and len(app_lists) >= num:
-        i += 1
-        print('<menu id="more" icon="application-sql" label="更多程序">')
-        menus(app_lists[num:], num, i)
-        if i != 0:
-            print('<separator />')
-            for i in range(len(logouts)):
-                items("☰☲☱☴☵☶☳☷", "application-sql", "")
-        print('</menu>')
+    print('</menu>')
 
 def apps():
     exclude = [
       'Foot Server',
       'Foot Client',
-      '批量重命名',
-      'Thunar 首选项',
-      '可移动驱动器和介质'
     ]
 
     file_path = '/usr/share/applications/'
@@ -58,8 +57,12 @@ def apps():
             Icon = config.get('Desktop Entry','Icon')
         else:
             continue
+        if config.has_option('Desktop Entry','Categories'):
+            Categories = config.get('Desktop Entry','Categories')
+        else:
+            continue
         if Name not in exclude:
-            app_lists.append([Name,Exec,Icon])
+            app_lists.append([Name,Exec,Icon,Categories])
     return sorted(app_lists)
 
 def applications():
@@ -101,14 +104,75 @@ def applications():
         }
     ]
 
-    num= 28
-    i = 0
+    CATEGORIES = [
+        ('Settings', ['Settings','Screensaver'], 'preferences-desktop', '设置'), 
+        ('Accessories', ['Accessibility','Core','Legacy','Utility'], 'applications-accessories', '实用工具'), 
+        ('Development', ['Development'], 'applications-development', '开发'), 
+        ('Education', ['Education'], 'applications-education', '教育'), 
+        ('Games', ['Game'], 'applications-games', '游戏'), 
+        ('Graphics', ['Graphics'], 'applications-graphics', '图形图像'), 
+        ('Multimedia', ['Audio','Video','AudioVideo'], 'applications-multimedia', '多媒体'), 
+        ('Network', ['Network'], 'applications-internet', '网络'), 
+        ('Office', ['Office'], 'applications-office', '办公'), 
+        ('Science', ['Science'], 'applications-science', '科学'), 
+        ('System', ['Emulator','System'], 'applications-system', '系统工具'), 
+        ('Other', ['Other'], 'applications-other', '其它')
+    ]
+
+    abouts = [
+        "系统：" + os.popen("uname -s").read(),
+        "用户名：" + os.popen("whoami").read(),
+        "Shell：" + os.popen("echo $SHELL").read(),
+        "运行时间：" + os.popen("uptime -p |awk -F' ' '{print $2,$3,$4,$5}' |sed -e 's/ hours, /时/g' -e 's/ minutes/分/g' -e 's/ hour, /时/g' -e 's/ minute/分/g'").read(),
+        "包数量：" + os.popen("dpkg -l |wc -l").read(),
+        "分辨率：" + os.popen("wlr-randr |awk '/Modes:/{getline; print}' |awk -F' ' '{print $1}'").read(),
+        "磁盘：" + os.popen("cat /proc/partitions |grep -w 'sda' | awk -F' ' '{print $3}' |awk '{printf \"%.1f\",$1/1024/1024}'").read() + "GB",
+        "设备名称：" + os.popen("hostname").read(),
+        "操作系统名称：" + os.popen("lsb_release -si").read(),
+        "操作系统类型：" + os.popen("uname -m |sed -e 's/_/__/g'").read(),
+        "发型版：" + os.popen("lsb_release -sd").read(),
+        "发型版版本：" + os.popen("cat /etc/os-release |grep VERSION_CODENAME |awk -F'=' '{print $2}'").read(),
+        "内核版本：" + os.popen("uname -r").read(),
+        "处理器：" + os.popen("cat /proc/cpuinfo |grep 'model name' |head -n 1 |awk -F ': ' '{print $2}'").read() + os.popen("cat /proc/cpuinfo |grep 'physical id'|uniq |wc -l").read().strip() + "C "  + os.popen("grep 'core id' /proc/cpuinfo | sort -u |wc -l").read().strip() + "核 "  + os.popen("grep 'processor' /proc/cpuinfo |wc -l").read().strip() + "线程",
+        "内存：" + os.popen("cat /proc/meminfo |grep 'MemTotal' |cut -f2 -d:|awk -F' ' '{print int($1)}' |awk '{printf \"%.1f\",$1/1024/1024}'").read() + "GB",
+        "GPU：" + os.popen("lspci |grep -i vga |awk -F ': ' '{print $2}'").read(),
+        "主板：" + os.popen("cat /sys/devices/virtual/dmi/id/board_vendor").read() + os.popen("cat /sys/devices/virtual/dmi/id/board_name").read(),
+        "网卡：" + os.popen("lspci |grep -i 'Network controller' |awk -F'Co., Ltd. ' '{print $2}'").read(),
+        "声卡：" + os.popen("lspci |grep -i audio |awk -F': ' '{print $2}'").read(),
+    ]
+
     app_lists = apps()
+    app_lists.sort()
+    app_dicts = defaultdict(list)
+
+    for app in app_lists:
+        for cat in CATEGORIES:
+            intersection = set(cat[1]) & set(app[3].split(";"))
+            others = set(list(chain.from_iterable([cat[1] for cat in CATEGORIES if cat[2] != ['Other']]))) & set(app[3].split(";"))
+            if intersection != ():
+                for key in intersection:
+                    if key in cat[1]:
+                        app_dicts[cat[0]].append(app[:-1])
+            elif others == ():
+                app_dicts['Other'].append(app[:-1])
 
     print('<openbox_pipe_menu>')
-    menus(app_lists, num, i, math.ceil(len(app_lists)/num))
+    items("运行程序...", "org.xfce.appfinder", "~/.config/labwc/appfinder.py")
     print('<separator />')
-    print('<menu id="logout" label="从这里登出" icon="system-log-out">')
+    items("终端模拟器", "org.xfce.terminalemulator", "exo-open --launch TerminalEmulator")
+    items("文件管理器", "org.xfce.filemanager", "exo-open --launch FileManager")
+    items("网络浏览器", "org.xfce.webbrowser", "exo-open --launch WebBrowser")
+    print('<separator />')
+    for cat in CATEGORIES:
+        if cat[0] in app_dicts:
+            menus(app_dicts, cat[0], cat[2], cat[3])
+    print('<separator />')
+    print('<menu id="about" label="关于Debian" icon="org.xfce.about">')
+    print('<separator label="关于Debian" />')
+    for about in abouts:
+        items(about, "debian-logo", "")
+    print('</menu>')
+    print('<menu id="logout" label="注销" icon="system-log-out">')
     for app in logouts:
         items(app["Name"], app["Icon"], app["Exec"])
     print('</menu>')
