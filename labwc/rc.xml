@@ -69,7 +69,7 @@
       <action name="Execute" command="~/.config/labwc/settings.sh touchpad" />
     </keybind>
     <keybind key="W-s">
-      <action name="Execute" command="~/.config/labwc/appfinder.py" />
+      <action name="Execute" command="~/.config/labwc/menu.py apps" />
     </keybind>
     <keybind key="A-F3">
       <action name="ShowMenu" menu="root-menu">

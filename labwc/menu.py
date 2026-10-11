@@ -5,17 +5,20 @@ import os,configparser,math,sys
 from collections import defaultdict
 from itertools import chain
 
+# labwc item
 def items(label, icon, exec):
     print('<item label="' + label + '" icon="' + icon + '">')
     print('<action name="Execute" command="' + exec + '" />')
     print('</item>')
 
+# labwc menu
 def menus(app_dicts, cat, icon, cat_zh):
     print('<menu id="apps" label="' + cat_zh + '" icon="' + icon + '">')
     for app in app_dicts[cat]:
         items(app[0], app[2], app[1])
     print('</menu>')
 
+# 所有程序
 def apps():
     exclude = [
       'Foot Server',
@@ -58,6 +61,181 @@ def apps():
             app_lists.append([Name,Exec,Icon,Categories])
     return sorted(app_lists)
 
+# 程序搜索---------------
+import gi
+gi.require_version("Gtk", "3.0")
+gi.require_version("GdkPixbuf", "2.0")
+from gi.repository import Gtk, Gdk, GdkPixbuf
+
+ICON_SIZE = 32
+
+def load_icon(icon_str):
+    """统一加载图标：支持绝对文件路径 / 主题图标名称，失败返回默认pixbuf"""
+    fallback = Gtk.IconTheme.get_default().load_icon("application-x-executable", ICON_SIZE, 0)
+    if not icon_str:
+        return fallback
+    # 如果是文件路径
+    if os.path.isabs(icon_str):
+        if os.path.exists(icon_str):
+            try:
+                return GdkPixbuf.Pixbuf.new_from_file_at_scale(icon_str, ICON_SIZE, ICON_SIZE, True)
+            except Exception:
+                return fallback
+        else:
+            return fallback
+    # 主题图标名
+    theme = Gtk.IconTheme.get_default()
+    try:
+        p = theme.load_icon(icon_str, ICON_SIZE, Gtk.IconLookupFlags.USE_BUILTIN)
+        if p:
+            return p
+    except Exception:
+        pass
+    return fallback
+
+def filter_apps(apps, query):
+    q = query.lower()
+    return [a for a in apps if q in a[0].lower() or q in a[1].lower()]
+
+class WofiLike(Gtk.Window):
+    def __init__(self):
+        super().__init__(title="AppFinder")
+        self.set_default_size(500, 400)
+        self.set_position(Gtk.WindowPosition.CENTER)
+        self.set_border_width(10)
+        self.set_icon_name("org.xfce.appfinder")
+        self.all_apps = apps()
+        self.matched_apps = self.all_apps.copy()
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        self.add(vbox)
+        # 搜索框
+        self.search_entry = Gtk.SearchEntry()
+        self.search_entry.set_placeholder_text("查询程序...")
+        self.search_entry.connect("changed", self.on_search_changed)
+        vbox.pack_start(self.search_entry, False, True, 0)
+
+        # ListStore: 0=GdkPixbuf对象，1=显示名称
+        self.list_store = Gtk.ListStore(GdkPixbuf.Pixbuf, str)
+        self.tree_view = Gtk.TreeView(model=self.list_store)
+        self.tree_view.set_headers_visible(False)
+
+        # 图标列
+        cell_pix = Gtk.CellRendererPixbuf()
+        col_icon = Gtk.TreeViewColumn()
+        col_icon.pack_start(cell_pix, False)
+        col_icon.add_attribute(cell_pix, "pixbuf", 0)
+        self.tree_view.append_column(col_icon)
+
+        # 文字列
+        cell_text = Gtk.CellRendererText()
+        col_text = Gtk.TreeViewColumn()
+        col_text.pack_start(cell_text, True)
+        col_text.add_attribute(cell_text, "text", 1)
+        self.tree_view.append_column(col_text)
+
+        self.tree_view.connect("row-activated", self.on_row_activate)
+        scrolled = Gtk.ScrolledWindow()
+        scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        scrolled.add(self.tree_view)
+        vbox.pack_start(scrolled, True, True, 0)
+        self.selection = self.tree_view.get_selection()
+        self.update_list()
+        self.connect("key-press-event", self.on_window_key)
+
+    def update_list(self):
+        self.list_store.clear()
+        for app in self.matched_apps:
+            pix = load_icon(app[2])
+            self.list_store.append([pix, app[0]])
+        if self.matched_apps:
+            self.selection.select_path(Gtk.TreePath.new_from_indices([0]))
+
+    def on_search_changed(self, entry):
+        query = entry.get_text()
+        self.matched_apps = filter_apps(self.all_apps, query)
+        self.update_list()
+
+    def on_window_key(self, widget, event):
+        if event.keyval == Gdk.KEY_Escape:
+            self.destroy()
+            return True
+        if event.keyval == Gdk.KEY_Down and self.search_entry.has_focus():
+            self.tree_view.grab_focus()
+            return True
+        return False
+
+    def on_row_activate(self, treeview, path, column):
+        idx = path.get_indices()[0]
+        app = self.matched_apps[idx]
+        cmd = app[1]
+        for ph in ["%U", "%u", "%i", "%d", "%c", "%k"]:
+            cmd = cmd.replace(ph, "")
+        cmd = cmd.strip()
+        subprocess.Popen(cmd, shell=True, start_new_session=True)
+        self.destroy()
+#---------------
+
+# 密码输入
+class InputPopup(Gtk.Window):
+    def __init__(self):
+        super().__init__(title="请输入WIFI密码")
+        self.set_default_size(300, 100)
+        self.set_resizable(False)
+        self.set_icon_name("network-wireless-signal-excellent")
+        # 窗口居中
+        self.set_position(Gtk.WindowPosition.CENTER)
+
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14)
+        vbox.set_margin_top(20)
+        vbox.set_margin_bottom(20)
+        vbox.set_margin_start(20)
+        vbox.set_margin_end(20)
+
+        # 输入框
+        self.entry = Gtk.Entry()
+        self.entry.set_placeholder_text("请输入WIFI密码...")
+        self.entry.connect("activate", self.on_submit) # 回车提交
+        vbox.pack_start(self.entry, False, False, 0)
+
+        # 按钮行
+        btn_box = Gtk.Box(spacing=10)
+        btn_ok = Gtk.Button(label="确定")
+        btn_ok.connect("clicked", self.on_submit)
+        btn_cancel = Gtk.Button(label="取消")
+        btn_cancel.connect("clicked", self.on_cancel)
+
+        btn_box.pack_start(btn_ok, True, True, 0)
+        btn_box.pack_start(btn_cancel, True, True, 0)
+        vbox.pack_start(btn_box, False, False, 0)
+
+        self.add(vbox)
+        self.result = None
+
+        # ESC关闭窗口
+        self.connect("key-press-event", self.on_key_press)
+        # 窗口显示后自动聚焦输入框
+        self.connect("show", self.on_window_shown)
+
+    def on_window_shown(self, widget):
+        self.entry.grab_focus()
+
+    def on_key_press(self, widget, event):
+        if event.keyval == Gdk.KEY_Escape:
+            self.result = None
+            Gtk.main_quit()
+            return True
+        return False
+
+    def on_submit(self, widget):
+        self.result = self.entry.get_text().strip()
+        Gtk.main_quit()
+
+    def on_cancel(self, widget):
+        self.result = None
+        Gtk.main_quit()
+#---------------
+
+# 程序菜单
 def applications():
     logouts = [
       {
@@ -99,16 +277,16 @@ def applications():
 
     CATEGORIES = [
         ('Settings', ['Settings','Screensaver'], 'preferences-desktop', '设置'), 
-        ('Accessories', ['Accessibility','Core','Legacy','Utility'], 'applications-accessories', '实用工具'), 
+        ('Accessories', ['Accessibility','Core','Legacy','Utility'], 'applications-accessories', '附件'), 
         ('Development', ['Development'], 'applications-development', '开发'), 
         ('Education', ['Education'], 'applications-education', '教育'), 
         ('Games', ['Game'], 'applications-games', '游戏'), 
-        ('Graphics', ['Graphics'], 'applications-graphics', '图形图像'), 
+        ('Graphics', ['Graphics'], 'applications-graphics', '图形'), 
         ('Multimedia', ['Audio','Video','AudioVideo'], 'applications-multimedia', '多媒体'), 
         ('Network', ['Network'], 'applications-internet', '网络'), 
         ('Office', ['Office'], 'applications-office', '办公'), 
         ('Science', ['Science'], 'applications-science', '科学'), 
-        ('System', ['Emulator','System'], 'applications-system', '系统工具'), 
+        ('System', ['Emulator','System'], 'applications-system', '系统'), 
         ('Other', ['Other'], 'applications-other', '其它')
     ]
 
@@ -152,7 +330,7 @@ def applications():
                 app_dicts['Other'].append(app[:-1])
 
     print('<openbox_pipe_menu>')
-    items("运行程序...", "org.xfce.appfinder", "~/.config/labwc/appfinder.py")
+    items("运行程序...", "org.xfce.appfinder", "~/.config/labwc/menu.py apps")
     print('<separator />')
     items("终端模拟器", "org.xfce.terminalemulator", "exo-open --launch TerminalEmulator")
     items("文件管理器", "org.xfce.filemanager", "exo-open --launch FileManager")
@@ -173,6 +351,7 @@ def applications():
     print('</menu>')
     print('</openbox_pipe_menu>')
 
+# 声音菜单
 def volume():
     devices = os.popen("wpctl status | awk '/Sinks:/{f=1;next} /Sources:/{f=0} f'").read().split('\n')
     devices = [device for device in devices if device not in (' │  ','')]
@@ -188,8 +367,11 @@ def volume():
     print('<separator label="默认声卡选择" />')
     for device in ndevices:
         items(device[2], device[0], "wpctl set-default " + device[1])
+    print('<separator label="当前音量" />')
+    items("当前音量：" + os.popen("wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk -F ': ' '{print $2*100}'").read().strip() + "%", "mail-unread-symbolic", "")
     print('</openbox_pipe_menu>')
 
+# 网络菜单
 def network():
     new_knowpass = []
     knowpass = os.popen("iwctl known-networks list").read()
@@ -216,7 +398,7 @@ def network():
         if ssid[1] in new_knowpass:
             items(ssid[1], ssid[2], "iwctl station wlan0 connect " + ssid[1])
         else:
-            items(ssid[1], ssid[2], "~/.config/labwc/network-input.py " + ssid[1])
+            items(ssid[1], ssid[2], "~/.config/labwc/menu.py password " + ssid[1])
     print('<item label="更新列表" icon="system-software-update">')
     exec = "sh -c 'iwctl station wlan0 scan;wtype -M logo -k n'"
     print('<action name="Execute" command="' + exec + '" />')
@@ -234,3 +416,15 @@ elif sys.argv[1] == "volume":
     volume()
 elif sys.argv[1] == "network":
     network()
+elif sys.argv[1] == "apps":
+    win = WofiLike()
+    win.connect("destroy", Gtk.main_quit)
+    win.show_all()
+    win.search_entry.grab_focus()
+    Gtk.main()
+elif sys.argv[1] == "password":
+    win = InputPopup()
+    win.show_all()
+    Gtk.main()
+    if win.result is not None:
+        os.system("iwctl --passphrase " + win.result + " station wlan0 connect " + sys.argv[2])
