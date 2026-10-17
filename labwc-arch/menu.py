@@ -184,19 +184,6 @@ def applications():
 
 def tools():
     print('<openbox_pipe_menu>')
-    # 窗口列表
-    print('<menu id="tools" label="窗口列表" icon="amarok_playlist">')
-    apps = os.popen("/home/poo/.config/labwc/wlrctl window list").read().split("\n")[:-1]
-    for app in apps:
-        temp = app.split(":", maxsplit=1)
-        icon = os.popen("grep -m 1 'Icon=' /usr/share/applications/" + temp[0].lower().replace(".py","".split("/")[-1]) + ".desktop").read().strip().split("=")
-        if "~" in temp[1].strip():
-            items(temp[1].strip(), icon[1], "/home/poo/.config/labwc/wlrctl window focus app_id:" + temp[0].strip())
-        else:
-            items(temp[1].strip(), icon[1], "/home/poo/.config/labwc/wlrctl window focus title:'" + temp[1].strip() + "'")
-    print('</menu>')
-
-    print('<separator />')
     # 输入法
     ime = os.popen("fcitx5-remote -n").read().strip()
     if ime == "rime":
@@ -210,7 +197,6 @@ def tools():
         print('<menu id="tools" label="' + ime + '" icon="fcitx-rime">')
     items("重新启动", "system-reboot", "fcitx5 -r")
     items("输入法设置", "org.xfce.settings.editor", "fcitx5-configtool")
-    #items("启动", "hb-start", "fcitx5")
     items("退出", "system-log-out", "pkill fcitx5")
     print('</menu>')
 
@@ -287,10 +273,10 @@ def tools():
     items(light + "% 亮度", "brightness-display-symbolic", "")
 
     # 触摸板
-    if os.system("grep -q '<sendEventsMode>no<\/sendEventsMode>$' ~/.config/labwc/rc.xml") == 0:
-        items("触摸板关闭", "touchpad-disabled-symbolic", "/home/poo/.config/labwc/settings.sh touchpad")
+    if os.system("grep -q '<sendEventsMode>no<\\/sendEventsMode>$' ~/.config/labwc/rc.xml") == 0:
+        items("触摸板关闭", "touchpad-disabled-symbolic", "~/.config/labwc/settings.sh touchpad")
     else:
-        items("触摸板打开", "touchpad-enabled-symbolic", "/home/poo/.config/labwc/settings.sh touchpad")
+        items("触摸板打开", "touchpad-enabled-symbolic", "~/.config/labwc/settings.sh touchpad")
 
     print('<separator />')
     # 图片
@@ -303,15 +289,16 @@ def tools():
             list.append((name, full_path))
     print('<menu id="tools" label="设置背景" icon="preferences-desktop-wallpaper">')
     for li in list:
-        items(li[0], "image", "/home/poo/.config/labwc/settings.sh change-swaybg " + li[1])
+        items(li[0], "image", "~/.config/labwc/settings.sh change-swaybg " + li[1])
     print('</menu>')
 
+    print('<separator />')
     # 时间
-    time = os.popen("date '+%m/%d %R'").read().strip()
-    long_time = os.popen("date '+%A %F %R 第%V周'").read().strip()
-    print('<menu id="tools" label="' + time + '" icon="date">')
-    items(long_time, "timeset-gui-icon", "/opt/xflunar/xflunar.py")
-    print('</menu>')
+    idate = os.popen("date '+%Y/%m/%d'").read().strip()
+    itime = os.popen("date '+%H:%M:%S'").read().strip()
+    iweek = os.popen("date '+%V周|%A'").read().strip()
+    for t in [idate, itime, iweek]:
+        items(t, "timeset-gui-icon", "/opt/xflunar/xflunar.py")
 
     print('<separator />')
     # 注销
@@ -319,16 +306,34 @@ def tools():
         items(app["Name"], app["Icon"], app["Exec"])
     print('</openbox_pipe_menu>')
 
-def appwindows():
+def window_list():
     apps = os.popen("/home/poo/.config/labwc/wlrctl window list").read().split("\n")[:-1]
-    print('<openbox_pipe_menu>')
+    return apps
+
+def tilde(index):
+    tilde_list = []
+    apps = window_list()
     for app in apps:
         temp = app.split(":", maxsplit=1)
-        icon = os.popen("grep -m 1 'Icon=' /usr/share/applications/" + temp[0].lower().replace(".py","".split("/")[-1]) + ".desktop").read().strip().split("=")
-        if "~" in temp[1].strip():
-            items(temp[1].strip(), icon[1], "/home/poo/.config/labwc/wlrctl window focus app_id:" + temp[0].strip())
+        tilde_list.append("/home/poo/.config/labwc/wlrctl window focus app_id:" + temp[0].strip() + " title:'" + temp[1].strip() + "'")
+    os.system(tilde_list[int(index)])
+
+def appwindows():
+    print('<openbox_pipe_menu>')
+    apps = window_list()
+    for app in apps:
+        temp = app.split(":", maxsplit=1)
+        icon = os.popen("grep -m 1 'Icon=' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip().split("=")
+        name_zh_cn = os.popen("grep -m 1 'Name\[zh_CN\]' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip()
+        name_zh = os.popen("grep -m 1 'Name\[zh_CN\]' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip()
+        name = os.popen("grep -m 1 'Name' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip()
+        if name_zh_cn != "":
+            name = name_zh_cn.split("=")[1]
+        elif name_zh != "":
+            name = name_zh.split("=")[1]
         else:
-            items(temp[1].strip(), icon[1], "/home/poo/.config/labwc/wlrctl window focus title:'" + temp[1].strip() + "'")
+            name = name.split("=")[1]
+        items(name + "｜" + temp[1].strip(), icon[1], "/home/poo/.config/labwc/menu.py tilde " + str(apps.index(app)))
     print('</openbox_pipe_menu>')
 
 if sys.argv[1] == "applications":
@@ -337,3 +342,5 @@ elif sys.argv[1] == "tools":
     tools()
 elif sys.argv[1] == "appwindows":
     appwindows()
+elif sys.argv[1] == "tilde":
+    tilde(sys.argv[2])
