@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=wechat
+Name[zh_CN]=微信
+Exec=/opt/wechat/WeChatLinux_x86_64.AppImage
+StartupNotify=true
+Terminal=false
+Icon=wechat
+Type=Application
+Categories=Utility;
+Comment=Wechat Desktop
+Comment[zh_CN]=微信桌面版
