@@ -32,7 +32,7 @@ class LabwcLayerBar(Gtk.Window):
 
         # Left root menu
         self.left_evbox = Gtk.EventBox()
-        left_label = Gtk.Label(label="🖥️")
+        left_label = Gtk.Label(label="♾️")
         self.left_evbox.add(left_label)
         self.left_evbox.set_visible_window(False)
         self.left_evbox.connect("enter-notify-event", self.on_enter_root)
@@ -133,7 +133,7 @@ class LabwcLayerBar(Gtk.Window):
             return False
 #        if self.root_timeout_id is not None:
 #            GLib.source_remove(self.root_timeout_id)
-        self.root_timeout_id = GLib.timeout_add(250, self._spawn_labwc_menu, "wtype -M logo -k s")
+        self.root_timeout_id = GLib.timeout_add(250, self._spawn_labwc_menu, "wtype -M alt -k f1")
         return False
 
     def on_enter_client(self, widget, event):
@@ -141,7 +141,7 @@ class LabwcLayerBar(Gtk.Window):
             return False
 #        if self.client_timeout_id is not None:
 #            GLib.source_remove(self.client_timeout_id)
-        self.client_timeout_id = GLib.timeout_add(250, self._spawn_labwc_menu, "wtype -M logo -k z")
+        self.client_timeout_id = GLib.timeout_add(250, self._spawn_labwc_menu, "wtype -M alt -k f2")
         return False
 
     def on_enter_list(self, widget, event):

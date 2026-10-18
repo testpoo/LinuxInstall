@@ -24,7 +24,7 @@ touchpad() {
 volume-notify() {
     xfce4-panel --plugin-event=genmon-10:refresh:bool:true
     volume=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk -F ': ' '{print $2*100}')
-    if [[ $(wpctl status| grep 'USB Audio Device 模拟立体声') =~ "MUTED" ]] || [ $volume -eq 0 ];then
+    if [[ $(wpctl get-volume @DEFAULT_AUDIO_SINK@) =~ "MUTED" ]] || [ $volume -eq 0 ];then
         notify-send -t 2000 -h string:x-canonical-private-synchronous:volume -h int:value:$volume -i display-volume "$volume% 静音"
     else
         notify-send -t 2000 -h string:x-canonical-private-synchronous:volume -h int:value:$volume -i display-volume "$volume% 音量"

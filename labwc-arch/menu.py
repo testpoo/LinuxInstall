@@ -24,7 +24,7 @@ logouts = [
     {
         "Name": "重载",
         "Exec": "labwc -r",
-        "Icon": "btsync-user"
+        "Icon": "retweet"
     },
     {
         "Name": "退出",
@@ -196,7 +196,7 @@ def tools():
     else:
         print('<menu id="tools" label="' + ime + '" icon="fcitx-rime">')
     items("重新启动", "system-reboot", "fcitx5 -r")
-    items("输入法设置", "org.xfce.settings.editor", "fcitx5-configtool")
+    items("输入法设置", "system-config-keyboard", "fcitx5-configtool")
     items("退出", "system-log-out", "pkill fcitx5")
     print('</menu>')
 
@@ -234,9 +234,9 @@ def tools():
             items(ssid[1], ssid[2], "iwctl station wlan0 connect " + ssid[1])
         else:
             items(ssid[1], ssid[2], "foot -T '输入WIFI密码' -w 500x80 sh -c 'iwctl station wlan0 connect " + ssid[1] + ";read'")
-    #print('<item label="更新列表" icon="system-software-update">')
-    #print('<action name="Execute" command="iwctl station wlan0 scan" />')
-    #print('</item>')
+    print('<item label="更新列表" icon="bqm-update">')
+    print('<action name="Execute" command="iwctl station wlan0 scan" />')
+    print('</item>')
     print('<separator label="清除密码" />')
     for ssid in new_knowpass:
         items(ssid, "editclear", "iwctl known-networks " + ssid + " forget")
@@ -272,11 +272,17 @@ def tools():
     light = os.popen("(brightnessctl get | awk '{print $1/192}')").read().strip()
     items(light + "% 亮度", "brightness-display-symbolic", "")
 
+    # 截图
+    items("截图", "accessories-screenshot-symbolic", "sh -c 'grim -g &quot;$(slurp)&quot; -s 1.25 - | wl-copy'")
+
     # 触摸板
     if os.system("grep -q '<sendEventsMode>no<\\/sendEventsMode>$' ~/.config/labwc/rc.xml") == 0:
         items("触摸板关闭", "touchpad-disabled-symbolic", "~/.config/labwc/settings.sh touchpad")
     else:
         items("触摸板打开", "touchpad-enabled-symbolic", "~/.config/labwc/settings.sh touchpad")
+
+    # 显示桌面
+    items("显示桌面", "desktop", "wtype -M logo -k d")
 
     print('<separator />')
     # 图片
@@ -287,9 +293,9 @@ def tools():
         full_path = os.path.join(target_dir, name)
         if os.path.isfile(full_path): # 只取文件，排除文件夹
             list.append((name, full_path))
-    print('<menu id="tools" label="设置背景" icon="preferences-desktop-wallpaper">')
+    print('<menu id="tools" label="设置背景" icon="cs-backgrounds-symbolic">')
     for li in list:
-        items(li[0], "image", "~/.config/labwc/settings.sh change-swaybg " + li[1])
+        items(li[0], "games-config-background", "~/.config/labwc/settings.sh change-swaybg " + li[1])
     print('</menu>')
 
     print('<separator />')
@@ -297,8 +303,8 @@ def tools():
     idate = os.popen("date '+%Y/%m/%d'").read().strip()
     itime = os.popen("date '+%H:%M:%S'").read().strip()
     iweek = os.popen("date '+%V周|%A'").read().strip()
-    for t in [idate, itime, iweek]:
-        items(t, "timeset-gui-icon", "/opt/xflunar/xflunar.py")
+    for time in [("date",idate), ("view-calendar-time-spent",itime), ("view-calendar-week",iweek)]:
+        items(time[1], time[0], "/opt/xflunar/xflunar.py")
 
     print('<separator />')
     # 注销
@@ -321,19 +327,22 @@ def tilde(index):
 def appwindows():
     print('<openbox_pipe_menu>')
     apps = window_list()
-    for app in apps:
-        temp = app.split(":", maxsplit=1)
-        icon = os.popen("grep -m 1 'Icon=' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip().split("=")
-        name_zh_cn = os.popen("grep -m 1 'Name\[zh_CN\]' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip()
-        name_zh = os.popen("grep -m 1 'Name\[zh_CN\]' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip()
-        name = os.popen("grep -m 1 'Name' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip()
-        if name_zh_cn != "":
-            name = name_zh_cn.split("=")[1]
-        elif name_zh != "":
-            name = name_zh.split("=")[1]
-        else:
-            name = name.split("=")[1]
-        items(name + "｜" + temp[1].strip(), icon[1], "/home/poo/.config/labwc/menu.py tilde " + str(apps.index(app)))
+    if apps:
+        for app in apps:
+            temp = app.split(":", maxsplit=1)
+            icon = os.popen("grep -m 1 'Icon=' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip().split("=")
+            name_zh_cn = os.popen("grep -m 1 'Name\[zh_CN\]' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip()
+            name_zh = os.popen("grep -m 1 'Name\[zh_CN\]' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip()
+            name = os.popen("grep -m 1 'Name' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip()
+            if name_zh_cn != "":
+                name = name_zh_cn.split("=")[1]
+            elif name_zh != "":
+                name = name_zh.split("=")[1]
+            else:
+                name = name.split("=")[1]
+            items(name + "｜" + temp[1].strip(), icon[1], "/home/poo/.config/labwc/menu.py tilde " + str(apps.index(app)))
+    else:
+        items("没有窗口打开", "window", "")
     print('</openbox_pipe_menu>')
 
 if sys.argv[1] == "applications":
