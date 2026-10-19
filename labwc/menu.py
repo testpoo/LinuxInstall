@@ -5,6 +5,44 @@ import os,configparser,math,sys
 from collections import defaultdict
 from itertools import chain
 
+logouts = [
+    {
+        "Name": "锁屏",
+        "Exec": "swaylock -i ~/图片/lock.svg -c 0F4C81",
+        "Icon": "system-lock-screen"
+    },
+#  {
+#    "Name": "挂起",
+#    "Exec": "systemctl suspend",
+#    "Icon": "system-suspend"
+#  },
+#  {
+#    "Name": "休眼",
+#    "Exec": "systemctl hibernate",
+#    "Icon": "system-suspend-hibernate"
+#  },
+    {
+        "Name": "重载",
+        "Exec": "labwc -r",
+        "Icon": "retweet"
+    },
+    {
+        "Name": "退出",
+        "Exec": "labwc -e",
+        "Icon": "system-log-out"
+    },
+    {
+        "Name": "重启",
+        "Exec": "systemctl reboot",
+        "Icon": "system-reboot"
+    },
+    {
+        "Name": "关机",
+        "Exec": "systemctl poweroff -i",
+        "Icon": "system-shutdown"
+    }
+]
+
 # labwc item
 def items(label, icon, exec):
     print('<item label="' + label + '" icon="' + icon + '">')
@@ -23,6 +61,11 @@ def apps():
     exclude = [
       'Foot Server',
       'Foot Client',
+      'Avahi SSH 服务器的浏览器',
+      'Avahi VNC 服务器的浏览器',
+      'Avahi Zeroconf 浏览器',
+      'Qt V4L2 test Utility',
+      'Qt V4L2 video capture utility'
     ]
 
     file_path = '/usr/share/applications/'
@@ -61,220 +104,8 @@ def apps():
             app_lists.append([Name,Exec,Icon,Categories])
     return sorted(app_lists)
 
-# 程序搜索---------------
-import gi
-gi.require_version("Gtk", "3.0")
-gi.require_version("GdkPixbuf", "2.0")
-from gi.repository import Gtk, Gdk, GdkPixbuf
-
-ICON_SIZE = 32
-
-def load_icon(icon_str):
-    """统一加载图标：支持绝对文件路径 / 主题图标名称，失败返回默认pixbuf"""
-    fallback = Gtk.IconTheme.get_default().load_icon("application-x-executable", ICON_SIZE, 0)
-    if not icon_str:
-        return fallback
-    # 如果是文件路径
-    if os.path.isabs(icon_str):
-        if os.path.exists(icon_str):
-            try:
-                return GdkPixbuf.Pixbuf.new_from_file_at_scale(icon_str, ICON_SIZE, ICON_SIZE, True)
-            except Exception:
-                return fallback
-        else:
-            return fallback
-    # 主题图标名
-    theme = Gtk.IconTheme.get_default()
-    try:
-        p = theme.load_icon(icon_str, ICON_SIZE, Gtk.IconLookupFlags.USE_BUILTIN)
-        if p:
-            return p
-    except Exception:
-        pass
-    return fallback
-
-def filter_apps(apps, query):
-    q = query.lower()
-    return [a for a in apps if q in a[0].lower() or q in a[1].lower()]
-
-class WofiLike(Gtk.Window):
-    def __init__(self):
-        super().__init__(title="AppFinder")
-        self.set_default_size(500, 400)
-        self.set_position(Gtk.WindowPosition.CENTER)
-        self.set_border_width(10)
-        self.set_icon_name("org.xfce.appfinder")
-        self.all_apps = apps()
-        self.matched_apps = self.all_apps.copy()
-        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
-        self.add(vbox)
-        # 搜索框
-        self.search_entry = Gtk.SearchEntry()
-        self.search_entry.set_placeholder_text("查询程序...")
-        self.search_entry.connect("changed", self.on_search_changed)
-        vbox.pack_start(self.search_entry, False, True, 0)
-
-        # ListStore: 0=GdkPixbuf对象，1=显示名称
-        self.list_store = Gtk.ListStore(GdkPixbuf.Pixbuf, str)
-        self.tree_view = Gtk.TreeView(model=self.list_store)
-        self.tree_view.set_headers_visible(False)
-
-        # 图标列
-        cell_pix = Gtk.CellRendererPixbuf()
-        col_icon = Gtk.TreeViewColumn()
-        col_icon.pack_start(cell_pix, False)
-        col_icon.add_attribute(cell_pix, "pixbuf", 0)
-        self.tree_view.append_column(col_icon)
-
-        # 文字列
-        cell_text = Gtk.CellRendererText()
-        col_text = Gtk.TreeViewColumn()
-        col_text.pack_start(cell_text, True)
-        col_text.add_attribute(cell_text, "text", 1)
-        self.tree_view.append_column(col_text)
-
-        self.tree_view.connect("row-activated", self.on_row_activate)
-        scrolled = Gtk.ScrolledWindow()
-        scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        scrolled.add(self.tree_view)
-        vbox.pack_start(scrolled, True, True, 0)
-        self.selection = self.tree_view.get_selection()
-        self.update_list()
-        self.connect("key-press-event", self.on_window_key)
-
-    def update_list(self):
-        self.list_store.clear()
-        for app in self.matched_apps:
-            pix = load_icon(app[2])
-            self.list_store.append([pix, app[0]])
-        if self.matched_apps:
-            self.selection.select_path(Gtk.TreePath.new_from_indices([0]))
-
-    def on_search_changed(self, entry):
-        query = entry.get_text()
-        self.matched_apps = filter_apps(self.all_apps, query)
-        self.update_list()
-
-    def on_window_key(self, widget, event):
-        if event.keyval == Gdk.KEY_Escape:
-            self.destroy()
-            return True
-        if event.keyval == Gdk.KEY_Down and self.search_entry.has_focus():
-            self.tree_view.grab_focus()
-            return True
-        return False
-
-    def on_row_activate(self, treeview, path, column):
-        idx = path.get_indices()[0]
-        app = self.matched_apps[idx]
-        cmd = app[1]
-        for ph in ["%U", "%u", "%i", "%d", "%c", "%k"]:
-            cmd = cmd.replace(ph, "")
-        cmd = cmd.strip()
-        subprocess.Popen(cmd, shell=True, start_new_session=True)
-        self.destroy()
-#---------------
-
-# 密码输入
-class InputPopup(Gtk.Window):
-    def __init__(self):
-        super().__init__(title="请输入WIFI密码")
-        self.set_default_size(300, 100)
-        self.set_resizable(False)
-        self.set_icon_name("network-wireless-signal-excellent")
-        # 窗口居中
-        self.set_position(Gtk.WindowPosition.CENTER)
-
-        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14)
-        vbox.set_margin_top(20)
-        vbox.set_margin_bottom(20)
-        vbox.set_margin_start(20)
-        vbox.set_margin_end(20)
-
-        # 输入框
-        self.entry = Gtk.Entry()
-        self.entry.set_placeholder_text("请输入WIFI密码...")
-        self.entry.connect("activate", self.on_submit) # 回车提交
-        vbox.pack_start(self.entry, False, False, 0)
-
-        # 按钮行
-        btn_box = Gtk.Box(spacing=10)
-        btn_ok = Gtk.Button(label="确定")
-        btn_ok.connect("clicked", self.on_submit)
-        btn_cancel = Gtk.Button(label="取消")
-        btn_cancel.connect("clicked", self.on_cancel)
-
-        btn_box.pack_start(btn_ok, True, True, 0)
-        btn_box.pack_start(btn_cancel, True, True, 0)
-        vbox.pack_start(btn_box, False, False, 0)
-
-        self.add(vbox)
-        self.result = None
-
-        # ESC关闭窗口
-        self.connect("key-press-event", self.on_key_press)
-        # 窗口显示后自动聚焦输入框
-        self.connect("show", self.on_window_shown)
-
-    def on_window_shown(self, widget):
-        self.entry.grab_focus()
-
-    def on_key_press(self, widget, event):
-        if event.keyval == Gdk.KEY_Escape:
-            self.result = None
-            Gtk.main_quit()
-            return True
-        return False
-
-    def on_submit(self, widget):
-        self.result = self.entry.get_text().strip()
-        Gtk.main_quit()
-
-    def on_cancel(self, widget):
-        self.result = None
-        Gtk.main_quit()
-#---------------
-
 # 程序菜单
 def applications():
-    logouts = [
-      {
-        "Name": "锁屏",
-        "Exec": "swaylock -c 0F4C81",
-        "Icon": "system-lock-screen"
-        },
-#  {
-#    "Name": "挂起",
-#    "Exec": "systemctl suspend",
-#    "Icon": "system-suspend"
-#  },
-#  {
-#    "Name": "休眼",
-#    "Exec": "systemctl hibernate",
-#    "Icon": "system-suspend-hibernate"
-#  },
-        {
-        "Name": "重载",
-        "Exec": "labwc -r",
-        "Icon": "sync-synchronizing"
-        },
-        {
-        "Name": "退出",
-        "Exec": "labwc -e",
-        "Icon": "system-log-out"
-        },
-        {
-        "Name": "重启",
-        "Exec": "systemctl reboot",
-        "Icon": "system-reboot"
-        },
-        {
-        "Name": "关机",
-        "Exec": "systemctl poweroff -i",
-        "Icon": "system-shutdown"
-        }
-    ]
-
     CATEGORIES = [
         ('Settings', ['Settings','Screensaver'], 'preferences-desktop', '设置'), 
         ('Accessories', ['Accessibility','Core','Legacy','Utility'], 'applications-accessories', '附件'), 
@@ -295,14 +126,14 @@ def applications():
         "用户名：" + os.popen("whoami").read().strip(),
         "Shell：" + os.popen("echo $SHELL").read().strip(),
         "运行时间：" + os.popen("uptime -p |awk -F' ' '{print $2,$3,$4,$5}' |sed -e 's/ hours, /时/g' -e 's/ minutes/分/g' -e 's/ hour, /时/g' -e 's/ minute/分/g'").read().strip(),
-        "包数量：" + os.popen("dpkg -l |wc -l").read().strip(),
+        "包数量：" + os.popen("pacman -Q | wc -l").read().strip(),
         "分辨率：" + os.popen("wlr-randr |awk '/Modes:/{getline; print}' |awk -F' ' '{print $1}'").read().strip(),
         "磁盘：" + os.popen("cat /proc/partitions |grep -w 'sda' | awk -F' ' '{print $3}' |awk '{printf \"%.1f\",$1/1024/1024}'").read().strip() + "GB",
-        "设备名称：" + os.popen("hostname").read().strip(),
-        "操作系统名称：" + os.popen("lsb_release -si").read().strip(),
+        "设备名称：" + os.popen("hostnamectl|grep 'Static hostname'|awk -F': ' '{print $2}'").read().strip(),
+        "操作系统名称：" + os.popen("hostnamectl|grep 'Operating System'|awk -F': ' '{print $2}'").read().strip(),
         "操作系统类型：" + os.popen("uname -m |sed -e 's/_/__/g'").read().strip(),
-        "发型版：" + os.popen("lsb_release -sd").read().strip(),
-        "发型版版本：" + os.popen("cat /etc/os-release |grep VERSION_CODENAME |awk -F'=' '{print $2}'").read().strip(),
+        "发型版：" + os.popen("cat /etc/os-release |grep ID |awk -F'=' '{print $2}'").read().strip(),
+        "发型版版本：" + os.popen("cat /etc/os-release |grep BUILD_ID |awk -F'=' '{print $2}'").read().strip(),
         "内核版本：" + os.popen("uname -r").read().strip(),
         "处理器：" + os.popen("cat /proc/cpuinfo |grep 'model name' |head -n 1 |awk -F ': ' '{print $2}'").read().strip() + " " + os.popen("cat /proc/cpuinfo |grep 'physical id'|uniq |wc -l").read().strip() + "C "  + os.popen("grep 'core id' /proc/cpuinfo | sort -u |wc -l").read().strip() + "核 "  + os.popen("grep 'processor' /proc/cpuinfo |wc -l").read().strip() + "线程",
         "内存：" + os.popen("cat /proc/meminfo |grep 'MemTotal' |cut -f2 -d:|awk -F' ' '{print int($1)}' |awk '{printf \"%.1f\",$1/1024/1024}'").read().strip() + "GB",
@@ -330,9 +161,9 @@ def applications():
                 app_dicts['Other'].append(app[:-1])
 
     print('<openbox_pipe_menu>')
-    items("运行程序...", "org.xfce.appfinder", "~/.config/labwc/menu.py apps")
+    items("运行程序...", "system-search", "~/.config/labwc/appfinder.py")
     print('<separator />')
-    items("终端模拟器", "org.xfce.terminalemulator", "exo-open --launch TerminalEmulator")
+    items("终端模拟器", "org.xfce.terminalemulator", "foot")
     items("文件管理器", "org.xfce.filemanager", "exo-open --launch FileManager")
     items("网络浏览器", "org.xfce.webbrowser", "exo-open --launch WebBrowser")
     print('<separator />')
@@ -340,10 +171,10 @@ def applications():
         if cat[0] in app_dicts:
             menus(app_dicts, cat[0], cat[2], cat[3])
     print('<separator />')
-    print('<menu id="about" label="关于Debian" icon="org.xfce.about">')
-    print('<separator label="关于Debian" />')
+    print('<menu id="about" label="关于Arch" icon="gnome-about-logo">')
+    print('<separator label="关于Arch" />')
     for about in abouts:
-        items(about, "debian-logo", "")
+        items(about, "distributor-logo-archlinux", "")
     print('</menu>')
     print('<menu id="logout" label="注销" icon="system-log-out">')
     for app in logouts:
@@ -351,28 +182,35 @@ def applications():
     print('</menu>')
     print('</openbox_pipe_menu>')
 
-# 声音菜单
-def volume():
-    devices = os.popen("wpctl status | awk '/Sinks:/{f=1;next} /Sources:/{f=0} f'").read().split('\n')
-    devices = [device for device in devices if device not in (' │  ','')]
-    ndevices = []
-    for device in devices:
-        device = device.split("[vol:")[0].split()
-        if device[1] != '*':
-            device =['',device[1].replace(".","")," ".join(device[2:])]
-        else:
-            device =['mail-unread-symbolic',device[2].replace(".","")," ".join(device[3:])]
-        ndevices.append(device)
+def tools():
     print('<openbox_pipe_menu>')
-    print('<separator label="默认声卡选择" />')
-    for device in ndevices:
-        items(device[2], device[0], "wpctl set-default " + device[1])
-    print('<separator label="当前音量" />')
-    items("当前音量：" + os.popen("wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk -F ': ' '{print $2*100}'").read().strip() + "%", "mail-unread-symbolic", "")
-    print('</openbox_pipe_menu>')
+    # 输入法
+    ime = os.popen("fcitx5-remote -n").read().strip()
+    if ime == "rime":
+        ime = "中州韵"
+    IsAsciiMode = os.popen("busctl --user call org.fcitx.Fcitx5 /rime org.fcitx.Fcitx.Rime1 IsAsciiMode").read().strip()
+    if ime == "":
+        print('<menu id="tools" label="输入法" icon="input-keyboard">')
+    elif IsAsciiMode == "b true":
+        print('<menu id="tools" label="英文" icon="fcitx_rime_latin">')
+    else:
+        print('<menu id="tools" label="' + ime + '" icon="fcitx-rime">')
+    items("重新启动", "system-reboot", "fcitx5 -r")
+    items("输入法设置", "system-config-keyboard", "fcitx5-configtool")
+    items("退出", "system-log-out", "pkill fcitx5")
+    print('</menu>')
 
-# 网络菜单
-def network():
+    # 蓝牙
+    status = os.popen("systemctl is-active bluetooth").read().strip()
+    bluetooth_device = os.popen("bluetoothctl devices Connected").read().strip()
+    if status == "active" and bluetooth_device != '':
+        items("激活|" + bluetooth_device.split(" ")[2], "network-bluetooth-activated", "foot bluetui")
+    elif status == "active" and bluetooth_device == '':
+        items("激活|未连接" + bluetooth_device, "bluetooth-symbolic", "foot bluetui")
+    else:
+        items("激活", "network-bluetooth-inactive", "foot bluetui")
+
+    # 网络
     new_knowpass = []
     knowpass = os.popen("iwctl known-networks list").read()
     for know in knowpass.replace('[0m','').split('\n')[4:]:
@@ -380,7 +218,6 @@ def network():
             new_knowpass.append(know.split()[0])
     ssids = os.popen("iwctl station wlan0 get-networks").read()
     new_ssids = []
-    choice_ssid = ''
     ssid_icons = ['network-wireless-signal-weak','network-wireless-signal-ok','network-wireless-signal-good','network-wireless-signal-excellent']
     for ssid in ssids.replace('[0m','').split('\n')[4:]:
         new_ssid = ssid.split()
@@ -389,42 +226,130 @@ def network():
         elif new_ssid != []:
             new_ssid = ['',new_ssid[0],ssid_icons[int(len(new_ssid[2].split('\x1b[1;90m')[0]) - 1)]]
             new_ssids.append(new_ssid)
-    print('<openbox_pipe_menu>')
-    if choice_ssid != '':
-        print('<separator label="已连接 WLAN" />')
-        items(choice_ssid[1], choice_ssid[2], "iwctl station wlan0 disconnect")
-    print('<separator label="可用 WLAN" />')
+    if choice_ssid == '':
+        choice_ssid = ['*',"网络断开","network-wireless-offline"]
+    print('<menu id="tools" label="' + choice_ssid[1] + '" icon="' + choice_ssid[2] + '">')
     for ssid in new_ssids:
         if ssid[1] in new_knowpass:
             items(ssid[1], ssid[2], "iwctl station wlan0 connect " + ssid[1])
         else:
-            items(ssid[1], ssid[2], "~/.config/labwc/menu.py password " + ssid[1])
-    print('<item label="更新列表" icon="system-software-update">')
-    exec = "sh -c 'iwctl station wlan0 scan;wtype -M logo -k n'"
-    print('<action name="Execute" command="' + exec + '" />')
+            items(ssid[1], ssid[2], "foot -T '输入WIFI密码' -w 500x80 sh -c 'iwctl station wlan0 connect " + ssid[1] + ";read'")
+    print('<item label="更新列表" icon="bqm-update">')
+    print('<action name="Execute" command="iwctl station wlan0 scan" />')
     print('</item>')
-    print('<menu id="logout" label="清除密碼" icon="edit-clear">')
-    for ssid in new_ssids:
-        if ssid[1] in new_knowpass:
-            items(ssid[1], ssid[2], "iwctl known-networks " + ssid[1] + " forget")
+    print('<separator label="清除密码" />')
+    for ssid in new_knowpass:
+        items(ssid, "editclear", "iwctl known-networks " + ssid + " forget")
     print('</menu>')
+
+    # 声音
+    volume = os.popen("wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk -F ': ' '{print $2*100}'").read().strip()
+    if "MUTED" in os.popen("wpctl get-volume @DEFAULT_AUDIO_SINK@").read().strip() or volume == 0:
+        volume_icon = "audio-volume-muted-symbolic"
+    elif int(volume) >= 1 and int(volume) < 33:
+        volume_icon = "audio-volume-low-symbolic"
+    elif int(volume) >= 34 and int(volume) < 66:
+        volume_icon = "audio-volume-medium-symbolic"
+    else:
+        volume_icon = "audio-volume-high-symbolic"
+    devices = os.popen("wpctl status | awk '/Sinks:/{f=1;next} /Sources:/{f=0} f'").read().split('\n')
+    devices = [device for device in devices if device not in (' │  ','')]
+    ndevices = []
+    for device in devices:
+        device = device.split("[vol:")[0].split()
+        if device[1] != '*':
+            device =['',device[1].replace(".","")," ".join(device[2:])]
+        else:
+            device =['audio-card',device[2].replace(".","")," ".join(device[3:])]
+        ndevices.append(device)
+    print('<menu id="tools" label="' + volume + '% 声音" icon="' + volume_icon + '">')
+    print('<separator label="默认声卡选择" />')
+    for device in ndevices:
+        items(device[2], device[0], "wpctl set-default " + device[1])
+    print('</menu>')
+
+    # 亮度
+    light = os.popen("(brightnessctl get | awk '{print $1/192}')").read().strip()
+    items(light + "% 亮度", "brightness-display-symbolic", "")
+
+    # 截图
+    items("截图", "accessories-screenshot-symbolic", "sh -c 'grim -g &quot;$(slurp)&quot; -s 1.25 - | wl-copy'")
+
+    # 触摸板
+    if os.system("grep -q '<sendEventsMode>no<\\/sendEventsMode>$' ~/.config/labwc/rc.xml") == 0:
+        items("触摸板关闭", "touchpad-disabled-symbolic", "~/.config/labwc/settings.sh touchpad")
+    else:
+        items("触摸板打开", "touchpad-enabled-symbolic", "~/.config/labwc/settings.sh touchpad")
+
+    # 显示桌面
+    items("显示桌面", "desktop", "wtype -M logo -k d")
+
+    print('<separator />')
+    # 图片
+    list = []
+    target_dir = "/home/poo/图片"
+    entries = os.listdir(target_dir)
+    for name in entries:
+        full_path = os.path.join(target_dir, name)
+        if os.path.isfile(full_path): # 只取文件，排除文件夹
+            list.append((name, full_path))
+    print('<menu id="tools" label="设置背景" icon="cs-backgrounds-symbolic">')
+    for li in list:
+        items(li[0], "games-config-background", "~/.config/labwc/settings.sh change-swaybg " + li[1])
+    print('</menu>')
+
+    print('<separator />')
+    # 时间
+    idate = os.popen("date '+%Y/%m/%d'").read().strip()
+    itime = os.popen("date '+%H:%M:%S'").read().strip()
+    iweek = os.popen("date '+%V周|%A'").read().strip()
+    for time in [("date",idate), ("view-calendar-time-spent",itime), ("view-calendar-week",iweek)]:
+        items(time[1], time[0], "/opt/xflunar/xflunar.py")
+
+    print('<separator />')
+    # 注销
+    for app in logouts:
+        items(app["Name"], app["Icon"], app["Exec"])
+    print('</openbox_pipe_menu>')
+
+def window_list():
+    apps = os.popen("wlrctl window list").read().split("\n")[:-1]
+    return apps
+
+def tilde(index):
+    tilde_list = []
+    apps = window_list()
+    for app in apps:
+        temp = app.split(":", maxsplit=1)
+        tilde_list.append("wlrctl window focus app_id:" + temp[0].strip() + " title:'" + temp[1].strip() + "'")
+    os.system(tilde_list[int(index)])
+
+def appwindows():
+    print('<openbox_pipe_menu>')
+    apps = window_list()
+    if apps:
+        for app in apps:
+            temp = app.split(":", maxsplit=1)
+            icon = os.popen("grep -m 1 'Icon=' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip().split("=")
+            name_zh_cn = os.popen("grep -m 1 'Name\[zh_CN\]' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip()
+            name_zh = os.popen("grep -m 1 'Name\[zh_CN\]' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip()
+            name = os.popen("grep -m 1 'Name' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip()
+            if name_zh_cn != "":
+                name = name_zh_cn.split("=")[1]
+            elif name_zh != "":
+                name = name_zh.split("=")[1]
+            else:
+                name = name.split("=")[1]
+            items(name + "｜" + temp[1].strip(), icon[1], "/home/poo/.config/labwc/menu.py tilde " + str(apps.index(app)))
+    else:
+        items("没有窗口打开", "window", "")
     print('</openbox_pipe_menu>')
 
 if sys.argv[1] == "applications":
     applications()
-elif sys.argv[1] == "volume":
-    volume()
-elif sys.argv[1] == "network":
-    network()
-elif sys.argv[1] == "apps":
-    win = WofiLike()
-    win.connect("destroy", Gtk.main_quit)
-    win.show_all()
-    win.search_entry.grab_focus()
-    Gtk.main()
-elif sys.argv[1] == "password":
-    win = InputPopup()
-    win.show_all()
-    Gtk.main()
-    if win.result is not None:
-        os.system("iwctl --passphrase " + win.result + " station wlan0 connect " + sys.argv[2])
+elif sys.argv[1] == "tools":
+    tools()
+elif sys.argv[1] == "appwindows":
+    appwindows()
+elif sys.argv[1] == "tilde":
+    tilde(sys.argv[2])

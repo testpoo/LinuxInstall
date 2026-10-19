@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # coding=utf-8
-
 import gi,os,subprocess,configparser
 gi.require_version("Gtk", "3.0")
 gi.require_version("GdkPixbuf", "2.0")
@@ -8,9 +7,14 @@ from gi.repository import Gtk, Gdk, GdkPixbuf
 
 ICON_SIZE = 32
 
+def scale_pixbuf(pixbuf, w, h):
+    """统一缩放pixbuf到固定尺寸"""
+    return pixbuf.scale_simple(w, h, GdkPixbuf.InterpType.BILINEAR)
+
 def load_icon(icon_str):
     """统一加载图标：支持绝对文件路径 / 主题图标名称，失败返回默认pixbuf"""
-    fallback = Gtk.IconTheme.get_default().load_icon("application-x-executable", ICON_SIZE, 0)
+    fallback_raw = Gtk.IconTheme.get_default().load_icon("application-x-executable", ICON_SIZE, 0)
+    fallback = scale_pixbuf(fallback_raw, ICON_SIZE, ICON_SIZE)
     if not icon_str:
         return fallback
     # 如果是文件路径
@@ -22,25 +26,32 @@ def load_icon(icon_str):
                 return fallback
         else:
             return fallback
-    # 主题图标名
+    # 主题图标名 —— 这里拿到后必须强制缩放！theme.load_icon返回的可能是大图
     theme = Gtk.IconTheme.get_default()
     try:
         p = theme.load_icon(icon_str, ICON_SIZE, Gtk.IconLookupFlags.USE_BUILTIN)
         if p:
-            return p
+            return scale_pixbuf(p, ICON_SIZE, ICON_SIZE)
     except Exception:
         pass
     return fallback
 
-
-def scan_desktop_entries():
-    app_lists = []
+def apps():
     exclude = [
       'Foot Server',
       'Foot Client',
+      'Avahi SSH 服务器的浏览器',
+      'Avahi VNC 服务器的浏览器',
+      'Avahi Zeroconf 浏览器',
+      'Qt V4L2 test Utility',
+      'Qt V4L2 video capture utility'
     ]
+
     file_path = '/usr/share/applications/'
     file_names = os.listdir(file_path)
+
+    app_lists = []
+
     for name in file_names:
         config = configparser.RawConfigParser()
         config.read(file_path + name, encoding='utf-8')
@@ -64,6 +75,10 @@ def scan_desktop_entries():
             Icon = config.get('Desktop Entry','Icon')
         else:
             continue
+        if config.has_option('Desktop Entry','Categories'):
+            Categories = config.get('Desktop Entry','Categories')
+        else:
+            continue
         if Name not in exclude:
             app_lists.append({"name":Name,"exec":Exec,"icon":Icon})
     return app_lists
@@ -79,7 +94,7 @@ class WofiLike(Gtk.Window):
         self.set_position(Gtk.WindowPosition.CENTER)
         self.set_border_width(10)
         self.set_icon_name("org.xfce.appfinder")
-        self.all_apps = scan_desktop_entries()
+        self.all_apps = apps()
         self.matched_apps = self.all_apps.copy()
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
         self.add(vbox)
@@ -88,7 +103,6 @@ class WofiLike(Gtk.Window):
         self.search_entry.set_placeholder_text("查询程序...")
         self.search_entry.connect("changed", self.on_search_changed)
         vbox.pack_start(self.search_entry, False, True, 0)
-
         # ListStore: 0=GdkPixbuf对象，1=显示名称
         self.list_store = Gtk.ListStore(GdkPixbuf.Pixbuf, str)
         self.tree_view = Gtk.TreeView(model=self.list_store)
@@ -96,6 +110,9 @@ class WofiLike(Gtk.Window):
 
         # 图标列
         cell_pix = Gtk.CellRendererPixbuf()
+        # 强制渲染单元格图标最大尺寸，防止原图撑大行高
+        cell_pix.set_fixed_size(ICON_SIZE, ICON_SIZE)
+
         col_icon = Gtk.TreeViewColumn()
         col_icon.pack_start(cell_pix, False)
         col_icon.add_attribute(cell_pix, "pixbuf", 0)
@@ -142,10 +159,10 @@ class WofiLike(Gtk.Window):
     def on_row_activate(self, treeview, path, column):
         idx = path.get_indices()[0]
         app = self.matched_apps[idx]
-        cmd = app["exec"]
-        for ph in ["%U", "%u", "%i", "%d", "%c", "%k"]:
-            cmd = cmd.replace(ph, "")
-        cmd = cmd.strip()
+        cmd = app["exec"].strip()
+#        for ph in ["%U", "%u", "%i", "%d", "%c", "%k"]:
+#            cmd = cmd.replace(ph, "")
+#        cmd = cmd.strip()
         subprocess.Popen(cmd, shell=True, start_new_session=True)
         self.destroy()
 

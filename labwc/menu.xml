@@ -1,5 +1,5 @@
 <openbox_menu>
   <menu id="root-menu" label="" icon="" execute="~/.config/labwc/menu.py applications" />
-  <menu id="volume-menu" label="" icon="" execute="~/.config/labwc/menu.py volume" />
-  <menu id="network-menu" label="" icon="" execute="~/.config/labwc/menu.py network" />
+  <menu id="tools-menu" label="" icon="" execute="~/.config/labwc/menu.py tools" />
+  <menu id="appwindows-menu" label="" icon="" execute="~/.config/labwc/menu.py appwindows" />
 </openbox_menu>
