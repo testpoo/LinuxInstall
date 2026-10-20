@@ -2,4 +2,5 @@
   <menu id="root-menu" label="" icon="" execute="~/.config/labwc/menu.py applications" />
   <menu id="tools-menu" label="" icon="" execute="~/.config/labwc/menu.py tools" />
   <menu id="appwindows-menu" label="" icon="" execute="~/.config/labwc/menu.py appwindows" />
+  <menu id="search-menu" label="" icon="" execute="~/.config/labwc/menu.py search" />
 </openbox_menu>

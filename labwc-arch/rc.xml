@@ -20,9 +20,6 @@
 
   <theme>
     <icon>Tela-circle-blue-light</icon>
-    <font place="*">
-      <name>WenQuanYi Zen Hei</name>
-    </font>
   </theme>
 
   <keyboard>
@@ -71,6 +68,9 @@
     <keybind key="W-Control_L">
       <action name="Execute" command="~/.config/labwc/settings.sh touchpad" />
     </keybind>
+    <keybind key="W-s">
+      <action name="Execute" command="~/.config/labwc/appfinder.py" />
+    </keybind>
     <keybind key="A-f1">
       <action name="ShowMenu" menu="root-menu">
       <position>
@@ -88,7 +88,20 @@
       </action>
     </keybind>
     <keybind key="A-f3">
-      <action name="ShowMenu" menu="appwindows-menu" />
+      <action name="ShowMenu" menu="appwindows-menu" >
+      <position>
+        <x>center</x>
+        <y>0</y>
+      </position>
+      </action>
+    </keybind>
+    <keybind key="A-f5">
+      <action name="ShowMenu" menu="search-menu">
+      <position>
+        <x>0</x>
+        <y>0</y>
+      </position>
+      </action>
     </keybind>
   </keyboard>
 

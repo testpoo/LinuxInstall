@@ -161,7 +161,7 @@ def applications():
                 app_dicts['Other'].append(app[:-1])
 
     print('<openbox_pipe_menu>')
-    items("运行程序...", "system-search", "")
+    items("运行程序...", "system-search", "~/.config/labwc/appfinder.py")
     print('<separator />')
     items("终端模拟器", "org.xfce.terminalemulator", "foot")
     items("文件管理器", "org.xfce.filemanager", "exo-open --launch FileManager")
@@ -313,7 +313,7 @@ def tools():
     print('</openbox_pipe_menu>')
 
 def window_list():
-    apps = os.popen("/home/poo/.config/labwc/wlrctl window list").read().split("\n")[:-1]
+    apps = os.popen("wlrctl window list").read().split("\n")[:-1]
     return apps
 
 def tilde(index):
@@ -321,7 +321,7 @@ def tilde(index):
     apps = window_list()
     for app in apps:
         temp = app.split(":", maxsplit=1)
-        tilde_list.append("/home/poo/.config/labwc/wlrctl window focus app_id:" + temp[0].strip() + " title:'" + temp[1].strip() + "'")
+        tilde_list.append("wlrctl window focus app_id:" + temp[0].strip() + " title:'" + temp[1].strip() + "'")
     os.system(tilde_list[int(index)])
 
 def appwindows():
@@ -342,7 +342,20 @@ def appwindows():
                 name = name.split("=")[1]
             items(name + "｜" + temp[1].strip(), icon[1], "/home/poo/.config/labwc/menu.py tilde " + str(apps.index(app)))
     else:
-        items("没有窗口打开", "window", "")
+        items("没有窗口打开", "window-close-symbolic", "")
+    print('</openbox_pipe_menu>')
+
+def search():
+    search_apps = apps()
+    with open('/tmp/tmp.txt','r',encoding='utf-8') as f:
+        text = f.read().strip()
+    print('<openbox_pipe_menu>')
+    search_list = [app for app in apps() if text in ','.join(app)]
+    if search_list != []:
+        for app in search_list:
+            items(app[0], app[2], app[1])
+    else:
+        items("未搜索到结果", "window-close-symbolic", "")
     print('</openbox_pipe_menu>')
 
 if sys.argv[1] == "applications":
@@ -353,3 +366,5 @@ elif sys.argv[1] == "appwindows":
     appwindows()
 elif sys.argv[1] == "tilde":
     tilde(sys.argv[2])
+elif sys.argv[1] == "search":
+    search()
