@@ -26,7 +26,7 @@
     <default />
     <!-- Use a different terminal emulator -->
     <keybind key="W-Return">
-      <action name="Execute" command="xfce4-terminal" />
+      <action name="Execute" command="foot" />
     </keybind>
     <!--自定义-->
     <keybind key="XF86AudioRaiseVolume">
@@ -45,7 +45,7 @@
       <action name="Execute" command="sh -c 'brightnessctl set 5%+;~/.config/labwc/settings.sh light'" />
     </keybind>
     <keybind key="W-q">
-      <action name="Execute" command="firefox-esr" />
+      <action name="Execute" command="firefox" />
     </keybind>
     <keybind key="W-e">
       <action name="Execute" command="thunar" />
@@ -69,29 +69,37 @@
       <action name="Execute" command="~/.config/labwc/settings.sh touchpad" />
     </keybind>
     <keybind key="W-s">
-      <action name="Execute" command="~/.config/labwc/menu.py apps" />
+      <action name="Execute" command="~/.config/labwc/appfinder.py" />
     </keybind>
-    <keybind key="A-F3">
+    <keybind key="A-f1">
       <action name="ShowMenu" menu="root-menu">
       <position>
         <x>0</x>
-        <y>-0</y>
+        <y>0</y>
       </position>
       </action>
     </keybind>
-    <keybind key="W-v">
-      <action name="ShowMenu" menu="volume-menu">
+    <keybind key="A-f2">
+      <action name="ShowMenu" menu="tools-menu">
       <position>
         <x>-0</x>
-        <y>-0</y>
+        <y>0</y>
       </position>
       </action>
     </keybind>
-    <keybind key="W-n">
-      <action name="ShowMenu" menu="network-menu">
+    <keybind key="A-f3">
+      <action name="ShowMenu" menu="appwindows-menu" >
       <position>
-        <x>-0</x>
-        <y>-0</y>
+        <x>center</x>
+        <y>0</y>
+      </position>
+      </action>
+    </keybind>
+    <keybind key="A-f5">
+      <action name="ShowMenu" menu="search-menu">
+      <position>
+        <x>0</x>
+        <y>0</y>
       </position>
       </action>
     </keybind>
@@ -101,12 +109,24 @@
     <default />
     <context name="Root">
       <mousebind button="Left" action="Press">
-        <action name="ShowMenu" menu="none" />
+        <action name="ShowMenu" menu="None" />
       </mousebind>
       <mousebind button="Right" action="Press">
-        <action name="ShowMenu" menu="none" />
+        <action name="ShowMenu" menu="None" />
       </mousebind>
     </context>
+    <context name="Client">
+      <mousebind button="A-Left" action="Press">
+        <action name="ShowMenu" menu="root-menu"/>
+      </mousebind>
+      <mousebind button="A-Right" action="Press">
+        <action name="ShowMenu" menu="tools-menu"/>
+      </mousebind>
+      <mousebind button="Middle" action="Press">
+        <action name="ShowMenu" menu="tools-menu"/>
+      </mousebind>
+    </context>
+
   </mouse>
 
   <libinput>
