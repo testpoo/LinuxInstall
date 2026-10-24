@@ -3,7 +3,7 @@
 
 import os,configparser,math,sys
 from collections import defaultdict
-from itertools import chain
+#from itertools import chain
 
 logouts = [
     {
@@ -145,15 +145,15 @@ def applications():
     for app in app_lists:
         for cat in CATEGORIES:
             intersection = set(cat[1]) & set(app[3].split(";"))
-            others = set(list(chain.from_iterable([cat[1] for cat in CATEGORIES if cat[2] != ['Other']]))) & set(app[3].split(";"))
+            #others = set(list(chain.from_iterable([cat[1] for cat in CATEGORIES if cat[2] != ['Other']]))) & set(app[3].split(";"))
             if intersection:
                 for key in intersection:
                     if key in cat[1] and app[:-1] not in app_dicts[cat[0]]:
                         app_dicts[cat[0]].append(app[:-1])
-            elif 'WPS' in app[0] and app[:-1] not in app_dicts['Office']:
-                app_dicts['Office'].append(app[:-1])
-            elif 'WPS' not in app[0] and not others and app[:-1] not in app_dicts['Other']:
-                app_dicts['Other'].append(app[:-1])
+            #elif 'WPS' in app[0] and app[:-1] not in app_dicts['Office']:
+            #    app_dicts['Office'].append(app[:-1])
+            #elif 'WPS' not in app[0] and not others and app[:-1] not in app_dicts['Other']:
+            #    app_dicts['Other'].append(app[:-1])
 
     print('<openbox_pipe_menu>')
     items("终端模拟器", "org.xfce.terminalemulator", "foot")
@@ -167,7 +167,7 @@ def applications():
     print('<menu id="about" label="关于Debian" icon="gtk-about">')
     print('<separator label="关于Debian" />')
     for about in abouts:
-        items(about, "folder-tag", "")
+        items(about, "tag-symbolic", "")
     print('</menu>')
     print('<menu id="logout" label="注销" icon="system-log-out">')
     for app in logouts:
@@ -198,19 +198,15 @@ def tools():
     bluetooth_device = os.popen("bluetoothctl devices Connected").read().strip()
     if status == "yes" and bluetooth_device != '':
         print('<menu id="tools" label="启动|' + bluetooth_device.split(" ")[2] + '" icon="bluetooth-active">')
-        items("关闭蓝牙", "gtk-close", "bluetoothctl power off")
     elif status == "yes" and bluetooth_device == '':
         print('<menu id="tools" label="启动|未连接" icon="bluetooth">')
-        items("关闭蓝牙", "gtk-close", "bluetoothctl power off")
     else:
-        print('<menu id="tools" label="关闭" icon="bluetooth-disabled">')
-        items("启动蓝牙", "media-playback-start", "bluetoothctl power on")
-    print('<separator />')
+        print('<menu id="tools" label="蓝牙已关闭" icon="bluetooth-disabled">')
     if bluetooth_device != '':
         items("断开设备", "gtk-disconnect", "bluetoothctl disconnect " + bluetooth_device.split(" ")[1])
     items("蓝牙工具", "blueman", "foot -e bluetoothctl")
     paired_devices = os.popen("bluetoothctl devices Bonded").read().strip()
-    print('<separator label="配对设备" />')
+    print('<separator label="已配对设备" />')
     for device in paired_devices.split("\n"):
         items(device.split(" ")[2], "blueman-device", "bluetoothctl connect " + device.split(" ")[1])
     print('</menu>')
@@ -251,13 +247,13 @@ def tools():
     # 声音
     volume = os.popen("wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk -F ': ' '{print $2*100}'").read().strip()
     if "MUTED" in os.popen("wpctl get-volume @DEFAULT_AUDIO_SINK@").read().strip() or volume == 0:
-        volume_icon = "audio-volume-muted-symbolic"
+        volume_icon = "audio-volume-muted"
     elif int(volume) >= 1 and int(volume) < 33:
-        volume_icon = "audio-volume-low-symbolic"
+        volume_icon = "audio-volume-low"
     elif int(volume) >= 34 and int(volume) < 66:
-        volume_icon = "audio-volume-medium-symbolic"
+        volume_icon = "audio-volume-medium"
     else:
-        volume_icon = "audio-volume-high-symbolic"
+        volume_icon = "audio-volume-high"
     devices = os.popen("wpctl status | awk '/Sinks:/{f=1;next} /Sources:/{f=0} f'").read().split('\n')
     devices = [device for device in devices if device not in (' │  ','')]
     ndevices = []
@@ -279,7 +275,7 @@ def tools():
     items(light + "% 亮度", "brightness-display-symbolic", "")
 
     # 截图
-    items("截图", "accessories-screenshot-tool", "sh -c 'grim -g &quot;$(slurp)&quot; -s 1.25 - | wl-copy'")
+    items("截图工具", "accessories-screenshot-tool", "sh -c 'grim -g &quot;$(slurp)&quot; -s 1.25 - | wl-copy'")
 
     # 触摸板
     if os.system("grep -q '<sendEventsMode>no<\\/sendEventsMode>$' ~/.config/labwc/rc.xml") == 0:
@@ -304,13 +300,9 @@ def tools():
         items(li[0], "image", "~/.config/labwc/settings.sh change-swaybg " + li[1])
     print('</menu>')
 
-    print('<separator />')
     # 时间
-    idate = os.popen("date '+%Y/%m/%d'").read().strip()
-    itime = os.popen("date '+%H:%M:%S'").read().strip()
-    iweek = os.popen("date '+%V周|%A'").read().strip()
-    for time in [("date",idate), ("preferences-system-time",itime), ("time-admin",iweek)]:
-        items(time[1], time[0], "/opt/xflunar/xflunar.py")
+    week = os.popen("date '+%V周|%A'").read().strip()
+    items(week, "preferences-system-time", "/opt/xflunar/xflunar.py")
 
     print('<separator />')
     # 注销

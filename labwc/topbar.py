@@ -44,7 +44,7 @@ class LabwcLayerBar(Gtk.Window):
         self.entry.set_placeholder_text("搜索程序...")
         self.entry.set_has_frame(False)
         hbox.pack_start(self.entry, False, False, 0)
-        self.entry.set_width_chars(10)
+        self.entry.set_width_chars(14)
 
         self.left_label = Gtk.Label()
         hbox.pack_start(self.left_label, True, True, 0)
@@ -61,21 +61,21 @@ class LabwcLayerBar(Gtk.Window):
         self.right_label = Gtk.Label()
         hbox.pack_start(self.right_label, True, True, 0)
 
+        # Right datetime
+        self.time_btn = Gtk.Button()
+        self.time_btn.set_relief(Gtk.ReliefStyle.NONE)
+        hbox.pack_start(self.time_btn, False, False, 0)
+        self.time_btn.connect("clicked", self.on_button_clicked)
+        GLib.timeout_add(1000, self.update_time)
+
         # Right tools menu
         self.tools_evbox = Gtk.EventBox()
         tools_label = Gtk.Label(label="🛠️")
         self.tools_evbox.add(tools_label)
         self.tools_evbox.set_visible_window(False)
         self.tools_evbox.connect("enter-notify-event", self.on_enter_tools)
-        hbox.pack_start(self.tools_evbox, False, False, 0)
+        hbox.pack_end(self.tools_evbox, False, False, 0)
         self.tools_timeout_id = None
-
-        # Right datetime
-        self.time_btn = Gtk.Button()
-        self.time_btn.set_relief(Gtk.ReliefStyle.NONE)
-        hbox.pack_end(self.time_btn, False, False, 0)
-        self.time_btn.connect("clicked", self.on_button_clicked)
-        GLib.timeout_add(1000, self.update_time)
 
         self.entry.connect("activate", self.on_enter)
 
@@ -144,7 +144,7 @@ class LabwcLayerBar(Gtk.Window):
         self.show_all()
 
     def update_time(self):
-        self.time_btn.set_label(datetime.now().strftime("%m/%d %R"))
+        self.time_btn.set_label(datetime.now().strftime("%Y/%m/%d %R"))
         return True
 
     def on_button_clicked(self, _button):
