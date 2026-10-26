@@ -69,39 +69,13 @@
       <action name="Execute" command="~/.config/labwc/settings.sh touchpad" />
     </keybind>
     <keybind key="W-s">
-      <action name="Execute" command="~/.config/labwc/appfinder.py" />
+      <action name="Execute" command="" />
     </keybind>
-    <keybind key="A-f1">
-      <action name="ShowMenu" menu="root-menu">
-      <position>
-        <x>0</x>
-        <y>0</y>
-      </position>
-      </action>
+    <keybind key="W-1">
+      <action name="ShowMenu" menu="root-menu" />
     </keybind>
-    <keybind key="A-f2">
-      <action name="ShowMenu" menu="tools-menu">
-      <position>
-        <x>-0</x>
-        <y>0</y>
-      </position>
-      </action>
-    </keybind>
-    <keybind key="A-f3">
-      <action name="ShowMenu" menu="appwindows-menu" >
-      <position>
-        <x>center</x>
-        <y>0</y>
-      </position>
-      </action>
-    </keybind>
-    <keybind key="A-f5">
-      <action name="ShowMenu" menu="search-menu">
-      <position>
-        <x>0</x>
-        <y>0</y>
-      </position>
-      </action>
+    <keybind key="W-2">
+      <action name="ShowMenu" menu="tools-menu" />
     </keybind>
   </keyboard>
 
@@ -109,10 +83,10 @@
     <default />
     <context name="Root">
       <mousebind button="Left" action="Press">
-        <action name="ShowMenu" menu="None" />
+        <action name="ShowMenu" menu="root-menu" />
       </mousebind>
       <mousebind button="Right" action="Press">
-        <action name="ShowMenu" menu="None" />
+        <action name="ShowMenu" menu="tools-menu" />
       </mousebind>
     </context>
     <context name="Client">

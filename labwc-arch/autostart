@@ -1,4 +1,4 @@
-swaybg -i "/home/poo/图片/【哲风壁纸】旷野-晴空-河流.jpg" >/dev/null 2>&1 &
+swaybg -i "/home/poo/图片/3jpg" >/dev/null 2>&1 &
 
 wlr-randr --output eDP-1 --scale 1.25
 
@@ -11,8 +11,6 @@ swayidle -w \
 	before-sleep 'swaylock -i /home/poo/图片/lock.svg -c 0F4C81' >/dev/null 2>&1 & 
 
 fcitx5 >/dev/null 2>&1 &
-
-/home/poo/.config/labwc/topbar.py >/dev/null 2>&1 &
 
 gsettings set "org.gnome.desktop.interface" icon-theme "Tela-circle-blue-light"
 gsettings set org.gnome.desktop.wm.preferences button-layout "menu:minimize,maximize,close"

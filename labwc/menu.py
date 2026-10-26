@@ -24,7 +24,7 @@ logouts = [
     {
         "Name": "重载",
         "Exec": "labwc -r",
-        "Icon": "view-refresh"
+        "Icon": "emblem-insync-syncing-shared"
     },
     {
         "Name": "退出",
@@ -61,6 +61,11 @@ def apps():
     exclude = [
       'Foot Server',
       'Foot Client',
+      'Avahi SSH 服务器的浏览器',
+      'Avahi VNC 服务器的浏览器',
+      'Avahi Zeroconf 浏览器',
+      'Qt V4L2 test Utility',
+      'Qt V4L2 video capture utility'
     ]
 
     file_path = '/usr/share/applications/'
@@ -121,14 +126,16 @@ def applications():
         "用户名：" + os.popen("whoami").read().strip(),
         "Shell：" + os.popen("echo $SHELL").read().strip(),
         "运行时间：" + os.popen("uptime -p |awk -F' ' '{print $2,$3,$4,$5}' |sed -e 's/ hours, /时/g' -e 's/ minutes/分/g' -e 's/ hour, /时/g' -e 's/ minute/分/g'").read().strip(),
-        "包数量：" + os.popen("dpkg -l |wc -l").read().strip(),
+        "包数量：" + os.popen("pacman -Q | wc -l").read().strip(),
+        #"包数量：" + os.popen("dpkg -l |wc -l").read().strip(),
         "分辨率：" + os.popen("wlr-randr |awk '/Modes:/{getline; print}' |awk -F' ' '{print $1}'").read().strip(),
         "磁盘：" + os.popen("cat /proc/partitions |grep -w 'sda' | awk -F' ' '{print $3}' |awk '{printf \"%.1f\",$1/1024/1024}'").read().strip() + "GB",
         "设备名称：" + os.popen("hostnamectl|grep 'Static hostname'|awk -F': ' '{print $2}'").read().strip(),
         "操作系统名称：" + os.popen("hostnamectl|grep 'Operating System'|awk -F': ' '{print $2}'").read().strip(),
         "操作系统类型：" + os.popen("uname -m |sed -e 's/_/__/g'").read().strip(),
         "发型版：" + os.popen("cat /etc/os-release |grep ID |awk -F'=' '{print $2}'").read().strip(),
-        "发型版版本：" + os.popen("cat /etc/os-release |grep VERSION_CODENAME |awk -F'=' '{print $2}'").read().strip(),
+        "发型版版本：" + os.popen("cat /etc/os-release |grep BUILD_ID |awk -F'=' '{print $2}'").read().strip(),
+        #"发型版版本：" + os.popen("cat /etc/os-release |grep VERSION_CODENAME |awk -F'=' '{print $2}'").read().strip(),
         "内核版本：" + os.popen("uname -r").read().strip(),
         "处理器：" + os.popen("cat /proc/cpuinfo |grep 'model name' |head -n 1 |awk -F ': ' '{print $2}'").read().strip() + " " + os.popen("cat /proc/cpuinfo |grep 'physical id'|uniq |wc -l").read().strip() + "C "  + os.popen("grep 'core id' /proc/cpuinfo | sort -u |wc -l").read().strip() + "核 "  + os.popen("grep 'processor' /proc/cpuinfo |wc -l").read().strip() + "线程",
         "内存：" + os.popen("cat /proc/meminfo |grep 'MemTotal' |cut -f2 -d:|awk -F' ' '{print int($1)}' |awk '{printf \"%.1f\",$1/1024/1024}'").read().strip() + "GB",
@@ -156,6 +163,8 @@ def applications():
             #    app_dicts['Other'].append(app[:-1])
 
     print('<openbox_pipe_menu>')
+    #items("运行程序...", "system-search", "~/.config/labwc/appfinder.py")
+    #print('<separator />')
     items("终端模拟器", "org.xfce.terminalemulator", "foot")
     items("文件管理器", "org.xfce.filemanager", "exo-open --launch FileManager")
     items("网络浏览器", "org.xfce.webbrowser", "exo-open --launch WebBrowser")
@@ -164,10 +173,11 @@ def applications():
         if cat[0] in app_dicts:
             menus(app_dicts, cat[0], cat[2], cat[3])
     print('<separator />')
-    print('<menu id="about" label="关于Debian" icon="gtk-about">')
-    print('<separator label="关于Debian" />')
+    print('<menu id="about" label="关于Arch" icon="gnome-about-logo">')
+    print('<separator label="关于Arch" />')
     for about in abouts:
-        items(about, "tag-symbolic", "")
+        items(about, "distributor-logo-archlinux", "")
+        #items(about, "tag-symbolic", "")
     print('</menu>')
     print('<menu id="logout" label="注销" icon="system-log-out">')
     for app in logouts:
@@ -189,7 +199,7 @@ def tools():
     else:
         print('<menu id="tools" label="' + ime + '" icon="fcitx-rime">')
     items("重新启动", "system-reboot", "fcitx5 -r")
-    items("输入法设置", "input-keyboard", "fcitx5-configtool")
+    items("输入法设置", "system-config-keyboard", "fcitx5-configtool")
     items("退出", "system-log-out", "pkill fcitx5")
     print('</menu>')
 
@@ -295,14 +305,18 @@ def tools():
         full_path = os.path.join(target_dir, name)
         if os.path.isfile(full_path): # 只取文件，排除文件夹
             list.append((name, full_path))
-    print('<menu id="tools" label="设置背景" icon="image-adjust">')
+    print('<menu id="tools" label="设置背景" icon="cs-backgrounds-symbolic">')
     for li in list:
-        items(li[0], "image", "~/.config/labwc/settings.sh change-swaybg " + li[1])
+        items(li[0], "games-config-background", "~/.config/labwc/settings.sh change-swaybg " + li[1])
     print('</menu>')
 
+    print('<separator />')
     # 时间
-    week = os.popen("date '+%V周|%A'").read().strip()
-    items(week, "preferences-system-time", "/opt/xflunar/xflunar.py")
+    idate = os.popen("date '+%Y/%m/%d'").read().strip()
+    itime = os.popen("date '+%H:%M:%S'").read().strip()
+    iweek = os.popen("date '+%V周|%A'").read().strip()
+    for time in [("date",idate), ("view-calendar-time-spent",itime), ("view-calendar-week",iweek)]:
+        items(time[1], time[0], "/opt/xflunar/xflunar.py")
 
     print('<separator />')
     # 注销
