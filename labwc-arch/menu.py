@@ -23,7 +23,7 @@ logouts = [
     {
         "Name": "重载",
         "Exec": "labwc -r",
-        "Icon": "emblem-insync-syncing-shared"
+        "Icon": "reload"
     },
     {
         "Name": "退出",
@@ -155,6 +155,8 @@ def applications():
                         app_dicts[cat[0]].append(app[:-1])
 
     print('<openbox_pipe_menu>')
+    items("运行程序...", "system-search", "xfce4-appfinder")
+    print('<separator />')
     items("终端模拟器", "org.xfce.terminalemulator", "foot")
     items("文件管理器", "org.xfce.filemanager", "exo-open --launch FileManager")
     items("网络浏览器", "org.xfce.webbrowser", "exo-open --launch WebBrowser")
@@ -176,39 +178,6 @@ def applications():
 
 def tools():
     print('<openbox_pipe_menu>')
-    # 输入法
-    ime = os.popen("fcitx5-remote -n").read().strip()
-    if ime == "rime":
-        ime = "中州韵"
-    IsAsciiMode = os.popen("busctl --user call org.fcitx.Fcitx5 /rime org.fcitx.Fcitx.Rime1 IsAsciiMode").read().strip()
-    if ime == "":
-        print('<menu id="tools" label="输入法" icon="input-keyboard">')
-    elif IsAsciiMode == "b true":
-        print('<menu id="tools" label="英文" icon="fcitx_rime_latin">')
-    else:
-        print('<menu id="tools" label="' + ime + '" icon="fcitx-rime">')
-    items("重新启动", "system-reboot", "fcitx5 -r")
-    items("输入法设置", "system-config-keyboard", "fcitx5-configtool")
-    items("退出", "system-log-out", "pkill fcitx5")
-    print('</menu>')
-
-    # 蓝牙
-    status = os.popen("bluetoothctl show | grep 'Powered:'").read().split(":")[1].strip()
-    bluetooth_device = os.popen("bluetoothctl devices Connected").read().strip()
-    if status == "yes" and bluetooth_device != '':
-        print('<menu id="tools" label="启动|' + bluetooth_device.split(" ")[2] + '" icon="bluetooth-active">')
-    elif status == "yes" and bluetooth_device == '':
-        print('<menu id="tools" label="启动|未连接" icon="bluetooth">')
-    else:
-        print('<menu id="tools" label="蓝牙已关闭" icon="bluetooth-disabled">')
-    if bluetooth_device != '':
-        items("断开设备", "gtk-disconnect", "bluetoothctl disconnect " + bluetooth_device.split(" ")[1])
-    items("蓝牙工具", "blueman", "foot -e bluetoothctl")
-    paired_devices = os.popen("bluetoothctl devices Bonded").read().strip()
-    print('<separator label="已配对设备" />')
-    for device in paired_devices.split("\n"):
-        items(device.split(" ")[2], "blueman-device", "bluetoothctl connect " + device.split(" ")[1])
-    print('</menu>')
 
     # 网络
     new_knowpass = []
@@ -243,6 +212,24 @@ def tools():
         items(ssid, "editclear", "iwctl known-networks " + ssid + " forget")
     print('</menu>')
 
+    # 蓝牙
+    status = os.popen("bluetoothctl show | grep 'Powered:'").read().split(":")[1].strip()
+    bluetooth_device = os.popen("bluetoothctl devices Connected").read().strip()
+    if status == "yes" and bluetooth_device != '':
+        print('<menu id="tools" label="启动|' + bluetooth_device.split(" ")[2] + '" icon="bluetooth-active">')
+    elif status == "yes" and bluetooth_device == '':
+        print('<menu id="tools" label="启动|未连接" icon="bluetooth">')
+    else:
+        print('<menu id="tools" label="蓝牙已关闭" icon="bluetooth-disabled">')
+    if bluetooth_device != '':
+        items("断开设备", "gtk-disconnect", "bluetoothctl disconnect " + bluetooth_device.split(" ")[1])
+    items("蓝牙工具", "blueman", "foot -e bluetoothctl")
+    paired_devices = os.popen("bluetoothctl devices Bonded").read().strip()
+    print('<separator label="已配对设备" />')
+    for device in paired_devices.split("\n"):
+        items(device.split(" ")[2], "blueman-device", "bluetoothctl connect " + device.split(" ")[1])
+    print('</menu>')
+    
     # 声音
     volume = os.popen("wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk -F ': ' '{print $2*100}'").read().strip()
     if "MUTED" in os.popen("wpctl get-volume @DEFAULT_AUDIO_SINK@").read().strip() or volume == 0:
@@ -299,12 +286,9 @@ def tools():
         items(li[0], "games-config-background", "~/.config/labwc/settings.sh change-swaybg " + li[1])
     print('</menu>')
 
-    print('<separator />')
     # 时间
-    itime = os.popen("date '+%m/%d %H:%M'").read().strip()
     iweek = os.popen("date '+%V周|%A'").read().strip()
-    for time in [("view-calendar-time-spent",itime), ("view-calendar-week",iweek)]:
-        items(time[1], time[0], "/opt/xflunar/xflunar.py")
+    items(iweek, "view-calendar-week", "/opt/xflunar/xflunar.py")
 
     print('<separator />')
     # 注销
