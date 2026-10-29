@@ -14,5 +14,5 @@ fcitx5 >/dev/null 2>&1 &
 
 xfce4-panel >/dev/null 2>&1 &
 
-gsettings set "org.gnome.desktop.interface" icon-theme "Qogir-Light"
+gsettings set "org.gnome.desktop.interface" icon-theme "elementary-xfce"
 gsettings set org.gnome.desktop.wm.preferences button-layout "menu:minimize,maximize,close"

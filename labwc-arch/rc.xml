@@ -19,14 +19,14 @@
   </core>
 
   <theme>
-    <icon>Qogir-Light</icon>
+    <icon>elementary-xfce</icon>
   </theme>
 
   <keyboard>
     <default />
     <!-- Use a different terminal emulator -->
     <keybind key="W-Return">
-      <action name="Execute" command="foot" />
+      <action name="Execute" command="xfce4-terminal" />
     </keybind>
     <!--自定义-->
     <keybind key="XF86AudioRaiseVolume">

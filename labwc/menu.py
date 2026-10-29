@@ -3,7 +3,6 @@
 
 import os,configparser,math,sys
 from collections import defaultdict
-#from itertools import chain
 
 logouts = [
     {
@@ -24,7 +23,7 @@ logouts = [
     {
         "Name": "重载",
         "Exec": "labwc -r",
-        "Icon": "emblem-insync-syncing-shared"
+        "Icon": "sync-synchronizing"
     },
     {
         "Name": "退出",
@@ -152,20 +151,15 @@ def applications():
     for app in app_lists:
         for cat in CATEGORIES:
             intersection = set(cat[1]) & set(app[3].split(";"))
-            #others = set(list(chain.from_iterable([cat[1] for cat in CATEGORIES if cat[2] != ['Other']]))) & set(app[3].split(";"))
             if intersection:
                 for key in intersection:
                     if key in cat[1] and app[:-1] not in app_dicts[cat[0]]:
                         app_dicts[cat[0]].append(app[:-1])
-            #elif 'WPS' in app[0] and app[:-1] not in app_dicts['Office']:
-            #    app_dicts['Office'].append(app[:-1])
-            #elif 'WPS' not in app[0] and not others and app[:-1] not in app_dicts['Other']:
-            #    app_dicts['Other'].append(app[:-1])
 
     print('<openbox_pipe_menu>')
-    #items("运行程序...", "system-search", "~/.config/labwc/appfinder.py")
-    #print('<separator />')
-    items("终端模拟器", "org.xfce.terminalemulator", "foot")
+    items("运行程序...", "system-search", "xfce4-appfinder")
+    print('<separator />')
+    items("终端模拟器", "org.xfce.terminalemulator", "exo-open --launch TerminalEmulator")
     items("文件管理器", "org.xfce.filemanager", "exo-open --launch FileManager")
     items("网络浏览器", "org.xfce.webbrowser", "exo-open --launch WebBrowser")
     print('<separator />')
@@ -177,7 +171,6 @@ def applications():
     print('<separator label="关于Arch" />')
     for about in abouts:
         items(about, "distributor-logo-archlinux", "")
-        #items(about, "tag-symbolic", "")
     print('</menu>')
     print('<menu id="logout" label="注销" icon="system-log-out">')
     for app in logouts:
@@ -201,24 +194,6 @@ def tools():
     items("重新启动", "system-reboot", "fcitx5 -r")
     items("输入法设置", "system-config-keyboard", "fcitx5-configtool")
     items("退出", "system-log-out", "pkill fcitx5")
-    print('</menu>')
-
-    # 蓝牙
-    status = os.popen("bluetoothctl show | grep 'Powered:'").read().split(":")[1].strip()
-    bluetooth_device = os.popen("bluetoothctl devices Connected").read().strip()
-    if status == "yes" and bluetooth_device != '':
-        print('<menu id="tools" label="启动|' + bluetooth_device.split(" ")[2] + '" icon="bluetooth-active">')
-    elif status == "yes" and bluetooth_device == '':
-        print('<menu id="tools" label="启动|未连接" icon="bluetooth">')
-    else:
-        print('<menu id="tools" label="蓝牙已关闭" icon="bluetooth-disabled">')
-    if bluetooth_device != '':
-        items("断开设备", "gtk-disconnect", "bluetoothctl disconnect " + bluetooth_device.split(" ")[1])
-    items("蓝牙工具", "blueman", "foot -e bluetoothctl")
-    paired_devices = os.popen("bluetoothctl devices Bonded").read().strip()
-    print('<separator label="已配对设备" />')
-    for device in paired_devices.split("\n"):
-        items(device.split(" ")[2], "blueman-device", "bluetoothctl connect " + device.split(" ")[1])
     print('</menu>')
 
     # 网络
@@ -254,6 +229,25 @@ def tools():
         items(ssid, "edit-clear", "iwctl known-networks " + ssid + " forget")
     print('</menu>')
 
+    # 蓝牙
+    status = os.popen("bluetoothctl show | grep 'Powered:'").read().split(":")[1].strip()
+    bluetooth_device = os.popen("bluetoothctl devices Connected").read().strip()
+    if status == "yes" and bluetooth_device != '':
+        print('<menu id="tools" label="启动|' + bluetooth_device.split(" ")[2] + '" icon="bluetooth-active">')
+    elif status == "yes" and bluetooth_device == '':
+        print('<menu id="tools" label="启动|未连接" icon="bluetooth">')
+    else:
+        print('<menu id="tools" label="蓝牙已关闭" icon="bluetooth-disabled">')
+    if bluetooth_device != '':
+        items("断开设备", "gtk-disconnect", "bluetoothctl disconnect " + bluetooth_device.split(" ")[1])
+    items("蓝牙工具", "blueman", "foot -e bluetoothctl")
+    paired_devices = os.popen("bluetoothctl devices Bonded").read().strip()
+    if paired_devices:
+        print('<separator label="已配对设备" />')
+        for device in paired_devices.split("\n"):
+            items(device.split(" ")[2], "blueman-device", "bluetoothctl connect " + device.split(" ")[1])
+    print('</menu>')
+
     # 声音
     volume = os.popen("wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk -F ': ' '{print $2*100}'").read().strip()
     if "MUTED" in os.popen("wpctl get-volume @DEFAULT_AUDIO_SINK@").read().strip() or volume == 0:
@@ -282,7 +276,7 @@ def tools():
 
     # 亮度
     light = os.popen("(brightnessctl get | awk '{print $1/192}')").read().strip()
-    items(light + "% 亮度", "brightness-display-symbolic", "")
+    items(light + "% 亮度", "display-brightness-symbolic", "")
 
     # 截图
     items("截图工具", "accessories-screenshot-tool", "sh -c 'grim -g &quot;$(slurp)&quot; -s 1.25 - | wl-copy'")
@@ -305,18 +299,14 @@ def tools():
         full_path = os.path.join(target_dir, name)
         if os.path.isfile(full_path): # 只取文件，排除文件夹
             list.append((name, full_path))
-    print('<menu id="tools" label="设置背景" icon="cs-backgrounds-symbolic">')
+    print('<menu id="tools" label="设置背景" icon="image-adjust">')
     for li in list:
-        items(li[0], "games-config-background", "~/.config/labwc/settings.sh change-swaybg " + li[1])
+        items(li[0], "image", "~/.config/labwc/settings.sh change-swaybg " + li[1])
     print('</menu>')
 
-    print('<separator />')
     # 时间
-    idate = os.popen("date '+%Y/%m/%d'").read().strip()
-    itime = os.popen("date '+%H:%M:%S'").read().strip()
-    iweek = os.popen("date '+%V周|%A'").read().strip()
-    for time in [("date",idate), ("view-calendar-time-spent",itime), ("view-calendar-week",iweek)]:
-        items(time[1], time[0], "/opt/xflunar/xflunar.py")
+    week = os.popen("date '+%V周|%A'").read().strip()
+    items(week, "time-admin", "/opt/xflunar/xflunar.py")
 
     print('<separator />')
     # 注销

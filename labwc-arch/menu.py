@@ -23,7 +23,7 @@ logouts = [
     {
         "Name": "重载",
         "Exec": "labwc -r",
-        "Icon": "reload"
+        "Icon": "sync-synchronizing"
     },
     {
         "Name": "退出",
@@ -126,6 +126,7 @@ def applications():
         "Shell：" + os.popen("echo $SHELL").read().strip(),
         "运行时间：" + os.popen("uptime -p |awk -F' ' '{print $2,$3,$4,$5}' |sed -e 's/ hours, /时/g' -e 's/ minutes/分/g' -e 's/ hour, /时/g' -e 's/ minute/分/g'").read().strip(),
         "包数量：" + os.popen("pacman -Q | wc -l").read().strip(),
+        #"包数量：" + os.popen("dpkg -l |wc -l").read().strip(),
         "分辨率：" + os.popen("wlr-randr |awk '/Modes:/{getline; print}' |awk -F' ' '{print $1}'").read().strip(),
         "磁盘：" + os.popen("cat /proc/partitions |grep -w 'sda' | awk -F' ' '{print $3}' |awk '{printf \"%.1f\",$1/1024/1024}'").read().strip() + "GB",
         "设备名称：" + os.popen("hostnamectl|grep 'Static hostname'|awk -F': ' '{print $2}'").read().strip(),
@@ -133,6 +134,7 @@ def applications():
         "操作系统类型：" + os.popen("uname -m |sed -e 's/_/__/g'").read().strip(),
         "发型版：" + os.popen("cat /etc/os-release |grep ID |awk -F'=' '{print $2}'").read().strip(),
         "发型版版本：" + os.popen("cat /etc/os-release |grep BUILD_ID |awk -F'=' '{print $2}'").read().strip(),
+        #"发型版版本：" + os.popen("cat /etc/os-release |grep VERSION_CODENAME |awk -F'=' '{print $2}'").read().strip(),
         "内核版本：" + os.popen("uname -r").read().strip(),
         "处理器：" + os.popen("cat /proc/cpuinfo |grep 'model name' |head -n 1 |awk -F ': ' '{print $2}'").read().strip() + " " + os.popen("cat /proc/cpuinfo |grep 'physical id'|uniq |wc -l").read().strip() + "C "  + os.popen("grep 'core id' /proc/cpuinfo | sort -u |wc -l").read().strip() + "核 "  + os.popen("grep 'processor' /proc/cpuinfo |wc -l").read().strip() + "线程",
         "内存：" + os.popen("cat /proc/meminfo |grep 'MemTotal' |cut -f2 -d:|awk -F' ' '{print int($1)}' |awk '{printf \"%.1f\",$1/1024/1024}'").read().strip() + "GB",
@@ -157,7 +159,7 @@ def applications():
     print('<openbox_pipe_menu>')
     items("运行程序...", "system-search", "xfce4-appfinder")
     print('<separator />')
-    items("终端模拟器", "org.xfce.terminalemulator", "foot")
+    items("终端模拟器", "org.xfce.terminalemulator", "exo-open --launch TerminalEmulator")
     items("文件管理器", "org.xfce.filemanager", "exo-open --launch FileManager")
     items("网络浏览器", "org.xfce.webbrowser", "exo-open --launch WebBrowser")
     print('<separator />')
@@ -178,6 +180,21 @@ def applications():
 
 def tools():
     print('<openbox_pipe_menu>')
+    # 输入法
+    ime = os.popen("fcitx5-remote -n").read().strip()
+    if ime == "rime":
+        ime = "中州韵"
+    IsAsciiMode = os.popen("busctl --user call org.fcitx.Fcitx5 /rime org.fcitx.Fcitx.Rime1 IsAsciiMode").read().strip()
+    if ime == "":
+        print('<menu id="tools" label="输入法" icon="input-keyboard">')
+    elif IsAsciiMode == "b true":
+        print('<menu id="tools" label="英文" icon="fcitx_rime_latin">')
+    else:
+        print('<menu id="tools" label="' + ime + '" icon="fcitx-rime">')
+    items("重新启动", "system-reboot", "fcitx5 -r")
+    items("输入法设置", "system-config-keyboard", "fcitx5-configtool")
+    items("退出", "system-log-out", "pkill fcitx5")
+    print('</menu>')
 
     # 网络
     new_knowpass = []
@@ -204,12 +221,12 @@ def tools():
             items(ssid[1], ssid[2], "iwctl station wlan0 connect " + ssid[1])
         else:
             items(ssid[1], ssid[2], "foot -T '输入WIFI密码' -w 500x80 sh -c 'iwctl station wlan0 connect " + ssid[1] + ";read'")
-    print('<item label="更新列表" icon="bqm-update">')
+    print('<item label="更新列表" icon="update-manager">')
     print('<action name="Execute" command="iwctl station wlan0 scan" />')
     print('</item>')
     print('<separator label="清除密码" />')
     for ssid in new_knowpass:
-        items(ssid, "editclear", "iwctl known-networks " + ssid + " forget")
+        items(ssid, "edit-clear", "iwctl known-networks " + ssid + " forget")
     print('</menu>')
 
     # 蓝牙
@@ -225,21 +242,22 @@ def tools():
         items("断开设备", "gtk-disconnect", "bluetoothctl disconnect " + bluetooth_device.split(" ")[1])
     items("蓝牙工具", "blueman", "foot -e bluetoothctl")
     paired_devices = os.popen("bluetoothctl devices Bonded").read().strip()
-    print('<separator label="已配对设备" />')
-    for device in paired_devices.split("\n"):
-        items(device.split(" ")[2], "blueman-device", "bluetoothctl connect " + device.split(" ")[1])
+    if paired_devices:
+        print('<separator label="已配对设备" />')
+        for device in paired_devices.split("\n"):
+            items(device.split(" ")[2], "blueman-device", "bluetoothctl connect " + device.split(" ")[1])
     print('</menu>')
-    
+
     # 声音
     volume = os.popen("wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk -F ': ' '{print $2*100}'").read().strip()
     if "MUTED" in os.popen("wpctl get-volume @DEFAULT_AUDIO_SINK@").read().strip() or volume == 0:
-        volume_icon = "audio-volume-muted-symbolic"
+        volume_icon = "audio-volume-muted"
     elif int(volume) >= 1 and int(volume) < 33:
-        volume_icon = "audio-volume-low-symbolic"
+        volume_icon = "audio-volume-low"
     elif int(volume) >= 34 and int(volume) < 66:
-        volume_icon = "audio-volume-medium-symbolic"
+        volume_icon = "audio-volume-medium"
     else:
-        volume_icon = "audio-volume-high-symbolic"
+        volume_icon = "audio-volume-high"
     devices = os.popen("wpctl status | awk '/Sinks:/{f=1;next} /Sources:/{f=0} f'").read().split('\n')
     devices = [device for device in devices if device not in (' │  ','')]
     ndevices = []
@@ -258,19 +276,19 @@ def tools():
 
     # 亮度
     light = os.popen("(brightnessctl get | awk '{print $1/192}')").read().strip()
-    items(light + "% 亮度", "brightness-display-symbolic", "")
+    items(light + "% 亮度", "display-brightness-symbolic", "")
 
     # 截图
-    items("截图工具", "accessories-screenshot-symbolic", "sh -c 'grim -g &quot;$(slurp)&quot; -s 1.25 - | wl-copy'")
+    items("截图工具", "accessories-screenshot-tool", "sh -c 'grim -g &quot;$(slurp)&quot; -s 1.25 - | wl-copy'")
 
     # 触摸板
     if os.system("grep -q '<sendEventsMode>no<\\/sendEventsMode>$' ~/.config/labwc/rc.xml") == 0:
         items("触摸板关闭", "touchpad-disabled-symbolic", "~/.config/labwc/settings.sh touchpad")
     else:
-        items("触摸板打开", "touchpad-enabled-symbolic", "~/.config/labwc/settings.sh touchpad")
+        items("触摸板打开", "input-touchpad-symbolic", "~/.config/labwc/settings.sh touchpad")
 
     # 显示桌面
-    items("显示桌面", "desktop", "wtype -M logo -k d")
+    items("显示桌面", "user-desktop", "wtype -M logo -k d")
 
     print('<separator />')
     # 图片
@@ -281,14 +299,14 @@ def tools():
         full_path = os.path.join(target_dir, name)
         if os.path.isfile(full_path): # 只取文件，排除文件夹
             list.append((name, full_path))
-    print('<menu id="tools" label="设置背景" icon="cs-backgrounds-symbolic">')
+    print('<menu id="tools" label="设置背景" icon="image-adjust">')
     for li in list:
-        items(li[0], "games-config-background", "~/.config/labwc/settings.sh change-swaybg " + li[1])
+        items(li[0], "image", "~/.config/labwc/settings.sh change-swaybg " + li[1])
     print('</menu>')
 
     # 时间
-    iweek = os.popen("date '+%V周|%A'").read().strip()
-    items(iweek, "view-calendar-week", "/opt/xflunar/xflunar.py")
+    week = os.popen("date '+%V周|%A'").read().strip()
+    items(week, "time-admin", "/opt/xflunar/xflunar.py")
 
     print('<separator />')
     # 注销
@@ -296,7 +314,59 @@ def tools():
         items(app["Name"], app["Icon"], app["Exec"])
     print('</openbox_pipe_menu>')
 
+def window_list():
+    apps = os.popen("wlrctl window list").read().split("\n")[:-1]
+    return apps
+
+def tilde(index):
+    tilde_list = []
+    apps = window_list()
+    for app in apps:
+        temp = app.split(":", maxsplit=1)
+        tilde_list.append("wlrctl window focus app_id:" + temp[0].strip() + " title:'" + temp[1].strip() + "'")
+    os.system(tilde_list[int(index)])
+
+def appwindows():
+    print('<openbox_pipe_menu>')
+    apps = window_list()
+    if apps:
+        for app in apps:
+            temp = app.split(":", maxsplit=1)
+            icon = os.popen("grep -m 1 'Icon=' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip().split("=")
+            name_zh_cn = os.popen("grep -m 1 'Name\\[zh_CN\\]' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip()
+            name_zh = os.popen("grep -m 1 'Name\\[zh_CN\\]' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip()
+            name = os.popen("grep -m 1 'Name' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip()
+            if name_zh_cn != "":
+                name = name_zh_cn.split("=")[1]
+            elif name_zh != "":
+                name = name_zh.split("=")[1]
+            else:
+                name = name.split("=")[1]
+            items(name + "｜" + temp[1].strip(), icon[1], "/home/poo/.config/labwc/menu.py tilde " + str(apps.index(app)))
+    else:
+        items("没有窗口打开", "window-close-symbolic", "")
+    print('</openbox_pipe_menu>')
+
+def search():
+    search_apps = apps()
+    with open('/tmp/tmp.txt','r',encoding='utf-8') as f:
+        text = f.read().strip()
+    print('<openbox_pipe_menu>')
+    search_list = [app for app in apps() if text in ','.join(app)]
+    if search_list != []:
+        for app in search_list:
+            items(app[0], app[2], app[1])
+    else:
+        items("未搜索到结果", "window-close-symbolic", "")
+    print('</openbox_pipe_menu>')
+
 if sys.argv[1] == "applications":
     applications()
 elif sys.argv[1] == "tools":
     tools()
+elif sys.argv[1] == "appwindows":
+    appwindows()
+elif sys.argv[1] == "tilde":
+    tilde(sys.argv[2])
+elif sys.argv[1] == "search":
+    search()
