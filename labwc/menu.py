@@ -3,6 +3,7 @@
 
 import os,configparser,math,sys
 from collections import defaultdict
+#from itertools import chain
 
 logouts = [
     {
@@ -151,10 +152,15 @@ def applications():
     for app in app_lists:
         for cat in CATEGORIES:
             intersection = set(cat[1]) & set(app[3].split(";"))
+            #others = set(list(chain.from_iterable([cat[1] for cat in CATEGORIES if cat[2] != ['Other']]))) & set(app[3].split(";"))
             if intersection:
                 for key in intersection:
                     if key in cat[1] and app[:-1] not in app_dicts[cat[0]]:
                         app_dicts[cat[0]].append(app[:-1])
+            #elif 'WPS' in app[0] and app[:-1] not in app_dicts['Office']:
+            #    app_dicts['Office'].append(app[:-1])
+            #elif 'WPS' not in app[0] and not others and app[:-1] not in app_dicts['Other']:
+            #    app_dicts['Other'].append(app[:-1])
 
     print('<openbox_pipe_menu>')
     items("运行程序...", "system-search", "xfce4-appfinder")
@@ -171,6 +177,7 @@ def applications():
     print('<separator label="关于Arch" />')
     for about in abouts:
         items(about, "distributor-logo-archlinux", "")
+        #items(about, "tag-symbolic", "")
     print('</menu>')
     print('<menu id="logout" label="注销" icon="system-log-out">')
     for app in logouts:
