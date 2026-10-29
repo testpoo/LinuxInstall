@@ -23,7 +23,7 @@ logouts = [
     {
         "Name": "重载",
         "Exec": "labwc -r",
-        "Icon": "sync-synchronizing"
+        "Icon": "state-sync"
     },
     {
         "Name": "退出",
@@ -180,21 +180,6 @@ def applications():
 
 def tools():
     print('<openbox_pipe_menu>')
-    # 输入法
-    ime = os.popen("fcitx5-remote -n").read().strip()
-    if ime == "rime":
-        ime = "中州韵"
-    IsAsciiMode = os.popen("busctl --user call org.fcitx.Fcitx5 /rime org.fcitx.Fcitx.Rime1 IsAsciiMode").read().strip()
-    if ime == "":
-        print('<menu id="tools" label="输入法" icon="input-keyboard">')
-    elif IsAsciiMode == "b true":
-        print('<menu id="tools" label="英文" icon="fcitx_rime_latin">')
-    else:
-        print('<menu id="tools" label="' + ime + '" icon="fcitx-rime">')
-    items("重新启动", "system-reboot", "fcitx5 -r")
-    items("输入法设置", "system-config-keyboard", "fcitx5-configtool")
-    items("退出", "system-log-out", "pkill fcitx5")
-    print('</menu>')
 
     # 网络
     new_knowpass = []
@@ -276,10 +261,10 @@ def tools():
 
     # 亮度
     light = os.popen("(brightnessctl get | awk '{print $1/192}')").read().strip()
-    items(light + "% 亮度", "display-brightness-symbolic", "")
+    items(light + "% 亮度", "display-brightness", "")
 
     # 截图
-    items("截图工具", "accessories-screenshot-tool", "sh -c 'grim -g &quot;$(slurp)&quot; -s 1.25 - | wl-copy'")
+    items("截图工具", "accessories-screenshot", "sh -c 'grim -g &quot;$(slurp)&quot; -s 1.25 - | wl-copy'")
 
     # 触摸板
     if os.system("grep -q '<sendEventsMode>no<\\/sendEventsMode>$' ~/.config/labwc/rc.xml") == 0:
@@ -314,59 +299,7 @@ def tools():
         items(app["Name"], app["Icon"], app["Exec"])
     print('</openbox_pipe_menu>')
 
-def window_list():
-    apps = os.popen("wlrctl window list").read().split("\n")[:-1]
-    return apps
-
-def tilde(index):
-    tilde_list = []
-    apps = window_list()
-    for app in apps:
-        temp = app.split(":", maxsplit=1)
-        tilde_list.append("wlrctl window focus app_id:" + temp[0].strip() + " title:'" + temp[1].strip() + "'")
-    os.system(tilde_list[int(index)])
-
-def appwindows():
-    print('<openbox_pipe_menu>')
-    apps = window_list()
-    if apps:
-        for app in apps:
-            temp = app.split(":", maxsplit=1)
-            icon = os.popen("grep -m 1 'Icon=' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip().split("=")
-            name_zh_cn = os.popen("grep -m 1 'Name\\[zh_CN\\]' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip()
-            name_zh = os.popen("grep -m 1 'Name\\[zh_CN\\]' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip()
-            name = os.popen("grep -m 1 'Name' /usr/share/applications/" + temp[0].lower().replace(".py","") + ".desktop").read().strip()
-            if name_zh_cn != "":
-                name = name_zh_cn.split("=")[1]
-            elif name_zh != "":
-                name = name_zh.split("=")[1]
-            else:
-                name = name.split("=")[1]
-            items(name + "｜" + temp[1].strip(), icon[1], "/home/poo/.config/labwc/menu.py tilde " + str(apps.index(app)))
-    else:
-        items("没有窗口打开", "window-close-symbolic", "")
-    print('</openbox_pipe_menu>')
-
-def search():
-    search_apps = apps()
-    with open('/tmp/tmp.txt','r',encoding='utf-8') as f:
-        text = f.read().strip()
-    print('<openbox_pipe_menu>')
-    search_list = [app for app in apps() if text in ','.join(app)]
-    if search_list != []:
-        for app in search_list:
-            items(app[0], app[2], app[1])
-    else:
-        items("未搜索到结果", "window-close-symbolic", "")
-    print('</openbox_pipe_menu>')
-
 if sys.argv[1] == "applications":
     applications()
 elif sys.argv[1] == "tools":
     tools()
-elif sys.argv[1] == "appwindows":
-    appwindows()
-elif sys.argv[1] == "tilde":
-    tilde(sys.argv[2])
-elif sys.argv[1] == "search":
-    search()
