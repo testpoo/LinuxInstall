@@ -23,7 +23,7 @@ logouts = [
     {
         "Name": "重载",
         "Exec": "labwc -r",
-        "Icon": "state-sync"
+        "Icon": "grsync"
     },
     {
         "Name": "退出",
@@ -58,8 +58,6 @@ def menus(app_dicts, cat, icon, cat_zh):
 # 所有程序
 def apps():
     exclude = [
-      'Foot Server',
-      'Foot Client',
       'Avahi SSH 服务器的浏览器',
       'Avahi VNC 服务器的浏览器',
       'Avahi Zeroconf 浏览器',
@@ -167,10 +165,10 @@ def applications():
         if cat[0] in app_dicts:
             menus(app_dicts, cat[0], cat[2], cat[3])
     print('<separator />')
-    print('<menu id="about" label="关于Arch" icon="gnome-about-logo">')
+    print('<menu id="about" label="关于Arch" icon="gtk-about">')
     print('<separator label="关于Arch" />')
     for about in abouts:
-        items(about, "distributor-logo-archlinux", "")
+        items(about, "tags", "")
     print('</menu>')
     print('<menu id="logout" label="注销" icon="system-log-out">')
     for app in logouts:
@@ -200,12 +198,12 @@ def tools():
             elif new_ssid != []:
                 new_ssid = ['',new_ssid[0],ssid_icons[int(len(new_ssid[2].split('\x1b[1;90m')[0]) - 1)]]
                 new_ssids.append(new_ssid)
-    print('<menu id="tools" label="' + choice_ssid[1] + '" icon="' + choice_ssid[2] + '">')
+    print('<menu id="network" label="' + choice_ssid[1] + '" icon="' + choice_ssid[2] + '">')
     for ssid in new_ssids:
         if ssid[1] in new_knowpass:
             items(ssid[1], ssid[2], "iwctl station wlan0 connect " + ssid[1])
         else:
-            items(ssid[1], ssid[2], "foot -T '输入WIFI密码' -w 500x80 sh -c 'iwctl station wlan0 connect " + ssid[1] + ";read'")
+            items(ssid[1], ssid[2], "xfce4-terminal -T '输入WIFI密码' --geometry 60x8 --hide-menubar -e &quot;sh -c 'iwctl station wlan0 connect " + ssid[1] + ";read -p &apos;执行完毕，回车关闭&apos;'&quot;")
     print('<item label="更新列表" icon="update-manager">')
     print('<action name="Execute" command="iwctl station wlan0 scan" />')
     print('</item>')
@@ -218,14 +216,14 @@ def tools():
     status = os.popen("bluetoothctl show | grep 'Powered:'").read().split(":")[1].strip()
     bluetooth_device = os.popen("bluetoothctl devices Connected").read().strip()
     if status == "yes" and bluetooth_device != '':
-        print('<menu id="tools" label="启动|' + bluetooth_device.split(" ")[2] + '" icon="bluetooth-active">')
+        print('<menu id="bluetooth" label="启动|' + bluetooth_device.split(" ")[2] + '" icon="bluetooth-active">')
     elif status == "yes" and bluetooth_device == '':
-        print('<menu id="tools" label="启动|未连接" icon="bluetooth">')
+        print('<menu id="bluetooth" label="启动|未连接" icon="bluetooth">')
     else:
-        print('<menu id="tools" label="蓝牙已关闭" icon="bluetooth-disabled">')
+        print('<menu id="bluetooth" label="蓝牙已关闭" icon="bluetooth-disabled">')
     if bluetooth_device != '':
         items("断开设备", "gtk-disconnect", "bluetoothctl disconnect " + bluetooth_device.split(" ")[1])
-    items("蓝牙工具", "blueman", "foot -e bluetoothctl")
+    items("蓝牙工具", "blueman", "xfce4-terminal -T '蓝牙连接工具' --hide-menubar -e bluetoothctl")
     paired_devices = os.popen("bluetoothctl devices Bonded").read().strip()
     if paired_devices:
         print('<separator label="已配对设备" />')
@@ -236,13 +234,13 @@ def tools():
     # 声音
     volume = os.popen("wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk -F ': ' '{print $2*100}'").read().strip()
     if "MUTED" in os.popen("wpctl get-volume @DEFAULT_AUDIO_SINK@").read().strip() or volume == 0:
-        volume_icon = "audio-volume-muted"
+        volume_icon = "audio-volume-muted-symbolic"
     elif int(volume) >= 1 and int(volume) < 33:
-        volume_icon = "audio-volume-low"
+        volume_icon = "audio-volume-low-symbolic"
     elif int(volume) >= 34 and int(volume) < 66:
-        volume_icon = "audio-volume-medium"
+        volume_icon = "audio-volume-medium-symbolic"
     else:
-        volume_icon = "audio-volume-high"
+        volume_icon = "audio-volume-high-symbolic"
     devices = os.popen("wpctl status | awk '/Sinks:/{f=1;next} /Sources:/{f=0} f'").read().split('\n')
     devices = [device for device in devices if device not in (' │  ','')]
     ndevices = []
@@ -253,7 +251,7 @@ def tools():
         else:
             device =['audio-card',device[2].replace(".","")," ".join(device[3:])]
         ndevices.append(device)
-    print('<menu id="tools" label="' + volume + '% 声音" icon="' + volume_icon + '">')
+    print('<menu id="volume" label="' + volume + '% 声音" icon="' + volume_icon + '">')
     print('<separator label="默认声卡选择" />')
     for device in ndevices:
         items(device[2], device[0], "wpctl set-default " + device[1])
@@ -291,7 +289,7 @@ def tools():
 
     # 时间
     week = os.popen("date '+%V周|%A'").read().strip()
-    items(week, "time-admin", "/opt/xflunar/xflunar.py")
+    items(week, "view-calendar-week", "/opt/xflunar/xflunar.py")
 
     print('<separator />')
     # 注销
