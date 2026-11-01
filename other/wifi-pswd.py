@@ -43,6 +43,15 @@ class InputPopup(Gtk.Window):
         # 窗口显示后自动聚焦输入框
         self.connect("show", self.on_window_shown)
 
+        # 只创建一次provider
+        self.css_provider = Gtk.CssProvider()
+        ctx = self.entry.get_style_context()
+        ctx.add_provider(self.css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
+    def set_color(self, hex_color):
+        css = f"entry {{ color: {hex_color}; }}"
+        self.css_provider.load_from_data(css.encode())
+
     def on_window_shown(self, widget):
         self.entry.grab_focus()
 
@@ -55,7 +64,21 @@ class InputPopup(Gtk.Window):
 
     def on_submit(self, widget):
         self.result = self.entry.get_text().strip()
-        Gtk.main_quit()
+        # Gtk.main_quit()
+        if self.result is not None:
+            passwd = self.result
+        else:
+            passwd = ""
+        text = os.popen("iwctl --passphrase " + passwd + " station wlan0 connect " + sys.argv[1]).read().strip()
+        if text == '\x1b[0;91mOperation failed\n\x1b[0m':
+            ntext = "网络连接失败"
+            self.set_color("#ff0000")
+        elif text == '\x1b[0;91mArgument format is invalid\n\x1b[0m':
+            ntext = "密码格式错误"
+            self.set_color("#ff0000")
+        elif text == '':
+            ntext = "网络连接成功"
+        self.entry.set_text(ntext)
 
     def on_cancel(self, widget):
         self.result = None
@@ -65,11 +88,6 @@ def main():
     win = InputPopup()
     win.show_all()
     Gtk.main()
-    if win.result is not None:
-        passwd = win.result
-    else:
-        passwd = ""
-    os.system("iwctl --passphrase " + passwd + " station wlan0 connect " + sys.argv[1])
 
 if __name__ == "__main__":
     main()
