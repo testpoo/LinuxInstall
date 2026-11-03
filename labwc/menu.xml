@@ -1,6 +1,6 @@
 <openbox_menu>
   <menu id="root-menu" label="" icon="" execute="~/.config/labwc/menu.py applications" />
-  <menu id="tools-menu" label="" icon="" execute="~/.config/labwc/menu.py tools" />
-  <menu id="appwindows-menu" label="" icon="" execute="~/.config/labwc/menu.py appwindows" />
-  <menu id="search-menu" label="" icon="" execute="~/.config/labwc/menu.py search" />
+  <menu id="network-menu" label="" icon="" execute="~/.config/labwc/menu.py network" />
+  <menu id="bluetooth-menu" label="" icon="" execute="~/.config/labwc/menu.py bluetooth" />
+  <menu id="volume-menu" label="" icon="" execute="~/.config/labwc/menu.py volume" />
 </openbox_menu>
