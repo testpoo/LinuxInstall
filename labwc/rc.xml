@@ -90,30 +90,6 @@
     </keybind>
   </keyboard>
 
-  <mouse>
-    <default />
-    <context name="Root">
-      <mousebind button="Left" action="Press">
-        <action name="ShowMenu" menu="root-menu" />
-      </mousebind>
-      <mousebind button="Right" action="Press">
-        <action name="ShowMenu" menu="tools-menu" />
-      </mousebind>
-    </context>
-    <context name="Client">
-      <mousebind button="A-Left" action="Press">
-        <action name="ShowMenu" menu="root-menu"/>
-      </mousebind>
-      <mousebind button="A-Right" action="Press">
-        <action name="ShowMenu" menu="tools-menu"/>
-      </mousebind>
-      <mousebind button="Middle" action="Press">
-        <action name="ShowMenu" menu="tools-menu"/>
-      </mousebind>
-    </context>
-
-  </mouse>
-
   <libinput>
     <device category="touchpad">
       <sendEventsMode>no</sendEventsMode>

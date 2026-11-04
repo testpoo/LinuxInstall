@@ -1,93 +1,73 @@
 #!/usr/bin/env python3
-import gi,sys,os
+import os,sys,gi,threading
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk, GLib
 
-gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gdk
-
-class InputPopup(Gtk.Window):
-    def __init__(self):
-        super().__init__(title="请输入WIFI密码")
+class WifiAuthDialog(Gtk.Window):
+    def __init__(self, ssid="MyWiFi"):
+        super().__init__(title=f"连接无线网络 {sys.argv[1]}")
+        self.set_border_width(10)
         self.set_default_size(300, 100)
         self.set_resizable(False)
-        # 窗口居中
-        self.set_position(Gtk.WindowPosition.CENTER)
+        self.set_icon_name("network-wireless")
 
-        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14)
-        vbox.set_margin_top(20)
-        vbox.set_margin_bottom(20)
-        vbox.set_margin_start(20)
-        vbox.set_margin_end(20)
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.add(vbox)
 
-        # 输入框
-        self.entry = Gtk.Entry()
-        self.entry.set_placeholder_text("请输入WIFI密码...")
-        self.entry.connect("activate", self.on_submit) # 回车提交
-        vbox.pack_start(self.entry, False, False, 0)
+        hbox_pw = Gtk.Box(spacing=0)
+        # ========== 重点：密码框下方的红色提示Label ==========
+        self.label_err = Gtk.Label()
+        self.label_err.set_markup('<span color="#228822">请输入无线网络' + sys.argv[1] + '的密码</span>')
+        self.label_err.set_halign(Gtk.Align.START)
+        vbox.pack_start(self.label_err, False, False, 0)
+
+        # 密码行 + 眼睛按钮
+        self.entry_pw = Gtk.Entry()
+        self.entry_pw.set_placeholder_text("请输入密码...")
+        self.entry_pw.set_visibility(False)
+        self.btn_eye = Gtk.Button(label="👁")
+        self.btn_eye.connect("clicked", self.toggle_visible)
+        hbox_pw.pack_start(self.entry_pw, True, True, 0)
+        hbox_pw.pack_start(self.btn_eye, False, False, 1)
+        vbox.pack_start(hbox_pw, False, False, 0)
+        self.entry_pw.connect("activate", self.on_connect)
 
         # 按钮行
-        btn_box = Gtk.Box(spacing=10)
-        btn_ok = Gtk.Button(label="确定")
-        btn_ok.connect("clicked", self.on_submit)
-        btn_cancel = Gtk.Button(label="取消")
-        btn_cancel.connect("clicked", self.on_cancel)
+        btn_conn = Gtk.Button(label="连接")
+        btn_conn.connect("clicked", self.on_connect)
+        vbox.pack_start(btn_conn, False, False, 0)
 
-        btn_box.pack_start(btn_ok, True, True, 0)
-        btn_box.pack_start(btn_cancel, True, True, 0)
-        vbox.pack_start(btn_box, False, False, 0)
+    def toggle_visible(self, btn):
+        vis = self.entry_pw.get_visibility()
+        self.entry_pw.set_visibility(not vis)
 
-        self.add(vbox)
-        self.result = None
+    def set_error(self, txt):
+        self.label_err.set_markup(f'<span color="#dd2222">{txt}</span>')
 
-        # ESC关闭窗口
-        self.connect("key-press-event", self.on_key_press)
-        # 窗口显示后自动聚焦输入框
-        self.connect("show", self.on_window_shown)
+    def on_connect(self, btn):
+        self.set_error('<span color="#228822">连接中...</span>')
+        passwd = self.entry_pw.get_text()
+        # 后台线程函数
+        def connect_wifi():
+            text = os.popen("iwctl --passphrase " + passwd + " station wlan0 connect " + sys.argv[1]).read().strip()
+            # 回到GTK主线程更新UI
+            def update_ui():
+                if text == '\x1b[0;91mOperation failed\n\x1b[0m':
+                    self.set_error("网络连接失败")
+                elif text == '\x1b[0;91mArgument format is invalid\n\x1b[0m':
+                    self.set_error("密码格式错误")
+                elif text == '':
+                    self.label_err.set_markup("网络连接成功")
+            GLib.idle_add(update_ui)
+        # 启动线程，不阻塞UI
+        t = threading.Thread(target=connect_wifi, daemon=True)
+        t.start()
 
-        # 只创建一次provider
-        self.css_provider = Gtk.CssProvider()
-        ctx = self.entry.get_style_context()
-        ctx.add_provider(self.css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        self.entry_pw.grab_focus()
+        self.entry_pw.select_region(0, -1)
+        return
 
-    def set_color(self, hex_color):
-        css = f"entry {{ color: {hex_color}; }}"
-        self.css_provider.load_from_data(css.encode())
-
-    def on_window_shown(self, widget):
-        self.entry.grab_focus()
-
-    def on_key_press(self, widget, event):
-        if event.keyval == Gdk.KEY_Escape:
-            self.result = None
-            Gtk.main_quit()
-            return True
-        return False
-
-    def on_submit(self, widget):
-        self.result = self.entry.get_text().strip()
-        # Gtk.main_quit()
-        if self.result is not None:
-            passwd = self.result
-        else:
-            passwd = ""
-        text = os.popen("iwctl --passphrase " + passwd + " station wlan0 connect " + sys.argv[1]).read().strip()
-        if text == '\x1b[0;91mOperation failed\n\x1b[0m':
-            ntext = "网络连接失败"
-            self.set_color("#ff0000")
-        elif text == '\x1b[0;91mArgument format is invalid\n\x1b[0m':
-            ntext = "密码格式错误"
-            self.set_color("#ff0000")
-        elif text == '':
-            ntext = "网络连接成功"
-        self.entry.set_text(ntext)
-
-    def on_cancel(self, widget):
-        self.result = None
-        Gtk.main_quit()
-
-def main():
-    win = InputPopup()
-    win.show_all()
-    Gtk.main()
-
-if __name__ == "__main__":
-    main()
+win = WifiAuthDialog("TestWiFi")
+win.connect("destroy", Gtk.main_quit)
+win.show_all()
+Gtk.main()

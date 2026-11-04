@@ -56,7 +56,7 @@ network() {
         echo "<tool>网络连接失败</tool>"
     fi
     echo "<css>.genmon_image {margin-right:2px;margin-left:2px}</css>"
-    echo "<iconclick>wtype -M logo -k 2</iconclick>"
+    echo "<iconclick>/home/poo/.config/labwc/network.py</iconclick>"
 }
 
 volume() {
