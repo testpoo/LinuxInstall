@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+
+<!--
+  This is a very simple config file with many options missing. For a complete
+  set of options with comments, see docs/rc.xml.all
+-->
+
+<labwc_config>
+
+  <core>
+    <decoration>client</decoration>
+    <gap>0</gap>
+    <adaptiveSync>no</adaptiveSync>
+    <allowTearing>no</allowTearing>
+    <autoEnableOutputs>yes</autoEnableOutputs>
+    <reuseOutputMode>no</reuseOutputMode>
+    <xwaylandPersistence>no</xwaylandPersistence>
+    <primarySelection>yes</primarySelection>
+  </core>
+
+  <theme>
+    <icon>elementary-xfce</icon>
+  </theme>
+
+  <keyboard>
+    <default />
+    <!-- Use a different terminal emulator -->
+    <keybind key="W-Return">
+      <action name="Execute" command="xfce4-terminal" />
+    </keybind>
+    <!--自定义-->
+    <keybind key="XF86AudioRaiseVolume">
+      <action name="Execute" command="sh -c 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+;~/.config/labwc/settings.sh volume-notify;xfce4-panel --plugin-event=genmon-16:refresh:bool:true'" />
+    </keybind>
+    <keybind key="XF86AudioLowerVolume">
+      <action name="Execute" command="sh -c 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-;~/.config/labwc/settings.sh volume-notify;xfce4-panel --plugin-event=genmon-16:refresh:bool:true'" />
+    </keybind>
+    <keybind key="XF86AudioMute">
+      <action name="Execute" command="sh -c 'wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle;~/.config/labwc/settings.sh volume-notify;xfce4-panel --plugin-event=genmon-16:refresh:bool:true'" />
+    </keybind>
+    <keybind key="XF86MonBrightnessDown">
+      <action name="Execute" command="sh -c 'brightnessctl set 5%-;~/.config/labwc/settings.sh light-notify;xfce4-panel --plugin-event=genmon-17:refresh:bool:true'" />
+    </keybind>
+    <keybind key="XF86MonBrightnessUp">
+      <action name="Execute" command="sh -c 'brightnessctl set 5%+;~/.config/labwc/settings.sh light-notify;xfce4-panel --plugin-event=genmon-17:refresh:bool:true'" />
+    </keybind>
+    <keybind key="W-q">
+      <action name="Execute" command="firefox" />
+    </keybind>
+    <keybind key="W-e">
+      <action name="Execute" command="thunar" />
+    </keybind>
+    <keybind key="W-l">
+      <action name="Execute" command="swaylock -i ~/图片/lock.svg -c 0F4C81" />
+    </keybind>
+    <keybind key="W-S-c">
+      <action name="Execute" command="labwc -r" />
+    </keybind>
+    <keybind key="W-S-e">
+      <action name="Execute" command="labwc -e" />
+    </keybind>
+    <keybind key="Print">
+      <action name="Execute" command="sh -c 'grim - | wl-copy'" />
+    </keybind>
+    <keybind key="W-S-s">
+      <action name="Execute" command="sh -c 'grim -g &quot;$(slurp)&quot; -s 1.25 - | wl-copy'" />
+    </keybind>
+    <keybind key="W-Control_L">
+      <action name="Execute" command="sh -c '~/.config/labwc/settings.sh touchpad-notify;xfce4-panel --plugin-event=genmon-19:refresh:bool:true'" />
+    </keybind>
+    <keybind key="W-s">
+      <action name="Execute" command="xfce4-appfinder" />
+    </keybind>
+    <keybind key="W-1">
+      <action name="ShowMenu" menu="root-menu">
+      <position>
+        <x>0</x>
+        <y>-0</y>
+      </position>
+      </action>
+    </keybind>
+    <keybind key="W-2">
+      <action name="ShowMenu" menu="network-menu" />
+    </keybind>
+    <keybind key="W-3">
+      <action name="ShowMenu" menu="bluetooth-menu" />
+    </keybind>
+    <keybind key="W-4">
+      <action name="ShowMenu" menu="volume-menu" />
+    </keybind>
+  </keyboard>
+
+  <libinput>
+    <device category="touchpad">
+      <sendEventsMode>no</sendEventsMode>
+    </device>
+  </libinput>
+
+  <windowRules>
+    <!-- 匹配窗口标题为 Labwc PowerMenu 的窗口，关闭全部服务器装饰（标题栏+边框） -->
+    <windowRule title="注销" serverDecoration="no"/>
+  </windowRules>
+
+</labwc_config>
