@@ -155,9 +155,9 @@ def applications():
                         app_dicts[cat[0]].append(app[:-1])
 
     print('<openbox_pipe_menu>')
-    items("运行程序...", "system-search", "xfce4-appfinder")
+    items("运行程序...", "system-search", "wtype -M logo -k 4")
     print('<separator />')
-    items("终端模拟器", "org.xfce.terminalemulator", "exo-open --launch TerminalEmulator")
+    items("终端模拟器", "org.xfce.terminalemulator", "lab-sensible-terminal")
     items("文件管理器", "org.xfce.filemanager", "exo-open --launch FileManager")
     items("网络浏览器", "org.xfce.webbrowser", "exo-open --launch WebBrowser")
     print('<separator />')
@@ -169,7 +169,6 @@ def applications():
     print('<separator label="关于Arch" />')
     for about in abouts:
         items(about, "distributor-logo-archlinux", "")
-        #items(about, "tag-symbolic", "")
     print('</menu>')
     print('<menu id="logout" label="注销" icon="system-log-out">')
     for app in logouts:
@@ -180,7 +179,6 @@ def applications():
 def tools():
     print('<openbox_pipe_menu>')
     # 输入法
-    '''
     ime = os.popen("fcitx5-remote -n").read().strip()
     if ime == "rime":
         ime = "中州韵"
@@ -195,7 +193,6 @@ def tools():
     items("输入法设置", "system-config-keyboard", "fcitx5-configtool")
     items("退出", "system-log-out", "pkill fcitx5")
     print('</menu>')
-    '''
 
     # 网络
     new_knowpass = []
@@ -315,7 +312,22 @@ def tools():
         items(app["Name"], app["Icon"], app["Exec"])
     print('</openbox_pipe_menu>')
 
+def search():
+    search_apps = apps()
+    with open('/tmp/tmp.txt','r',encoding='utf-8') as f:
+        text = f.read().strip()
+    print('<openbox_pipe_menu>')
+    search_list = [app for app in apps() if text in ','.join(app)]
+    if search_list != []:
+        for app in search_list:
+            items(app[0], app[2], app[1])
+    else:
+        items("未搜索到结果", "window-close-symbolic", "")
+    print('</openbox_pipe_menu>')
+
 if sys.argv[1] == "applications":
     applications()
 elif sys.argv[1] == "tools":
     tools()
+elif sys.argv[1] == "search":
+    search()

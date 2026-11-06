@@ -5,7 +5,7 @@ light-notify() {
     notify-send -t 2000 -h string:x-canonical-private-synchronous:brightness -h int:value:$light -i display-brightness "$light% 亮度"
 }
 
-touchpad-notify() {
+touchpad() {
     if grep -q "<sendEventsMode>no</sendEventsMode>$" ~/.config/labwc/rc.xml; then
         sed -i "s/<sendEventsMode>no<\/sendEventsMode>/<sendEventsMode>yes<\/sendEventsMode>/" ~/.config/labwc/rc.xml
         labwc -r
@@ -35,7 +35,7 @@ change-swaybg() {
 if [ "$1" = "light-notify" ]; then
     light-notify
 elif [ "$1" = "touchpad-notify" ]; then
-    touchpad-notify
+    touchpad
 elif [ "$1" = "volume-notify" ]; then
     volume-notify
 elif [ "$1" = "change-swaybg" ]; then

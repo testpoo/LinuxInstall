@@ -87,6 +87,22 @@
       </position>
       </action>
     </keybind>
+    <keybind key="W-3">
+      <action name="ShowMenu" menu="client-list-combined-menu">
+      <position>
+        <x>center</x>
+        <y>-0</y>
+      </position>
+      </action>
+    </keybind>
+    <keybind key="W-4">
+      <action name="ShowMenu" menu="search-menu">
+      <position>
+        <x>0</x>
+        <y>-0</y>
+      </position>
+      </action>
+    </keybind>
   </keyboard>
 
   <libinput>
