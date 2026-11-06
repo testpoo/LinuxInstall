@@ -105,6 +105,21 @@
     </keybind>
   </keyboard>
 
+  <mouse>
+    <default />
+    <context name="Root">
+      <mousebind button="Left" action="Press">
+        <action name="ShowMenu" menu="root-menu" />
+      </mousebind>
+      <mousebind button="Right" action="Press">
+        <action name="ShowMenu" menu="tools-menu" />
+      </mousebind>
+      <mousebind button="Middle" action="Press">
+        <action name="ShowMenu" menu="client-list-combined-menu"/>
+      </mousebind>
+    </context>
+  </mouse>
+
   <libinput>
     <device category="touchpad">
       <sendEventsMode>no</sendEventsMode>
