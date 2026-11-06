@@ -1,23 +1,19 @@
 #!/bin/bash
 
-light() {
+light-notify() {
     light=$(brightnessctl get | awk '{print $1/192}')
     notify-send -t 2000 -h string:x-canonical-private-synchronous:brightness -h int:value:$light -i display-brightness "$light% 亮度"
 }
 
-touchpad() {
+touchpad-notify() {
     if grep -q "<sendEventsMode>no</sendEventsMode>$" ~/.config/labwc/rc.xml; then
         sed -i "s/<sendEventsMode>no<\/sendEventsMode>/<sendEventsMode>yes<\/sendEventsMode>/" ~/.config/labwc/rc.xml
         labwc -r
+        notify-send -t 2000 -h string:x-canonical-private-synchronous:touchpad "触摸板已启用"
     else
         sed -i "s/<sendEventsMode>yes<\/sendEventsMode>/<sendEventsMode>no<\/sendEventsMode>/" ~/.config/labwc/rc.xml
         labwc -r
-    fi
-
-    if grep -q "<sendEventsMode>no</sendEventsMode>$" ~/.config/labwc/rc.xml;then
         notify-send -t 2000 -h string:x-canonical-private-synchronous:touchpad "触摸板已关闭"
-    else
-        notify-send -t 2000 -h string:x-canonical-private-synchronous:touchpad "触摸板已启用"
     fi
 }
 
@@ -36,10 +32,10 @@ change-swaybg() {
     swaybg -i "$2"
 }
 
-if [ "$1" = "light" ]; then
-    light
-elif [ "$1" = "touchpad" ]; then
-    touchpad
+if [ "$1" = "light-notify" ]; then
+    light-notify
+elif [ "$1" = "touchpad-notify" ]; then
+    touchpad-notify
 elif [ "$1" = "volume-notify" ]; then
     volume-notify
 elif [ "$1" = "change-swaybg" ]; then
