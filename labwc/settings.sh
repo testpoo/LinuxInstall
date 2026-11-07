@@ -34,7 +34,7 @@ change-swaybg() {
 
 if [ "$1" = "light-notify" ]; then
     light-notify
-elif [ "$1" = "touchpad-notify" ]; then
+elif [ "$1" = "touchpad" ]; then
     touchpad
 elif [ "$1" = "volume-notify" ]; then
     volume-notify

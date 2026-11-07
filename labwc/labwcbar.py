@@ -26,7 +26,7 @@ class LabwcBar(Gtk.Window):
         GtkLayerShell.set_exclusive_zone(self, self.height)
         # 设置边距
         GtkLayerShell.set_margin(self, GtkLayerShell.Edge.TOP, 0)
-        GtkLayerShell.set_keyboard_mode(self, GtkLayerShell.KeyboardMode.ON_DEMAND)
+        # GtkLayerShell.set_keyboard_mode(self, GtkLayerShell.KeyboardMode.ON_DEMAND)
 
         self.set_default_size(-1, self.height)
 
@@ -38,18 +38,11 @@ class LabwcBar(Gtk.Window):
         self.root_btn = Gtk.Button()
         self.root_btn.set_relief(Gtk.ReliefStyle.NONE)
         self.root_btn.set_tooltip_text("所有程序")
-        icon = Gtk.Image.new_from_icon_name("debian-logo-symbolic", Gtk.IconSize.BUTTON)
+        icon = Gtk.Image.new_from_icon_name("distributor-logo-archlinux", Gtk.IconSize.BUTTON)
         icon.set_pixel_size(self.height)
         self.root_btn.set_image(icon)
         hbox.pack_start(self.root_btn, False, False, 0)
         self.root_btn.connect("clicked", self.on_root_clicked)
-
-        # 搜索框
-        self.entry = Gtk.Entry()
-        self.entry.set_placeholder_text("在此搜索程序...")
-        self.entry.set_has_frame(False)
-        hbox.pack_start(self.entry, False, False, 0)
-        self.entry.set_width_chars(15)
 
         self.left_label = Gtk.Label()
         hbox.pack_start(self.left_label, True, True, 0)
@@ -57,7 +50,7 @@ class LabwcBar(Gtk.Window):
         # 窗口列表
         self.window_btn = Gtk.Button()
         self.window_btn.set_relief(Gtk.ReliefStyle.NONE)
-        icon = Gtk.Image.new_from_icon_name("debian-logo-symbolic", Gtk.IconSize.BUTTON)
+        icon = Gtk.Image.new_from_icon_name("org.xfce.panel.windowmenu", Gtk.IconSize.BUTTON)
         icon.set_pixel_size(self.height)
         self.window_btn.set_image(icon)
         hbox.pack_start(self.window_btn, False, False, 0)
@@ -71,7 +64,6 @@ class LabwcBar(Gtk.Window):
         # 时间按钮
         self.time_btn = Gtk.Button()
         self.time_btn.set_relief(Gtk.ReliefStyle.NONE)
-        self.time_btn.set_tooltip_text(os.popen("date +'%A %F %H:%M 第%V周'").read().strip())
         self.time_btn.set_name("time_btn")
         hbox.pack_start(self.time_btn, False, False, 0)
         self.time_btn.connect("clicked", self.on_date_clicked)
@@ -81,14 +73,11 @@ class LabwcBar(Gtk.Window):
         self.tools_btn = Gtk.Button()
         self.tools_btn.set_relief(Gtk.ReliefStyle.NONE)
         self.tools_btn.set_tooltip_text("工具")
-        icon = Gtk.Image.new_from_icon_name("org.xfce.settings.manager", Gtk.IconSize.BUTTON)
+        icon = Gtk.Image.new_from_icon_name("shutdown", Gtk.IconSize.BUTTON)
         icon.set_pixel_size(self.height)
         self.tools_btn.set_image(icon)
         hbox.pack_end(self.tools_btn, False, False, 0)
         self.tools_btn.connect("clicked", self.on_tools_clicked)
-
-        self.entry.connect("activate", self.on_search_enter)
-        #GLib.timeout_add(250, self.update_tasks)
 
         # CSS
         css = f"""
@@ -124,22 +113,6 @@ class LabwcBar(Gtk.Window):
             border-image: none;
             box-shadow: none;
         }}
-        entry {{
-            background-color: #FFFFFF;
-            color: #2D2D2D;
-            border: none;
-            border-radius: 0px;
-            min-height: {self.height}px;
-            padding:0 6px;
-            box-shadow: none;
-        }}
-        entry:focus {{
-            outline: none;
-        }}
-        entry selection {{
-            background-color: #444444;
-            color: #ffffff;
-        }}
         #time_btn label {{
             font-size: 10px;
             font-weight: bold;
@@ -166,7 +139,8 @@ class LabwcBar(Gtk.Window):
         self.show_all()
 
     def update_time(self):
-        self.time_btn.set_label(datetime.now().strftime("        %R\n%Y/%m/%d"))
+        self.time_btn.set_label(datetime.now().strftime("       %R\n%Y/%m/%d"))
+        self.time_btn.set_tooltip_text(os.popen("date +'%A %F %H:%M 第%V周'").read().strip())
         return True
 
     def on_date_clicked(self, _button):
@@ -174,24 +148,16 @@ class LabwcBar(Gtk.Window):
 
     def on_root_clicked(self, _button):
         os.system("wtype -M logo -k 1")
+        return False
 
     def on_tools_clicked(self, _button):
         os.system("wtype -M logo -k 2")
+        return False
 
     def on_window_clicked(self, widget, event):
         if event.detail != Gdk.NotifyType.INFERIOR:
             os.system("wtype -M logo -k 3")
         return False
-
-    def on_search_enter(self, entry):
-        """输入内容"""
-        text = entry.get_text().strip()
-        if not text:
-            return
-        with open("/tmp/tmp.txt", "w", encoding="utf-8") as f:
-            f.write(text)
-        os.system("wtype -M logo -k 4")
-        entry.set_text("")
 
 if __name__ == "__main__":
     win = LabwcBar()
