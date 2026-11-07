@@ -302,9 +302,14 @@ def tools():
         items(li[0], "image", "~/.config/labwc/settings.sh change-swaybg " + li[1])
     print('</menu>')
 
+    print('<separator />')
     # 时间
+    date = os.popen("date '+%F'").read().strip()
+    time = os.popen("date '+%H:%M:%S'").read().strip()
     week = os.popen("date '+%V周|%A'").read().strip()
-    items(week, "time-admin", "/opt/xflunar/xflunar.py")
+    items(date, "date", "/opt/xflunar/xflunar.py")
+    items(time, "time", "/opt/xflunar/xflunar.py")
+    items(week, "timeshift", "/opt/xflunar/xflunar.py")
 
     print('<separator />')
     # 注销
