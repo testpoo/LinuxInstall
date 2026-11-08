@@ -72,13 +72,28 @@
       <action name="Execute" command="~/.config/labwc/appfinder.py" />
     </keybind>
     <keybind key="W-1">
-      <action name="ShowMenu" menu="root-menu" />
+      <action name="ShowMenu" menu="root-menu">
+        <position>
+          <x>center</x>
+          <y>10</y>
+        </position>
+      </action>
     </keybind>
     <keybind key="W-2">
-      <action name="ShowMenu" menu="tools-menu" />
+      <action name="ShowMenu" menu="client-list-combined-menu">
+        <position>
+          <x>center</x>
+          <y>10</y>
+        </position>
+      </action>
     </keybind>
     <keybind key="W-3">
-      <action name="ShowMenu" menu="client-list-combined-menu" />
+      <action name="ShowMenu" menu="tools-menu">
+        <position>
+          <x>center</x>
+          <y>10</y>
+        </position>
+      </action>
     </keybind>
   </keyboard>
 
@@ -88,11 +103,11 @@
       <mousebind button="Left" action="Press">
         <action name="ShowMenu" menu="root-menu" />
       </mousebind>
-      <mousebind button="Right" action="Press">
-        <action name="ShowMenu" menu="tools-menu" />
-      </mousebind>
       <mousebind button="Middle" action="Press">
         <action name="ShowMenu" menu="client-list-combined-menu"/>
+      </mousebind>
+      <mousebind button="Right" action="Press">
+        <action name="ShowMenu" menu="tools-menu" />
       </mousebind>
     </context>
   </mouse>

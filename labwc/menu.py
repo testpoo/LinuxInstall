@@ -304,12 +304,10 @@ def tools():
 
     print('<separator />')
     # 时间
-    date = os.popen("date '+%F'").read().strip()
-    time = os.popen("date '+%H:%M:%S'").read().strip()
+    date = os.popen("date '+%m/%d|%H:%M'").read().strip()
     week = os.popen("date '+%V周|%A'").read().strip()
     items(date, "date", "/opt/xflunar/xflunar.py")
-    items(time, "time", "/opt/xflunar/xflunar.py")
-    items(week, "timeshift", "/opt/xflunar/xflunar.py")
+    items(week, "time", "/opt/xflunar/xflunar.py")
 
     print('<separator />')
     # 注销

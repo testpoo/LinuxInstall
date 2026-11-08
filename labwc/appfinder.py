@@ -4,7 +4,6 @@ import gi,os,subprocess,configparser
 gi.require_version("Gtk", "3.0")
 gi.require_version("GdkPixbuf", "2.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf
-
 ICON_SIZE = 32
 
 def scale_pixbuf(pixbuf, w, h):
@@ -46,12 +45,9 @@ def apps():
       'Qt V4L2 test Utility',
       'Qt V4L2 video capture utility'
     ]
-
     file_path = '/usr/share/applications/'
     file_names = os.listdir(file_path)
-
     app_lists = []
-
     for name in file_names:
         config = configparser.RawConfigParser()
         config.read(file_path + name, encoding='utf-8')
@@ -87,7 +83,7 @@ def filter_apps(apps, query):
     q = query.lower()
     return [a for a in apps if q in a["name"].lower() or q in a["exec"].lower()]
 
-class WofiLike(Gtk.Window):
+class AppFinder(Gtk.Window):
     def __init__(self):
         super().__init__(title="AppFinder")
         self.set_default_size(500, 400)
@@ -102,29 +98,27 @@ class WofiLike(Gtk.Window):
         self.search_entry = Gtk.SearchEntry()
         self.search_entry.set_placeholder_text("查询程序...")
         self.search_entry.connect("changed", self.on_search_changed)
+        # 绑定回车activate信号
+        self.search_entry.connect("activate", self.on_search_enter)
         vbox.pack_start(self.search_entry, False, True, 0)
         # ListStore: 0=GdkPixbuf对象，1=显示名称
         self.list_store = Gtk.ListStore(GdkPixbuf.Pixbuf, str)
         self.tree_view = Gtk.TreeView(model=self.list_store)
         self.tree_view.set_headers_visible(False)
-
         # 图标列
         cell_pix = Gtk.CellRendererPixbuf()
         # 强制渲染单元格图标最大尺寸，防止原图撑大行高
         cell_pix.set_fixed_size(ICON_SIZE, ICON_SIZE)
-
         col_icon = Gtk.TreeViewColumn()
         col_icon.pack_start(cell_pix, False)
         col_icon.add_attribute(cell_pix, "pixbuf", 0)
         self.tree_view.append_column(col_icon)
-
         # 文字列
         cell_text = Gtk.CellRendererText()
         col_text = Gtk.TreeViewColumn()
         col_text.pack_start(cell_text, True)
         col_text.add_attribute(cell_text, "text", 1)
         self.tree_view.append_column(col_text)
-
         self.tree_view.connect("row-activated", self.on_row_activate)
         scrolled = Gtk.ScrolledWindow()
         scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
@@ -133,6 +127,17 @@ class WofiLike(Gtk.Window):
         self.selection = self.tree_view.get_selection()
         self.update_list()
         self.connect("key-press-event", self.on_window_key)
+
+    def on_search_enter(self, entry):
+        """搜索框回车：定位第一条，直接激活打开程序"""
+        if not self.matched_apps:
+            return
+        path = Gtk.TreePath.new_from_indices([0])
+        # 设置光标并给到treeview键盘焦点，光标定位第一个项目
+        self.tree_view.set_cursor(path, None, False)
+        self.tree_view.grab_focus()
+        # 调用row_activated，复用已有的运行逻辑，打开程序并关闭窗口
+        self.tree_view.row_activated(path, self.tree_view.get_column(0))
 
     def update_list(self):
         self.list_store.clear()
@@ -167,7 +172,7 @@ class WofiLike(Gtk.Window):
         self.destroy()
 
 if __name__ == "__main__":
-    win = WofiLike()
+    win = AppFinder()
     win.connect("destroy", Gtk.main_quit)
     win.show_all()
     win.search_entry.grab_focus()
